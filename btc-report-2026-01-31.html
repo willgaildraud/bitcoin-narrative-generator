@@ -469,10 +469,16 @@
         }
 
         /* Historical Table */
+        .history-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .history-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
+            min-width: 280px;
         }
 
         .history-table thead {
@@ -594,22 +600,143 @@
         .mt-40 { margin-top: 40px; }
         .mb-24 { margin-bottom: 24px; }
 
+        /* Tablet */
         @media (max-width: 1024px) {
             .grid-2 { grid-template-columns: 1fr; }
             .grid-3 { grid-template-columns: 1fr; }
+            .mini-stats { grid-template-columns: repeat(3, 1fr); }
         }
 
+        /* Mobile landscape / small tablet */
         @media (max-width: 768px) {
-            .hero-price { font-size: 3rem; }
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 0 16px; }
+
+            .hero { padding: 40px 0 30px; }
+            .hero-price { font-size: 2.5rem; }
+            .hero-change { font-size: 0.95rem; padding: 6px 12px; }
+            .hero-label { font-size: 0.65rem; margin-bottom: 16px; }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                margin: 24px 0;
+            }
+            .stat-item { padding: 16px 12px; }
+            .stat-label { font-size: 0.65rem; }
+            .stat-value { font-size: 1.2rem; }
+
+            .chart-container { padding: 16px; margin: 16px 0 24px; }
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .chart-header > div {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .chart-timeframes {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .ma-toggle {
+                width: 100%;
+                justify-content: flex-start;
+                margin-bottom: 8px;
+            }
+            .chart-wrapper { height: 250px; }
+            .chart-stats {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .chart-stat {
+                flex: 1 1 40%;
+                min-width: 80px;
+            }
+
+            .card { padding: 16px; }
+            .card-header { margin-bottom: 12px; padding-bottom: 12px; }
+            .card-icon { width: 32px; height: 32px; font-size: 14px; }
+            .card-title { font-size: 0.9rem; }
+            .data-row { padding: 10px 0; }
+            .data-label { font-size: 0.8rem; }
+            .data-value { font-size: 0.85rem; }
+
+            .section-header { margin-bottom: 16px; }
+            .section-title { font-size: 1.2rem; }
+            .section-subtitle { font-size: 0.85rem; }
+
+            .mini-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .mini-stat { padding: 12px; }
+            .mini-stat-label { font-size: 0.6rem; }
+            .mini-stat-value { font-size: 1rem; }
+
             .history-table { font-size: 0.85rem; }
             .history-table th, .history-table td { padding: 10px 12px; }
+
+            .ma-legend { gap: 10px; }
+            .ma-legend-item { font-size: 0.65rem; }
+
+            .nav-date { font-size: 0.75rem; }
+            .logo-text { font-size: 0.95rem; }
+            .logo-icon { width: 30px; height: 30px; font-size: 16px; }
+
+            footer { padding: 24px 0; }
+            .footer-text { font-size: 0.8rem; }
+            .footer-links { font-size: 0.7rem; }
         }
 
+        /* Mobile portrait */
         @media (max-width: 480px) {
-            .stats-row { grid-template-columns: 1fr; }
+            .container { padding: 0 12px; }
+
+            .hero { padding: 30px 0 20px; }
+            .hero-price { font-size: 2rem; }
+            .hero-change { font-size: 0.85rem; }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 1px;
+            }
+            .stat-item { padding: 12px 8px; }
+            .stat-label { font-size: 0.6rem; }
+            .stat-value { font-size: 1rem; }
+
+            .chart-container { padding: 12px; }
+            .chart-wrapper { height: 200px; }
+            .timeframe-btn { padding: 5px 8px; font-size: 0.65rem; }
+            .ma-toggle-btn { padding: 3px 6px; font-size: 0.6rem; }
+            .chart-stat-label { font-size: 0.6rem; }
+            .chart-stat-value { font-size: 0.85rem; }
+
+            .mini-stats { grid-template-columns: repeat(2, 1fr); }
+
             .history-table { font-size: 0.8rem; }
-            .history-table th, .history-table td { padding: 8px 10px; }
+            .history-table th, .history-table td { padding: 8px; }
+            .history-year-cell { font-size: 0.85rem; }
+            .history-price-cell { font-size: 0.85rem; }
+            .history-change-cell { font-size: 0.75rem; }
+
+            .data-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .data-label { font-size: 0.75rem; }
+            .data-value { font-size: 0.9rem; }
+
+            .fg-value { font-size: 3rem; }
+            .fg-label { font-size: 0.95rem; }
+
+            .logo-text { display: none; }
+            .nav-date { font-size: 0.7rem; }
+        }
+
+        /* Very small screens */
+        @media (max-width: 360px) {
+            .hero-price { font-size: 1.75rem; }
+            .stat-value { font-size: 0.9rem; }
+            .chart-timeframes { gap: 4px; }
+            .timeframe-btn { padding: 4px 6px; }
         }
     </style>
 </head>
@@ -631,12 +758,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <div class="hero-price">$83,877</div>
+                <div class="hero-price">$83,926</div>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M18 15l-6-6-6 6'/>
                     </svg>
-                    +0.85% (24h)
+                    +1.11% (24h)
                 </div>
             </section>
 
@@ -647,15 +774,15 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$60.63B</div>
+                    <div class="stat-value">$60.50B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-6.50%</div>
+                    <div class="stat-value red">-6.45%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-4.37%</div>
+                    <div class="stat-value red">-4.31%</div>
                 </div>
             </div>
 
@@ -723,7 +850,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$83,877.00</span>
+                        <span class="data-value accent">$83,926.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -731,7 +858,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$83,854.75</span>
+                        <span class="data-value">$83,915.87</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
@@ -739,7 +866,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-33.5%</span>
+                        <span class="data-value" style="color: var(--red)">-33.4%</span>
                     </div>
                 </div>
 
@@ -751,15 +878,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,543 <small>(-3.1%)</small></span>
+                <span class="data-value" style="color: var(--red)">$86,552 <small>(-3.0%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$90,371 <small>(-7.2%)</small></span>
+                <span class="data-value" style="color: var(--red)">$90,373 <small>(-7.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$89,514 <small>(-6.3%)</small></span>
+                <span class="data-value" style="color: var(--red)">$89,515 <small>(-6.2%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -795,16 +922,17 @@
                 <p class="section-subtitle">Historical prices for this date across the years</p>
             </div>
             <div class="card mb-24">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th>Price</th>
-                            <th>YoY Change</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Price</th>
+                                <th>YoY Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
                     <td class="history-year-cell">2025</td>
                     <td class="history-price-cell">$104,782</td>
                     <td class="history-change-cell"><span style="color: var(--green)">+146.1%</span></td>
@@ -853,8 +981,9 @@
                     <td class="history-price-cell">$800</td>
                     <td class="history-change-cell"><span style="color: var(--green)">+3900.0%</span></td>
                 </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Block Stats -->
@@ -871,7 +1000,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height</span>
-                        <span class="data-value">934,434</span>
+                        <span class="data-value">934,435</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward</span>
@@ -879,11 +1008,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$262,116</span>
+                        <span class="data-value">$262,269</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">10.3 min</span>
+                        <span class="data-value">10.2 min</span>
                     </div>
                 </div>
 
@@ -894,7 +1023,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">115,566</span>
+                        <span class="data-value">115,565</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -906,7 +1035,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">33,530</span>
+                        <span class="data-value">32,074</span>
                     </div>
                 </div>
 
@@ -929,7 +1058,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1</span>
-                        <span class="data-value">1,192</span>
+                        <span class="data-value">1,191</span>
                     </div>
                 </div>
             </div>
@@ -946,11 +1075,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate</div>
-                    <div class="mini-stat-value">3 sat/vB</div>
+                    <div class="mini-stat-value">2 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes</div>
-                    <div class="mini-stat-value">10,450</div>
+                    <div class="mini-stat-value">9,434</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty</div>
@@ -1011,7 +1140,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size</span>
-                        <span class="data-value">33,530 txs</span>
+                        <span class="data-value">32,074 txs</span>
                     </div>
                 </div>
             </div>
@@ -1049,11 +1178,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume</span>
-                        <span class="data-value accent">$60.63B</span>
+                        <span class="data-value accent">$60.50B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">3.62%</span>
+                        <span class="data-value">3.61%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -1069,7 +1198,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 05:35 UTC</span> ·
+                <span id="last-update">Last updated: 05:48 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -1084,7 +1213,7 @@
         let priceChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 83877;
+        let lastPrice = 83926;
         let isChartLoading = false;
 
         // MA visibility state
