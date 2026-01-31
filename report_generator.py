@@ -400,12 +400,6 @@ Based on current data patterns:
         sma_20_data = ma_data.get('sma_20', []) if ma_data else []
         sma_50_data = ma_data.get('sma_50', []) if ma_data else []
 
-        # Convert price data to JSON for JavaScript
-        import json
-        price_data_json = json.dumps(full_price_data) if full_price_data else "[]"
-
-        # Build historical yearly comparison data for JavaScript
-        historical_yearly_json = json.dumps(historical_yearly) if historical_yearly else "{}"
 
         # Determine sentiment color
         if fg_value >= 75:
@@ -444,60 +438,46 @@ Based on current data patterns:
         today_short = datetime.now().strftime("%B %d")
         time_now = datetime.now().strftime("%H:%M UTC")
 
-        # Generate historical prices HTML for new Cloudflare-style design
+        # Generate historical prices HTML as a clean table
         historical_section = ""
         if historical_prices:
-            items = ""
-            for hp in historical_prices[:12]:
-                items += f'<div class="history-item"><span class="history-year">{hp["year"]}</span><span class="history-price">${hp["price"]:,.0f}</span></div>'
+            # Build table rows
+            table_rows = ""
+            for i, hp in enumerate(historical_prices[:12]):
+                year = hp["year"]
+                price_val = hp["price"]
+                # Calculate year-over-year change if we have previous year data
+                yoy_change = ""
+                if i < len(historical_prices) - 1:
+                    prev_price = historical_prices[i + 1]["price"]
+                    if prev_price > 0:
+                        change_pct = ((price_val - prev_price) / prev_price) * 100
+                        change_color = "var(--green)" if change_pct >= 0 else "var(--red)"
+                        yoy_change = f'<span style="color: {change_color}">{change_pct:+.1f}%</span>'
+
+                table_rows += f'''<tr>
+                    <td class="history-year-cell">{year}</td>
+                    <td class="history-price-cell">${price_val:,.0f}</td>
+                    <td class="history-change-cell">{yoy_change}</td>
+                </tr>'''
+
             historical_section = f'''<div class="section-header mt-40">
                 <h2 class="section-title">Bitcoin on {today_short}</h2>
-                <p class="section-subtitle">Historical prices for this date</p>
+                <p class="section-subtitle">Historical prices for this date across the years</p>
             </div>
-            <div class="history-grid mb-24">{items}</div>'''
-
-        # Generate historical year comparison chart section
-        historical_yearly_section = ""
-        if historical_yearly:
-            years_available = sorted(historical_yearly.keys(), reverse=True)[:3]
-            year_buttons = ""
-            for year in years_available:
-                year_buttons += f'<button class="year-btn" data-year="{year}">{year}</button>'
-            historical_yearly_section = f'''<div class="section-header mt-40">
-                <h2 class="section-title">Historical Performance Comparison</h2>
-                <p class="section-subtitle">Compare daily price action across previous years for the same period</p>
-            </div>
-            <div class="chart-container mb-24">
-                <div class="chart-header">
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <span class="chart-title">Year-over-Year Comparison</span>
-                    </div>
-                    <div class="chart-timeframes">
-                        <button class="year-btn active" data-year="current">{datetime.now().year}</button>
-                        {year_buttons}
-                    </div>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="historicalChart"></canvas>
-                </div>
-                <div class="chart-stats" id="historical-stats">
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Current Year</div>
-                        <div class="chart-stat-value" id="hist-current">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">YoY Change</div>
-                        <div class="chart-stat-value" id="hist-yoy">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Best Year</div>
-                        <div class="chart-stat-value" id="hist-best">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Worst Year</div>
-                        <div class="chart-stat-value" id="hist-worst">--</div>
-                    </div>
-                </div>
+            <div class="card mb-24">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Price</th>
+                            <th>YoY Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {table_rows}
+                    </tbody>
+                </table>
             </div>'''
 
         # Generate moving averages section
@@ -779,29 +759,6 @@ Based on current data patterns:
             color: white;
         }}
 
-        .year-btn {{
-            padding: 6px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }}
-
-        .year-btn:hover {{
-            border-color: var(--blue);
-            color: var(--blue);
-        }}
-
-        .year-btn.active {{
-            background: var(--blue);
-            border-color: var(--blue);
-            color: white;
-        }}
-
         /* MA Legend */
         .ma-legend {{
             display: flex;
@@ -1034,33 +991,60 @@ Based on current data patterns:
             color: var(--accent);
         }}
 
-        /* Historical Grid */
-        .history-grid {{
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
+        /* Historical Table */
+        .history-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
         }}
 
-        .history-item {{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 12px;
+        .history-table thead {{
             background: var(--bg-darker);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
         }}
 
-        .history-year {{
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+        .history-table th {{
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
         }}
 
-        .history-price {{
+        .history-table th:last-child {{
+            text-align: right;
+        }}
+
+        .history-table td {{
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }}
+
+        .history-table tr:last-child td {{
+            border-bottom: none;
+        }}
+
+        .history-table tr:hover {{
+            background: var(--bg-card-hover);
+        }}
+
+        .history-year-cell {{
+            font-weight: 600;
+            color: var(--text-primary);
+        }}
+
+        .history-price-cell {{
             font-weight: 700;
             color: var(--accent);
-            font-size: 0.95rem;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }}
+
+        .history-change-cell {{
+            text-align: right;
+            font-weight: 500;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
         }}
 
         /* Section Headers */
@@ -1141,12 +1125,14 @@ Based on current data patterns:
         @media (max-width: 768px) {{
             .hero-price {{ font-size: 3rem; }}
             .stats-row {{ grid-template-columns: repeat(2, 1fr); }}
-            .history-grid {{ grid-template-columns: repeat(3, 1fr); }}
+            .history-table {{ font-size: 0.85rem; }}
+            .history-table th, .history-table td {{ padding: 10px 12px; }}
         }}
 
         @media (max-width: 480px) {{
             .stats-row {{ grid-template-columns: 1fr; }}
-            .history-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .history-table {{ font-size: 0.8rem; }}
+            .history-table th, .history-table td {{ padding: 8px 10px; }}
         }}
     </style>
 </head>
@@ -1305,9 +1291,6 @@ Based on current data patterns:
 
             <!-- Historical Prices -->
             {historical_section}
-
-            <!-- Historical Year Comparison Chart -->
-            {historical_yearly_section}
 
             <!-- Block Stats -->
             <div class="section-header mt-40">
@@ -1534,18 +1517,15 @@ Based on current data patterns:
         const FULL_UPDATE_INTERVAL = 120000;  // 2 minutes for all other data
 
         let priceChart = null;
-        let historicalChart = null;
         let currentTimeframe = 7;
         let chartData = [];
         let lastPrice = {price};
+        let isChartLoading = false;
 
         // MA visibility state
         let showMA7 = true;
         let showMA20 = true;
         let showMA50 = false;
-
-        // Historical yearly data (embedded from server)
-        const historicalYearlyData = {historical_yearly_json};
 
         // ===== Formatters =====
         function formatPrice(n) {{
@@ -1569,13 +1549,11 @@ Based on current data patterns:
         }}
 
         // ===== Chart Functions =====
-        async function fetchChartData(days) {{
-            // Determine interval based on timeframe
-            let interval = 'daily';
-            if (days <= 1) interval = '';  // CoinGecko auto-selects for 1 day
-            else if (days <= 7) interval = '';  // Auto for better resolution
+        async function fetchChartData(days, retryCount = 0) {{
+            const maxRetries = 3;
+            const retryDelay = 2000;
 
-            const url = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${{days}}${{interval ? '&interval=' + interval : ''}}`;
+            const url = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${{days}}`;
 
             console.log('Fetching chart data:', url);
 
@@ -1583,12 +1561,22 @@ Based on current data patterns:
                 const response = await fetch(url);
 
                 if (response.status === 429) {{
-                    console.warn('Rate limited - using cached data');
+                    console.warn('Rate limited');
+                    if (retryCount < maxRetries) {{
+                        console.log(`Retrying in ${{retryDelay/1000}}s... (attempt ${{retryCount + 1}}/${{maxRetries}})`);
+                        await new Promise(resolve => setTimeout(resolve, retryDelay * (retryCount + 1)));
+                        return fetchChartData(days, retryCount + 1);
+                    }}
+                    console.warn('Max retries reached, using cached data');
                     return chartData.length > 0 ? chartData : [];
                 }}
 
                 if (!response.ok) {{
                     console.error('API error:', response.status);
+                    if (retryCount < maxRetries) {{
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        return fetchChartData(days, retryCount + 1);
+                    }}
                     return chartData.length > 0 ? chartData : [];
                 }}
 
@@ -1602,6 +1590,10 @@ Based on current data patterns:
                 return chartData.length > 0 ? chartData : [];
             }} catch (error) {{
                 console.error('Chart data fetch failed:', error);
+                if (retryCount < maxRetries) {{
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    return fetchChartData(days, retryCount + 1);
+                }}
                 return chartData.length > 0 ? chartData : [];
             }}
         }}
@@ -1744,45 +1736,61 @@ Based on current data patterns:
         }}
 
         async function updateChart(days) {{
+            if (isChartLoading) return;
+            isChartLoading = true;
+
+            // Show loading state
+            const chartWrapper = document.querySelector('.chart-wrapper');
+            if (chartWrapper) chartWrapper.style.opacity = '0.5';
+
             currentTimeframe = days;
-            chartData = await fetchChartData(days);
+            const newData = await fetchChartData(days);
 
-            if (chartData.length === 0) return;
+            // Only update if we got data
+            if (newData && newData.length > 0) {{
+                chartData = newData;
 
-            const labels = chartData.map(p => p[0]);
-            const prices = chartData.map(p => p[1]);
+                const labels = chartData.map(p => p[0]);
+                const prices = chartData.map(p => p[1]);
 
-            // Calculate moving averages
-            const ma7 = calculateMA(prices, 7);
-            const ma20 = calculateMA(prices, 20);
-            const ma50 = calculateMA(prices, 50);
+                // Calculate moving averages
+                const ma7 = calculateMA(prices, 7);
+                const ma20 = calculateMA(prices, 20);
+                const ma50 = calculateMA(prices, 50);
 
-            priceChart.data.labels = labels;
-            priceChart.data.datasets[0].data = prices;
-            priceChart.data.datasets[1].data = ma7;
-            priceChart.data.datasets[2].data = ma20;
-            priceChart.data.datasets[3].data = ma50;
+                priceChart.data.labels = labels;
+                priceChart.data.datasets[0].data = prices;
+                priceChart.data.datasets[1].data = ma7;
+                priceChart.data.datasets[2].data = ma20;
+                priceChart.data.datasets[3].data = ma50;
 
-            // Update MA visibility
-            priceChart.data.datasets[1].hidden = !showMA7;
-            priceChart.data.datasets[2].hidden = !showMA20;
-            priceChart.data.datasets[3].hidden = !showMA50;
+                // Update MA visibility
+                priceChart.data.datasets[1].hidden = !showMA7;
+                priceChart.data.datasets[2].hidden = !showMA20;
+                priceChart.data.datasets[3].hidden = !showMA50;
 
-            priceChart.update('none');
+                priceChart.update('none');
 
-            // Update chart stats
-            const high = Math.max(...prices);
-            const low = Math.min(...prices);
-            const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-            const change = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
+                // Update chart stats
+                const high = Math.max(...prices);
+                const low = Math.min(...prices);
+                const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+                const change = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
 
-            document.getElementById('chart-high').textContent = formatPriceDecimal(high);
-            document.getElementById('chart-low').textContent = formatPriceDecimal(low);
-            document.getElementById('chart-avg').textContent = formatPriceDecimal(avg);
+                document.getElementById('chart-high').textContent = formatPriceDecimal(high);
+                document.getElementById('chart-low').textContent = formatPriceDecimal(low);
+                document.getElementById('chart-avg').textContent = formatPriceDecimal(avg);
 
-            const changeEl = document.getElementById('chart-change');
-            changeEl.textContent = formatPercent(change);
-            changeEl.style.color = change >= 0 ? '#3fb950' : '#f85149';
+                const changeEl = document.getElementById('chart-change');
+                changeEl.textContent = formatPercent(change);
+                changeEl.style.color = change >= 0 ? '#3fb950' : '#f85149';
+            }} else {{
+                console.warn('No chart data available for ' + days + ' days');
+            }}
+
+            // Remove loading state
+            if (chartWrapper) chartWrapper.style.opacity = '1';
+            isChartLoading = false;
         }}
 
         function addPriceToChart(newPrice) {{
@@ -1925,194 +1933,10 @@ Based on current data patterns:
             await updateFearGreed();
         }}
 
-        // ===== Historical Year Comparison Chart =====
-        function initHistoricalChart() {{
-            const canvas = document.getElementById('historicalChart');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-
-            // Define year colors
-            const yearColors = {{
-                'current': '#f6851b',
-                2025: '#58a6ff',
-                2024: '#3fb950',
-                2023: '#f85149',
-                2022: '#a371f7',
-                2021: '#f0883e',
-                2020: '#7ee787'
-            }};
-
-            // Build datasets from historical data
-            const datasets = [];
-            const currentYear = new Date().getFullYear();
-
-            // Add current year placeholder (will be updated with live data)
-            datasets.push({{
-                label: currentYear.toString(),
-                data: [],
-                borderColor: yearColors['current'],
-                borderWidth: 2,
-                fill: false,
-                tension: 0.4,
-                pointRadius: 0
-            }});
-
-            // Add historical years
-            Object.keys(historicalYearlyData).forEach(year => {{
-                const yearData = historicalYearlyData[year];
-                if (yearData && yearData.length > 0) {{
-                    // Normalize prices to percentage change from start
-                    const startPrice = yearData[0].price;
-                    const normalizedData = yearData.map(d => ({{
-                        x: yearData.indexOf(d),
-                        y: ((d.price - startPrice) / startPrice) * 100
-                    }}));
-
-                    datasets.push({{
-                        label: year.toString(),
-                        data: normalizedData,
-                        borderColor: yearColors[year] || '#8b949e',
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        hidden: false
-                    }});
-                }}
-            }});
-
-            historicalChart = new Chart(ctx, {{
-                type: 'line',
-                data: {{
-                    labels: Array.from({{length: 30}}, (_, i) => `Day ${{i + 1}}`),
-                    datasets: datasets
-                }},
-                options: {{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {{
-                        intersect: false,
-                        mode: 'index'
-                    }},
-                    plugins: {{
-                        legend: {{
-                            display: true,
-                            position: 'top',
-                            labels: {{
-                                color: '#8b949e',
-                                usePointStyle: true,
-                                padding: 20
-                            }}
-                        }},
-                        tooltip: {{
-                            backgroundColor: '#161b22',
-                            titleColor: '#f0f6fc',
-                            bodyColor: '#f0f6fc',
-                            borderColor: '#30363d',
-                            borderWidth: 1,
-                            padding: 12,
-                            callbacks: {{
-                                label: (item) => item.dataset.label + ': ' + item.raw.y.toFixed(2) + '%'
-                            }}
-                        }}
-                    }},
-                    scales: {{
-                        x: {{
-                            display: true,
-                            grid: {{ color: 'rgba(48, 54, 61, 0.5)', drawBorder: false }},
-                            ticks: {{
-                                color: '#6e7681',
-                                maxTicksLimit: 6
-                            }}
-                        }},
-                        y: {{
-                            display: true,
-                            position: 'right',
-                            grid: {{ color: 'rgba(48, 54, 61, 0.5)', drawBorder: false }},
-                            ticks: {{
-                                color: '#6e7681',
-                                callback: (val) => val.toFixed(0) + '%'
-                            }},
-                            title: {{
-                                display: true,
-                                text: '% Change from Period Start',
-                                color: '#6e7681'
-                            }}
-                        }}
-                    }}
-                }}
-            }});
-
-            // Update historical stats
-            updateHistoricalStats();
-        }}
-
-        function updateHistoricalStats() {{
-            const years = Object.keys(historicalYearlyData).map(Number).sort((a, b) => b - a);
-            if (years.length === 0) return;
-
-            // Calculate stats
-            let bestYear = null;
-            let worstYear = null;
-            let bestChange = -Infinity;
-            let worstChange = Infinity;
-
-            years.forEach(year => {{
-                const data = historicalYearlyData[year];
-                if (data && data.length > 1) {{
-                    const startPrice = data[0].price;
-                    const endPrice = data[data.length - 1].price;
-                    const change = ((endPrice - startPrice) / startPrice) * 100;
-
-                    if (change > bestChange) {{
-                        bestChange = change;
-                        bestYear = year;
-                    }}
-                    if (change < worstChange) {{
-                        worstChange = change;
-                        worstYear = year;
-                    }}
-                }}
-            }});
-
-            // Update DOM
-            const currentEl = document.getElementById('hist-current');
-            const yoyEl = document.getElementById('hist-yoy');
-            const bestEl = document.getElementById('hist-best');
-            const worstEl = document.getElementById('hist-worst');
-
-            if (currentEl) currentEl.textContent = formatPrice(lastPrice);
-
-            if (years.length > 0 && historicalYearlyData[years[0]]) {{
-                const lastYearData = historicalYearlyData[years[0]];
-                const lastYearEndPrice = lastYearData[lastYearData.length - 1]?.price || 0;
-                const yoyChange = lastYearEndPrice > 0 ? ((lastPrice - lastYearEndPrice) / lastYearEndPrice) * 100 : 0;
-
-                if (yoyEl) {{
-                    yoyEl.textContent = formatPercent(yoyChange);
-                    yoyEl.style.color = yoyChange >= 0 ? '#3fb950' : '#f85149';
-                }}
-            }}
-
-            if (bestEl && bestYear) {{
-                bestEl.textContent = bestYear + ' (' + formatPercent(bestChange) + ')';
-                bestEl.style.color = '#3fb950';
-            }}
-
-            if (worstEl && worstYear) {{
-                worstEl.textContent = worstYear + ' (' + formatPercent(worstChange) + ')';
-                worstEl.style.color = '#f85149';
-            }}
-        }}
-
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', async function() {{
             // Initialize main price chart
             initChart();
-
-            // Initialize historical comparison chart
-            initHistoricalChart();
 
             // Set up MA toggle buttons
             document.querySelectorAll('.ma-toggle-btn').forEach(btn => {{
@@ -2166,27 +1990,6 @@ Based on current data patterns:
                 }});
             }});
 
-            // Set up year toggle buttons for historical chart
-            document.querySelectorAll('.year-btn').forEach(btn => {{
-                btn.addEventListener('click', function(e) {{
-                    e.preventDefault();
-
-                    if (!historicalChart) return;
-
-                    const year = this.dataset.year;
-                    this.classList.toggle('active');
-
-                    // Find the dataset and toggle visibility
-                    historicalChart.data.datasets.forEach(dataset => {{
-                        if (dataset.label === year || (year === 'current' && dataset.label === new Date().getFullYear().toString())) {{
-                            dataset.hidden = !dataset.hidden;
-                        }}
-                    }});
-
-                    historicalChart.update('none');
-                }});
-            }});
-
             // Load initial chart data
             console.log('Loading initial 7-day chart...');
             await updateChart(7);
@@ -2205,7 +2008,6 @@ Based on current data patterns:
             console.log('  - Chart: every 60s');
             console.log('  - Extended data: every 2min');
             console.log('  - Moving averages: 7D, 20D, 50D');
-            console.log('  - Historical comparison: ' + Object.keys(historicalYearlyData).join(', '));
         }});
     </script>
 </body>
