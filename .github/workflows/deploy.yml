@@ -1,4 +1,4 @@
-name: Generate and Deploy Bitcoin Report
+name: Generate and Deploy The Bitcoin Pulse
 
 on:
   # Run every hour

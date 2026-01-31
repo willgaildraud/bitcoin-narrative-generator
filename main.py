@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bitcoin Market Narrative Generator - CLI Entry Point."""
+"""The Bitcoin Pulse - CLI Entry Point."""
 
 import argparse
 import os
@@ -92,9 +92,9 @@ Examples:
     report_type = "weekly" if args.weekly else "daily"
 
     console.print(Panel(
-        f"[bold cyan]Bitcoin Market Narrative Generator[/bold cyan]\n"
+        f"[bold cyan]The Bitcoin Pulse[/bold cyan]\n"
         f"Generating {report_type} report...",
-        title="🪙 BTC Report Generator"
+        title="🪙 The Bitcoin Pulse"
     ))
 
     try:
