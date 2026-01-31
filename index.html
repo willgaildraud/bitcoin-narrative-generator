@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin Market Report - January 31, 2026</title>
+    <title>The Bitcoin Pulse - January 31, 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -136,9 +136,9 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: rgba(248, 81, 73, 0.1);
+            background: rgba(63, 185, 80, 0.1);
             border-radius: 8px;
-            color: #ef4444;
+            color: #22c55e;
             font-weight: 600;
             font-size: 1.1rem;
         }
@@ -234,6 +234,74 @@
             background: var(--accent);
             border-color: var(--accent);
             color: white;
+        }
+
+        .year-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .year-btn:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .year-btn.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: white;
+        }
+
+        /* MA Legend */
+        .ma-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ma-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .ma-legend-line {
+            width: 20px;
+            height: 2px;
+            border-radius: 1px;
+        }
+
+        .ma-toggle {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .ma-toggle-btn {
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ma-toggle-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
         .chart-wrapper {
@@ -547,7 +615,7 @@
                 <div class="nav-content">
                     <a href="#" class="logo">
                         <div class="logo-icon">&#8383;</div>
-                        <span class="logo-text">Bitcoin Report</span>
+                        <span class="logo-text">The Bitcoin Pulse</span>
                     </a>
                     <span class="nav-date">January 31, 2026</span>
                 </div>
@@ -557,12 +625,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <div class="hero-price">$83,939</div>
+                <div class="hero-price">$84,046</div>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d='M6 9l6 6 6-6'/>
+                        <path d='M18 15l-6-6-6 6'/>
                     </svg>
-                    -0.12% (24h)
+                    +2.20% (24h)
                 </div>
             </section>
 
@@ -573,15 +641,15 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$78.24B</div>
+                    <div class="stat-value">$64.05B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-6.19%</div>
+                    <div class="stat-value red">-6.16%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-4.09%</div>
+                    <div class="stat-value red">-4.28%</div>
                 </div>
             </div>
 
@@ -592,11 +660,18 @@
                         <span class="chart-title">Price Chart</span>
                         <span class="live-indicator"><span class="live-dot"></span> Live</span>
                     </div>
-                    <div class="chart-timeframes">
-                        <button class="timeframe-btn" data-days="1">24H</button>
-                        <button class="timeframe-btn active" data-days="7">7D</button>
-                        <button class="timeframe-btn" data-days="30">30D</button>
-                        <button class="timeframe-btn" data-days="90">90D</button>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="ma-toggle">
+                            <button class="ma-toggle-btn active" data-ma="7">7D MA</button>
+                            <button class="ma-toggle-btn active" data-ma="20">20D MA</button>
+                            <button class="ma-toggle-btn" data-ma="50">50D MA</button>
+                        </div>
+                        <div class="chart-timeframes">
+                            <button class="timeframe-btn" data-days="1">24H</button>
+                            <button class="timeframe-btn active" data-days="7">7D</button>
+                            <button class="timeframe-btn" data-days="30">30D</button>
+                            <button class="timeframe-btn" data-days="90">90D</button>
+                        </div>
                     </div>
                 </div>
                 <div class="chart-wrapper">
@@ -620,6 +695,12 @@
                         <div class="chart-stat-value" id="chart-avg">--</div>
                     </div>
                 </div>
+                <div class="ma-legend">
+                    <div class="ma-legend-item"><span class="ma-legend-line" style="background: #f6851b;"></span> Price</div>
+                    <div class="ma-legend-item" id="legend-ma7"><span class="ma-legend-line" style="background: #58a6ff;"></span> 7D MA</div>
+                    <div class="ma-legend-item" id="legend-ma20"><span class="ma-legend-line" style="background: #3fb950;"></span> 20D MA</div>
+                    <div class="ma-legend-item" id="legend-ma50" style="display: none;"><span class="ma-legend-line" style="background: #f85149;"></span> 50D MA</div>
+                </div>
             </div>
         </div>
     </div>
@@ -627,7 +708,7 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <div class="grid-2 mb-24">
+            <div class="grid-3 mb-24">
                 <!-- Price Range Card -->
                 <div class="card">
                     <div class="card-header">
@@ -636,7 +717,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$83,939.00</span>
+                        <span class="data-value accent">$84,046.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -644,7 +725,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$83,938.86</span>
+                        <span class="data-value">$84,047.03</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
@@ -652,9 +733,35 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-33.4%</span>
+                        <span class="data-value" style="color: var(--red)">-33.3%</span>
                     </div>
                 </div>
+
+                <!-- Moving Averages Card -->
+                <div class="card">
+            <div class="card-header">
+                <div class="card-icon">&#128200;</div>
+                <span class="card-title">Moving Averages</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">7-Day MA</span>
+                <span class="data-value" style="color: var(--red)">$86,569 <small>(-2.9%)</small></span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">20-Day MA</span>
+                <span class="data-value" style="color: var(--red)">$90,379 <small>(-7.0%)</small></span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">50-Day MA</span>
+                <span class="data-value" style="color: var(--red)">$89,518 <small>(-6.1%)</small></span>
+            </div>
+            <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
+                <span class="data-label">Trend Signal</span>
+                <span class="data-value" style="color: var(--text-secondary)">
+                    Neutral
+                </span>
+            </div>
+        </div>
 
                 <!-- Fear & Greed Card -->
                 <div class="card">
@@ -679,6 +786,9 @@
             <!-- Historical Prices -->
             
 
+            <!-- Historical Year Comparison Chart -->
+            
+
             <!-- Block Stats -->
             <div class="section-header mt-40">
                 <h2 class="section-title">Network Statistics</h2>
@@ -693,7 +803,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height</span>
-                        <span class="data-value">934,407</span>
+                        <span class="data-value">934,422</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward</span>
@@ -701,11 +811,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$262,309</span>
+                        <span class="data-value">$262,644</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">10.6 min</span>
+                        <span class="data-value">10.5 min</span>
                     </div>
                 </div>
 
@@ -716,7 +826,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">115,593</span>
+                        <span class="data-value">115,578</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -728,7 +838,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">29,649</span>
+                        <span class="data-value">36,144</span>
                     </div>
                 </div>
 
@@ -751,7 +861,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1</span>
-                        <span class="data-value">1,191</span>
+                        <span class="data-value">1,189</span>
                     </div>
                 </div>
             </div>
@@ -768,11 +878,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate</div>
-                    <div class="mini-stat-value">1 sat/vB</div>
+                    <div class="mini-stat-value">2 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes</div>
-                    <div class="mini-stat-value">10,148</div>
+                    <div class="mini-stat-value">9,467</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty</div>
@@ -798,11 +908,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Active Addresses (24h)</span>
-                        <span class="data-value accent">521,611</span>
+                        <span class="data-value accent">580,888</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">7-Day Average</span>
-                        <span class="data-value">469,950</span>
+                        <span class="data-value">481,478</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">New Addresses</span>
@@ -833,7 +943,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size</span>
-                        <span class="data-value">29,649 txs</span>
+                        <span class="data-value">36,144 txs</span>
                     </div>
                 </div>
             </div>
@@ -871,11 +981,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume</span>
-                        <span class="data-value accent">$78.24B</span>
+                        <span class="data-value accent">$64.05B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.67%</span>
+                        <span class="data-value">3.81%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -888,10 +998,10 @@
 
     <footer>
         <div class="container">
-            <p class="footer-text">Bitcoin Market Narrative Generator</p>
+            <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 01:02 UTC</span> ·
+                <span id="last-update">Last updated: 03:22 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -904,9 +1014,18 @@
         const FULL_UPDATE_INTERVAL = 120000;  // 2 minutes for all other data
 
         let priceChart = null;
+        let historicalChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 83939;
+        let lastPrice = 84046;
+
+        // MA visibility state
+        let showMA7 = true;
+        let showMA20 = true;
+        let showMA50 = false;
+
+        // Historical yearly data (embedded from server)
+        const historicalYearlyData = {};
 
         // ===== Formatters =====
         function formatPrice(n) {
@@ -978,20 +1097,59 @@
                 type: 'line',
                 data: {
                     labels: [],
-                    datasets: [{
-                        label: 'BTC Price',
-                        data: [],
-                        borderColor: '#f6851b',
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: '#f6851b',
-                        pointHoverBorderColor: '#fff',
-                        pointHoverBorderWidth: 2
-                    }]
+                    datasets: [
+                        {
+                            label: 'BTC Price',
+                            data: [],
+                            borderColor: '#f6851b',
+                            backgroundColor: gradient,
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#f6851b',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            order: 0
+                        },
+                        {
+                            label: '7D MA',
+                            data: [],
+                            borderColor: '#58a6ff',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            hidden: !showMA7,
+                            order: 1
+                        },
+                        {
+                            label: '20D MA',
+                            data: [],
+                            borderColor: '#3fb950',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            hidden: !showMA20,
+                            order: 2
+                        },
+                        {
+                            label: '50D MA',
+                            data: [],
+                            borderColor: '#f85149',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            hidden: !showMA50,
+                            order: 3
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -1009,13 +1167,13 @@
                             borderColor: '#30363d',
                             borderWidth: 1,
                             padding: 12,
-                            displayColors: false,
+                            displayColors: true,
                             callbacks: {
                                 title: (items) => {
                                     const date = new Date(items[0].label);
                                     return date.toLocaleString();
                                 },
-                                label: (item) => formatPriceDecimal(item.raw)
+                                label: (item) => item.dataset.label + ': ' + formatPriceDecimal(item.raw)
                             }
                         }
                     },
@@ -1049,6 +1207,22 @@
             });
         }
 
+        // Calculate moving average from price data
+        function calculateMA(prices, period) {
+            if (prices.length < period) return [];
+
+            const ma = [];
+            for (let i = 0; i < prices.length; i++) {
+                if (i < period - 1) {
+                    ma.push(null);
+                } else {
+                    const sum = prices.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+                    ma.push(sum / period);
+                }
+            }
+            return ma;
+        }
+
         async function updateChart(days) {
             currentTimeframe = days;
             chartData = await fetchChartData(days);
@@ -1058,8 +1232,22 @@
             const labels = chartData.map(p => p[0]);
             const prices = chartData.map(p => p[1]);
 
+            // Calculate moving averages
+            const ma7 = calculateMA(prices, 7);
+            const ma20 = calculateMA(prices, 20);
+            const ma50 = calculateMA(prices, 50);
+
             priceChart.data.labels = labels;
             priceChart.data.datasets[0].data = prices;
+            priceChart.data.datasets[1].data = ma7;
+            priceChart.data.datasets[2].data = ma20;
+            priceChart.data.datasets[3].data = ma50;
+
+            // Update MA visibility
+            priceChart.data.datasets[1].hidden = !showMA7;
+            priceChart.data.datasets[2].hidden = !showMA20;
+            priceChart.data.datasets[3].hidden = !showMA50;
+
             priceChart.update('none');
 
             // Update chart stats
@@ -1217,10 +1405,220 @@
             await updateFearGreed();
         }
 
+        // ===== Historical Year Comparison Chart =====
+        function initHistoricalChart() {
+            const canvas = document.getElementById('historicalChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // Define year colors
+            const yearColors = {
+                'current': '#f6851b',
+                2025: '#58a6ff',
+                2024: '#3fb950',
+                2023: '#f85149',
+                2022: '#a371f7',
+                2021: '#f0883e',
+                2020: '#7ee787'
+            };
+
+            // Build datasets from historical data
+            const datasets = [];
+            const currentYear = new Date().getFullYear();
+
+            // Add current year placeholder (will be updated with live data)
+            datasets.push({
+                label: currentYear.toString(),
+                data: [],
+                borderColor: yearColors['current'],
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                pointRadius: 0
+            });
+
+            // Add historical years
+            Object.keys(historicalYearlyData).forEach(year => {
+                const yearData = historicalYearlyData[year];
+                if (yearData && yearData.length > 0) {
+                    // Normalize prices to percentage change from start
+                    const startPrice = yearData[0].price;
+                    const normalizedData = yearData.map(d => ({
+                        x: yearData.indexOf(d),
+                        y: ((d.price - startPrice) / startPrice) * 100
+                    }));
+
+                    datasets.push({
+                        label: year.toString(),
+                        data: normalizedData,
+                        borderColor: yearColors[year] || '#8b949e',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        hidden: false
+                    });
+                }
+            });
+
+            historicalChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#8b949e',
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#161b22',
+                            titleColor: '#f0f6fc',
+                            bodyColor: '#f0f6fc',
+                            borderColor: '#30363d',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: (item) => item.dataset.label + ': ' + item.raw.y.toFixed(2) + '%'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { color: 'rgba(48, 54, 61, 0.5)', drawBorder: false },
+                            ticks: {
+                                color: '#6e7681',
+                                maxTicksLimit: 6
+                            }
+                        },
+                        y: {
+                            display: true,
+                            position: 'right',
+                            grid: { color: 'rgba(48, 54, 61, 0.5)', drawBorder: false },
+                            ticks: {
+                                color: '#6e7681',
+                                callback: (val) => val.toFixed(0) + '%'
+                            },
+                            title: {
+                                display: true,
+                                text: '% Change from Period Start',
+                                color: '#6e7681'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update historical stats
+            updateHistoricalStats();
+        }
+
+        function updateHistoricalStats() {
+            const years = Object.keys(historicalYearlyData).map(Number).sort((a, b) => b - a);
+            if (years.length === 0) return;
+
+            // Calculate stats
+            let bestYear = null;
+            let worstYear = null;
+            let bestChange = -Infinity;
+            let worstChange = Infinity;
+
+            years.forEach(year => {
+                const data = historicalYearlyData[year];
+                if (data && data.length > 1) {
+                    const startPrice = data[0].price;
+                    const endPrice = data[data.length - 1].price;
+                    const change = ((endPrice - startPrice) / startPrice) * 100;
+
+                    if (change > bestChange) {
+                        bestChange = change;
+                        bestYear = year;
+                    }
+                    if (change < worstChange) {
+                        worstChange = change;
+                        worstYear = year;
+                    }
+                }
+            });
+
+            // Update DOM
+            const currentEl = document.getElementById('hist-current');
+            const yoyEl = document.getElementById('hist-yoy');
+            const bestEl = document.getElementById('hist-best');
+            const worstEl = document.getElementById('hist-worst');
+
+            if (currentEl) currentEl.textContent = formatPrice(lastPrice);
+
+            if (years.length > 0 && historicalYearlyData[years[0]]) {
+                const lastYearData = historicalYearlyData[years[0]];
+                const lastYearEndPrice = lastYearData[lastYearData.length - 1]?.price || 0;
+                const yoyChange = lastYearEndPrice > 0 ? ((lastPrice - lastYearEndPrice) / lastYearEndPrice) * 100 : 0;
+
+                if (yoyEl) {
+                    yoyEl.textContent = formatPercent(yoyChange);
+                    yoyEl.style.color = yoyChange >= 0 ? '#3fb950' : '#f85149';
+                }
+            }
+
+            if (bestEl && bestYear) {
+                bestEl.textContent = bestYear + ' (' + formatPercent(bestChange) + ')';
+                bestEl.style.color = '#3fb950';
+            }
+
+            if (worstEl && worstYear) {
+                worstEl.textContent = worstYear + ' (' + formatPercent(worstChange) + ')';
+                worstEl.style.color = '#f85149';
+            }
+        }
+
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize chart
+            // Initialize main price chart
             initChart();
+
+            // Initialize historical comparison chart
+            initHistoricalChart();
+
+            // Set up MA toggle buttons
+            document.querySelectorAll('.ma-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const ma = this.dataset.ma;
+                    this.classList.toggle('active');
+
+                    if (ma === '7') {
+                        showMA7 = !showMA7;
+                        priceChart.data.datasets[1].hidden = !showMA7;
+                        document.getElementById('legend-ma7').style.display = showMA7 ? 'flex' : 'none';
+                    } else if (ma === '20') {
+                        showMA20 = !showMA20;
+                        priceChart.data.datasets[2].hidden = !showMA20;
+                        document.getElementById('legend-ma20').style.display = showMA20 ? 'flex' : 'none';
+                    } else if (ma === '50') {
+                        showMA50 = !showMA50;
+                        priceChart.data.datasets[3].hidden = !showMA50;
+                        document.getElementById('legend-ma50').style.display = showMA50 ? 'flex' : 'none';
+                    }
+
+                    priceChart.update('none');
+                });
+            });
 
             // Set up timeframe button event listeners
             document.querySelectorAll('.timeframe-btn').forEach(btn => {
@@ -1248,6 +1646,27 @@
                 });
             });
 
+            // Set up year toggle buttons for historical chart
+            document.querySelectorAll('.year-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    if (!historicalChart) return;
+
+                    const year = this.dataset.year;
+                    this.classList.toggle('active');
+
+                    // Find the dataset and toggle visibility
+                    historicalChart.data.datasets.forEach(dataset => {
+                        if (dataset.label === year || (year === 'current' && dataset.label === new Date().getFullYear().toString())) {
+                            dataset.hidden = !dataset.hidden;
+                        }
+                    });
+
+                    historicalChart.update('none');
+                });
+            });
+
             // Load initial chart data
             console.log('Loading initial 7-day chart...');
             await updateChart(7);
@@ -1261,10 +1680,12 @@
             setTimeout(updatePrice, 2000);
             setTimeout(updateExtendedData, 5000);
 
-            console.log('Bitcoin Report: Live updates enabled');
+            console.log('The Bitcoin Pulse: Live updates enabled');
             console.log('  - Price: every 10s');
             console.log('  - Chart: every 60s');
             console.log('  - Extended data: every 2min');
+            console.log('  - Moving averages: 7D, 20D, 50D');
+            console.log('  - Historical comparison: ' + Object.keys(historicalYearlyData).join(', '));
         });
     </script>
 </body>
