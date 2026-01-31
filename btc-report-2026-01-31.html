@@ -236,29 +236,6 @@
             color: white;
         }
 
-        .year-btn {
-            padding: 6px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .year-btn:hover {
-            border-color: var(--blue);
-            color: var(--blue);
-        }
-
-        .year-btn.active {
-            background: var(--blue);
-            border-color: var(--blue);
-            color: white;
-        }
-
         /* MA Legend */
         .ma-legend {
             display: flex;
@@ -491,33 +468,60 @@
             color: var(--accent);
         }
 
-        /* Historical Grid */
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
+        /* Historical Table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
         }
 
-        .history-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 12px;
+        .history-table thead {
             background: var(--bg-darker);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
         }
 
-        .history-year {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+        .history-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .history-price {
+        .history-table th:last-child {
+            text-align: right;
+        }
+
+        .history-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .history-year-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .history-price-cell {
             font-weight: 700;
             color: var(--accent);
-            font-size: 0.95rem;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+
+        .history-change-cell {
+            text-align: right;
+            font-weight: 500;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
         }
 
         /* Section Headers */
@@ -598,12 +602,14 @@
         @media (max-width: 768px) {
             .hero-price { font-size: 3rem; }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .history-grid { grid-template-columns: repeat(3, 1fr); }
+            .history-table { font-size: 0.85rem; }
+            .history-table th, .history-table td { padding: 10px 12px; }
         }
 
         @media (max-width: 480px) {
             .stats-row { grid-template-columns: 1fr; }
-            .history-grid { grid-template-columns: repeat(2, 1fr); }
+            .history-table { font-size: 0.8rem; }
+            .history-table th, .history-table td { padding: 8px 10px; }
         }
     </style>
 </head>
@@ -625,12 +631,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <div class="hero-price">$84,063</div>
+                <div class="hero-price">$83,951</div>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M18 15l-6-6-6 6'/>
                     </svg>
-                    +2.30% (24h)
+                    +1.31% (24h)
                 </div>
             </section>
 
@@ -641,15 +647,15 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$64.30B</div>
+                    <div class="stat-value">$62.18B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-6.15%</div>
+                    <div class="stat-value red">-6.35%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-4.26%</div>
+                    <div class="stat-value red">-4.34%</div>
                 </div>
             </div>
 
@@ -717,7 +723,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$84,063.00</span>
+                        <span class="data-value accent">$83,951.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -725,7 +731,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$84,048.86</span>
+                        <span class="data-value">$83,950.80</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
@@ -733,7 +739,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-33.3%</span>
+                        <span class="data-value" style="color: var(--red)">-33.4%</span>
                     </div>
                 </div>
 
@@ -745,15 +751,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,571 <small>(-2.9%)</small></span>
+                <span class="data-value" style="color: var(--red)">$86,556 <small>(-3.0%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$90,380 <small>(-7.0%)</small></span>
+                <span class="data-value" style="color: var(--red)">$90,375 <small>(-7.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$89,518 <small>(-6.1%)</small></span>
+                <span class="data-value" style="color: var(--red)">$89,516 <small>(-6.2%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -786,46 +792,69 @@
             <!-- Historical Prices -->
             <div class="section-header mt-40">
                 <h2 class="section-title">Bitcoin on January 31</h2>
-                <p class="section-subtitle">Historical prices for this date</p>
+                <p class="section-subtitle">Historical prices for this date across the years</p>
             </div>
-            <div class="history-grid mb-24"><div class="history-item"><span class="history-year">2025</span><span class="history-price">$104,782</span></div><div class="history-item"><span class="history-year">2024</span><span class="history-price">$42,580</span></div><div class="history-item"><span class="history-year">2023</span><span class="history-price">$23,140</span></div><div class="history-item"><span class="history-year">2022</span><span class="history-price">$38,480</span></div><div class="history-item"><span class="history-year">2021</span><span class="history-price">$33,110</span></div><div class="history-item"><span class="history-year">2020</span><span class="history-price">$9,350</span></div><div class="history-item"><span class="history-year">2019</span><span class="history-price">$3,450</span></div><div class="history-item"><span class="history-year">2018</span><span class="history-price">$10,200</span></div><div class="history-item"><span class="history-year">2017</span><span class="history-price">$965</span></div><div class="history-item"><span class="history-year">2016</span><span class="history-price">$378</span></div><div class="history-item"><span class="history-year">2015</span><span class="history-price">$227</span></div><div class="history-item"><span class="history-year">2014</span><span class="history-price">$800</span></div></div>
-
-            <!-- Historical Year Comparison Chart -->
-            <div class="section-header mt-40">
-                <h2 class="section-title">Historical Performance Comparison</h2>
-                <p class="section-subtitle">Compare daily price action across previous years for the same period</p>
-            </div>
-            <div class="chart-container mb-24">
-                <div class="chart-header">
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <span class="chart-title">Year-over-Year Comparison</span>
-                    </div>
-                    <div class="chart-timeframes">
-                        <button class="year-btn active" data-year="current">2026</button>
-                        <button class="year-btn" data-year="2024">2024</button><button class="year-btn" data-year="2023">2023</button>
-                    </div>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="historicalChart"></canvas>
-                </div>
-                <div class="chart-stats" id="historical-stats">
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Current Year</div>
-                        <div class="chart-stat-value" id="hist-current">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">YoY Change</div>
-                        <div class="chart-stat-value" id="hist-yoy">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Best Year</div>
-                        <div class="chart-stat-value" id="hist-best">--</div>
-                    </div>
-                    <div class="chart-stat">
-                        <div class="chart-stat-label">Worst Year</div>
-                        <div class="chart-stat-value" id="hist-worst">--</div>
-                    </div>
-                </div>
+            <div class="card mb-24">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Price</th>
+                            <th>YoY Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                    <td class="history-year-cell">2025</td>
+                    <td class="history-price-cell">$104,782</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+146.1%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2024</td>
+                    <td class="history-price-cell">$42,580</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+84.0%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2023</td>
+                    <td class="history-price-cell">$23,140</td>
+                    <td class="history-change-cell"><span style="color: var(--red)">-39.9%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2022</td>
+                    <td class="history-price-cell">$38,480</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+16.2%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2021</td>
+                    <td class="history-price-cell">$33,110</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+254.1%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2020</td>
+                    <td class="history-price-cell">$9,350</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+171.0%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2019</td>
+                    <td class="history-price-cell">$3,450</td>
+                    <td class="history-change-cell"><span style="color: var(--red)">-66.2%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2018</td>
+                    <td class="history-price-cell">$10,200</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+957.0%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2017</td>
+                    <td class="history-price-cell">$965</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+155.3%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2016</td>
+                    <td class="history-price-cell">$378</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+66.5%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2015</td>
+                    <td class="history-price-cell">$227</td>
+                    <td class="history-change-cell"><span style="color: var(--red)">-71.6%</span></td>
+                </tr><tr>
+                    <td class="history-year-cell">2014</td>
+                    <td class="history-price-cell">$800</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+3900.0%</span></td>
+                </tr>
+                    </tbody>
+                </table>
             </div>
 
             <!-- Block Stats -->
@@ -842,7 +871,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height</span>
-                        <span class="data-value">934,422</span>
+                        <span class="data-value">934,425</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward</span>
@@ -850,11 +879,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$262,697</span>
+                        <span class="data-value">$262,347</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">10.5 min</span>
+                        <span class="data-value">10.8 min</span>
                     </div>
                 </div>
 
@@ -865,7 +894,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">115,578</span>
+                        <span class="data-value">115,575</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -877,7 +906,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">37,774</span>
+                        <span class="data-value">34,668</span>
                     </div>
                 </div>
 
@@ -900,7 +929,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1</span>
-                        <span class="data-value">1,189</span>
+                        <span class="data-value">1,191</span>
                     </div>
                 </div>
             </div>
@@ -917,11 +946,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate</div>
-                    <div class="mini-stat-value">3 sat/vB</div>
+                    <div class="mini-stat-value">1 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes</div>
-                    <div class="mini-stat-value">9,455</div>
+                    <div class="mini-stat-value">9,463</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty</div>
@@ -982,7 +1011,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size</span>
-                        <span class="data-value">37,774 txs</span>
+                        <span class="data-value">34,668 txs</span>
                     </div>
                 </div>
             </div>
@@ -1020,11 +1049,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume</span>
-                        <span class="data-value accent">$64.30B</span>
+                        <span class="data-value accent">$62.18B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">3.83%</span>
+                        <span class="data-value">3.71%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -1040,7 +1069,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 03:31 UTC</span> ·
+                <span id="last-update">Last updated: 04:17 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -1053,18 +1082,15 @@
         const FULL_UPDATE_INTERVAL = 120000;  // 2 minutes for all other data
 
         let priceChart = null;
-        let historicalChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 84063;
+        let lastPrice = 83951;
+        let isChartLoading = false;
 
         // MA visibility state
         let showMA7 = true;
         let showMA20 = true;
         let showMA50 = false;
-
-        // Historical yearly data (embedded from server)
-        const historicalYearlyData = {"2024": [{"date": "2024-01-02", "day_of_year": 2, "price": 42000}, {"date": "2024-01-03", "day_of_year": 3, "price": 42000}, {"date": "2024-01-04", "day_of_year": 4, "price": 42639.32}, {"date": "2024-01-05", "day_of_year": 5, "price": 43818.19}, {"date": "2024-01-06", "day_of_year": 6, "price": 43841.65}, {"date": "2024-01-07", "day_of_year": 7, "price": 44532.05}, {"date": "2024-01-08", "day_of_year": 8, "price": 43557.51}, {"date": "2024-01-09", "day_of_year": 9, "price": 43389.71}, {"date": "2024-01-10", "day_of_year": 10, "price": 42860.62}, {"date": "2024-01-11", "day_of_year": 11, "price": 42000}, {"date": "2024-01-12", "day_of_year": 12, "price": 43273.26}, {"date": "2024-01-13", "day_of_year": 13, "price": 44497.78}, {"date": "2024-01-14", "day_of_year": 14, "price": 45149.04}, {"date": "2024-01-15", "day_of_year": 15, "price": 44234.92}, {"date": "2024-01-16", "day_of_year": 16, "price": 44389.31}, {"date": "2024-01-17", "day_of_year": 17, "price": 44678.98}, {"date": "2024-01-18", "day_of_year": 18, "price": 45878.05}, {"date": "2024-01-19", "day_of_year": 19, "price": 45646.87}, {"date": "2024-01-20", "day_of_year": 20, "price": 46051.25}, {"date": "2024-01-21", "day_of_year": 21, "price": 46035.07}, {"date": "2024-01-22", "day_of_year": 22, "price": 46455.93}, {"date": "2024-01-23", "day_of_year": 23, "price": 47642.74}, {"date": "2024-01-24", "day_of_year": 24, "price": 47056.52}, {"date": "2024-01-25", "day_of_year": 25, "price": 47391.8}, {"date": "2024-01-26", "day_of_year": 26, "price": 46599.27}, {"date": "2024-01-27", "day_of_year": 27, "price": 47128.38}, {"date": "2024-01-28", "day_of_year": 28, "price": 48000}, {"date": "2024-01-29", "day_of_year": 29, "price": 48000}, {"date": "2024-01-30", "day_of_year": 30, "price": 47247.95}, {"date": "2024-01-31", "day_of_year": 31, "price": 45950.21}], "2023": [{"date": "2023-01-02", "day_of_year": 2, "price": 16500}, {"date": "2023-01-03", "day_of_year": 3, "price": 16566.57}, {"date": "2023-01-04", "day_of_year": 4, "price": 16710.25}, {"date": "2023-01-05", "day_of_year": 5, "price": 16500}, {"date": "2023-01-06", "day_of_year": 6, "price": 16500}, {"date": "2023-01-07", "day_of_year": 7, "price": 16941.07}, {"date": "2023-01-08", "day_of_year": 8, "price": 16580.83}, {"date": "2023-01-09", "day_of_year": 9, "price": 16588.09}, {"date": "2023-01-10", "day_of_year": 10, "price": 16610.43}, {"date": "2023-01-11", "day_of_year": 11, "price": 16940.64}, {"date": "2023-01-12", "day_of_year": 12, "price": 17181.62}, {"date": "2023-01-13", "day_of_year": 13, "price": 17818.07}, {"date": "2023-01-14", "day_of_year": 14, "price": 18039.33}, {"date": "2023-01-15", "day_of_year": 15, "price": 18391.67}, {"date": "2023-01-16", "day_of_year": 16, "price": 18337.13}, {"date": "2023-01-17", "day_of_year": 17, "price": 18957.15}, {"date": "2023-01-18", "day_of_year": 18, "price": 19041.45}, {"date": "2023-01-19", "day_of_year": 19, "price": 19148.21}, {"date": "2023-01-20", "day_of_year": 20, "price": 19304.47}, {"date": "2023-01-21", "day_of_year": 21, "price": 19717.19}, {"date": "2023-01-22", "day_of_year": 22, "price": 19753.66}, {"date": "2023-01-23", "day_of_year": 23, "price": 20289.5}, {"date": "2023-01-24", "day_of_year": 24, "price": 20125.83}, {"date": "2023-01-25", "day_of_year": 25, "price": 19614.37}, {"date": "2023-01-26", "day_of_year": 26, "price": 19496.02}, {"date": "2023-01-27", "day_of_year": 27, "price": 19030.25}, {"date": "2023-01-28", "day_of_year": 28, "price": 18986.15}, {"date": "2023-01-29", "day_of_year": 29, "price": 19279.81}, {"date": "2023-01-30", "day_of_year": 30, "price": 19121.48}, {"date": "2023-01-31", "day_of_year": 31, "price": 19755.51}]};
 
         // ===== Formatters =====
         function formatPrice(n) {
@@ -1088,13 +1114,11 @@
         }
 
         // ===== Chart Functions =====
-        async function fetchChartData(days) {
-            // Determine interval based on timeframe
-            let interval = 'daily';
-            if (days <= 1) interval = '';  // CoinGecko auto-selects for 1 day
-            else if (days <= 7) interval = '';  // Auto for better resolution
+        async function fetchChartData(days, retryCount = 0) {
+            const maxRetries = 3;
+            const retryDelay = 2000;
 
-            const url = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${days}${interval ? '&interval=' + interval : ''}`;
+            const url = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${days}`;
 
             console.log('Fetching chart data:', url);
 
@@ -1102,12 +1126,22 @@
                 const response = await fetch(url);
 
                 if (response.status === 429) {
-                    console.warn('Rate limited - using cached data');
+                    console.warn('Rate limited');
+                    if (retryCount < maxRetries) {
+                        console.log(`Retrying in ${retryDelay/1000}s... (attempt ${retryCount + 1}/${maxRetries})`);
+                        await new Promise(resolve => setTimeout(resolve, retryDelay * (retryCount + 1)));
+                        return fetchChartData(days, retryCount + 1);
+                    }
+                    console.warn('Max retries reached, using cached data');
                     return chartData.length > 0 ? chartData : [];
                 }
 
                 if (!response.ok) {
                     console.error('API error:', response.status);
+                    if (retryCount < maxRetries) {
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        return fetchChartData(days, retryCount + 1);
+                    }
                     return chartData.length > 0 ? chartData : [];
                 }
 
@@ -1121,6 +1155,10 @@
                 return chartData.length > 0 ? chartData : [];
             } catch (error) {
                 console.error('Chart data fetch failed:', error);
+                if (retryCount < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    return fetchChartData(days, retryCount + 1);
+                }
                 return chartData.length > 0 ? chartData : [];
             }
         }
@@ -1263,45 +1301,61 @@
         }
 
         async function updateChart(days) {
+            if (isChartLoading) return;
+            isChartLoading = true;
+
+            // Show loading state
+            const chartWrapper = document.querySelector('.chart-wrapper');
+            if (chartWrapper) chartWrapper.style.opacity = '0.5';
+
             currentTimeframe = days;
-            chartData = await fetchChartData(days);
+            const newData = await fetchChartData(days);
 
-            if (chartData.length === 0) return;
+            // Only update if we got data
+            if (newData && newData.length > 0) {
+                chartData = newData;
 
-            const labels = chartData.map(p => p[0]);
-            const prices = chartData.map(p => p[1]);
+                const labels = chartData.map(p => p[0]);
+                const prices = chartData.map(p => p[1]);
 
-            // Calculate moving averages
-            const ma7 = calculateMA(prices, 7);
-            const ma20 = calculateMA(prices, 20);
-            const ma50 = calculateMA(prices, 50);
+                // Calculate moving averages
+                const ma7 = calculateMA(prices, 7);
+                const ma20 = calculateMA(prices, 20);
+                const ma50 = calculateMA(prices, 50);
 
-            priceChart.data.labels = labels;
-            priceChart.data.datasets[0].data = prices;
-            priceChart.data.datasets[1].data = ma7;
-            priceChart.data.datasets[2].data = ma20;
-            priceChart.data.datasets[3].data = ma50;
+                priceChart.data.labels = labels;
+                priceChart.data.datasets[0].data = prices;
+                priceChart.data.datasets[1].data = ma7;
+                priceChart.data.datasets[2].data = ma20;
+                priceChart.data.datasets[3].data = ma50;
 
-            // Update MA visibility
-            priceChart.data.datasets[1].hidden = !showMA7;
-            priceChart.data.datasets[2].hidden = !showMA20;
-            priceChart.data.datasets[3].hidden = !showMA50;
+                // Update MA visibility
+                priceChart.data.datasets[1].hidden = !showMA7;
+                priceChart.data.datasets[2].hidden = !showMA20;
+                priceChart.data.datasets[3].hidden = !showMA50;
 
-            priceChart.update('none');
+                priceChart.update('none');
 
-            // Update chart stats
-            const high = Math.max(...prices);
-            const low = Math.min(...prices);
-            const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-            const change = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
+                // Update chart stats
+                const high = Math.max(...prices);
+                const low = Math.min(...prices);
+                const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+                const change = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
 
-            document.getElementById('chart-high').textContent = formatPriceDecimal(high);
-            document.getElementById('chart-low').textContent = formatPriceDecimal(low);
-            document.getElementById('chart-avg').textContent = formatPriceDecimal(avg);
+                document.getElementById('chart-high').textContent = formatPriceDecimal(high);
+                document.getElementById('chart-low').textContent = formatPriceDecimal(low);
+                document.getElementById('chart-avg').textContent = formatPriceDecimal(avg);
 
-            const changeEl = document.getElementById('chart-change');
-            changeEl.textContent = formatPercent(change);
-            changeEl.style.color = change >= 0 ? '#3fb950' : '#f85149';
+                const changeEl = document.getElementById('chart-change');
+                changeEl.textContent = formatPercent(change);
+                changeEl.style.color = change >= 0 ? '#3fb950' : '#f85149';
+            } else {
+                console.warn('No chart data available for ' + days + ' days');
+            }
+
+            // Remove loading state
+            if (chartWrapper) chartWrapper.style.opacity = '1';
+            isChartLoading = false;
         }
 
         function addPriceToChart(newPrice) {
@@ -1444,194 +1498,10 @@
             await updateFearGreed();
         }
 
-        // ===== Historical Year Comparison Chart =====
-        function initHistoricalChart() {
-            const canvas = document.getElementById('historicalChart');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-
-            // Define year colors
-            const yearColors = {
-                'current': '#f6851b',
-                2025: '#58a6ff',
-                2024: '#3fb950',
-                2023: '#f85149',
-                2022: '#a371f7',
-                2021: '#f0883e',
-                2020: '#7ee787'
-            };
-
-            // Build datasets from historical data
-            const datasets = [];
-            const currentYear = new Date().getFullYear();
-
-            // Add current year placeholder (will be updated with live data)
-            datasets.push({
-                label: currentYear.toString(),
-                data: [],
-                borderColor: yearColors['current'],
-                borderWidth: 2,
-                fill: false,
-                tension: 0.4,
-                pointRadius: 0
-            });
-
-            // Add historical years
-            Object.keys(historicalYearlyData).forEach(year => {
-                const yearData = historicalYearlyData[year];
-                if (yearData && yearData.length > 0) {
-                    // Normalize prices to percentage change from start
-                    const startPrice = yearData[0].price;
-                    const normalizedData = yearData.map(d => ({
-                        x: yearData.indexOf(d),
-                        y: ((d.price - startPrice) / startPrice) * 100
-                    }));
-
-                    datasets.push({
-                        label: year.toString(),
-                        data: normalizedData,
-                        borderColor: yearColors[year] || '#8b949e',
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        hidden: false
-                    });
-                }
-            });
-
-            historicalChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: '#8b949e',
-                                usePointStyle: true,
-                                padding: 20
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#161b22',
-                            titleColor: '#f0f6fc',
-                            bodyColor: '#f0f6fc',
-                            borderColor: '#30363d',
-                            borderWidth: 1,
-                            padding: 12,
-                            callbacks: {
-                                label: (item) => item.dataset.label + ': ' + item.raw.y.toFixed(2) + '%'
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            grid: { color: 'rgba(48, 54, 61, 0.5)', drawBorder: false },
-                            ticks: {
-                                color: '#6e7681',
-                                maxTicksLimit: 6
-                            }
-                        },
-                        y: {
-                            display: true,
-                            position: 'right',
-                            grid: { color: 'rgba(48, 54, 61, 0.5)', drawBorder: false },
-                            ticks: {
-                                color: '#6e7681',
-                                callback: (val) => val.toFixed(0) + '%'
-                            },
-                            title: {
-                                display: true,
-                                text: '% Change from Period Start',
-                                color: '#6e7681'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Update historical stats
-            updateHistoricalStats();
-        }
-
-        function updateHistoricalStats() {
-            const years = Object.keys(historicalYearlyData).map(Number).sort((a, b) => b - a);
-            if (years.length === 0) return;
-
-            // Calculate stats
-            let bestYear = null;
-            let worstYear = null;
-            let bestChange = -Infinity;
-            let worstChange = Infinity;
-
-            years.forEach(year => {
-                const data = historicalYearlyData[year];
-                if (data && data.length > 1) {
-                    const startPrice = data[0].price;
-                    const endPrice = data[data.length - 1].price;
-                    const change = ((endPrice - startPrice) / startPrice) * 100;
-
-                    if (change > bestChange) {
-                        bestChange = change;
-                        bestYear = year;
-                    }
-                    if (change < worstChange) {
-                        worstChange = change;
-                        worstYear = year;
-                    }
-                }
-            });
-
-            // Update DOM
-            const currentEl = document.getElementById('hist-current');
-            const yoyEl = document.getElementById('hist-yoy');
-            const bestEl = document.getElementById('hist-best');
-            const worstEl = document.getElementById('hist-worst');
-
-            if (currentEl) currentEl.textContent = formatPrice(lastPrice);
-
-            if (years.length > 0 && historicalYearlyData[years[0]]) {
-                const lastYearData = historicalYearlyData[years[0]];
-                const lastYearEndPrice = lastYearData[lastYearData.length - 1]?.price || 0;
-                const yoyChange = lastYearEndPrice > 0 ? ((lastPrice - lastYearEndPrice) / lastYearEndPrice) * 100 : 0;
-
-                if (yoyEl) {
-                    yoyEl.textContent = formatPercent(yoyChange);
-                    yoyEl.style.color = yoyChange >= 0 ? '#3fb950' : '#f85149';
-                }
-            }
-
-            if (bestEl && bestYear) {
-                bestEl.textContent = bestYear + ' (' + formatPercent(bestChange) + ')';
-                bestEl.style.color = '#3fb950';
-            }
-
-            if (worstEl && worstYear) {
-                worstEl.textContent = worstYear + ' (' + formatPercent(worstChange) + ')';
-                worstEl.style.color = '#f85149';
-            }
-        }
-
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', async function() {
             // Initialize main price chart
             initChart();
-
-            // Initialize historical comparison chart
-            initHistoricalChart();
 
             // Set up MA toggle buttons
             document.querySelectorAll('.ma-toggle-btn').forEach(btn => {
@@ -1685,27 +1555,6 @@
                 });
             });
 
-            // Set up year toggle buttons for historical chart
-            document.querySelectorAll('.year-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    if (!historicalChart) return;
-
-                    const year = this.dataset.year;
-                    this.classList.toggle('active');
-
-                    // Find the dataset and toggle visibility
-                    historicalChart.data.datasets.forEach(dataset => {
-                        if (dataset.label === year || (year === 'current' && dataset.label === new Date().getFullYear().toString())) {
-                            dataset.hidden = !dataset.hidden;
-                        }
-                    });
-
-                    historicalChart.update('none');
-                });
-            });
-
             // Load initial chart data
             console.log('Loading initial 7-day chart...');
             await updateChart(7);
@@ -1724,7 +1573,6 @@
             console.log('  - Chart: every 60s');
             console.log('  - Extended data: every 2min');
             console.log('  - Moving averages: 7D, 20D, 50D');
-            console.log('  - Historical comparison: ' + Object.keys(historicalYearlyData).join(', '));
         });
     </script>
 </body>
