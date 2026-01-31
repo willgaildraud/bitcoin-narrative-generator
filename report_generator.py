@@ -466,18 +466,20 @@ Based on current data patterns:
                 <p class="section-subtitle">Historical prices for this date across the years</p>
             </div>
             <div class="card mb-24">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th>Price</th>
-                            <th>YoY Change</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {table_rows}
-                    </tbody>
-                </table>
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Price</th>
+                                <th>YoY Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table_rows}
+                        </tbody>
+                    </table>
+                </div>
             </div>'''
 
         # Generate moving averages section
@@ -992,10 +994,16 @@ Based on current data patterns:
         }}
 
         /* Historical Table */
+        .history-table-wrapper {{
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }}
+
         .history-table {{
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
+            min-width: 280px;
         }}
 
         .history-table thead {{
@@ -1117,22 +1125,143 @@ Based on current data patterns:
         .mt-40 {{ margin-top: 40px; }}
         .mb-24 {{ margin-bottom: 24px; }}
 
+        /* Tablet */
         @media (max-width: 1024px) {{
             .grid-2 {{ grid-template-columns: 1fr; }}
             .grid-3 {{ grid-template-columns: 1fr; }}
+            .mini-stats {{ grid-template-columns: repeat(3, 1fr); }}
         }}
 
+        /* Mobile landscape / small tablet */
         @media (max-width: 768px) {{
-            .hero-price {{ font-size: 3rem; }}
-            .stats-row {{ grid-template-columns: repeat(2, 1fr); }}
+            .container {{ padding: 0 16px; }}
+
+            .hero {{ padding: 40px 0 30px; }}
+            .hero-price {{ font-size: 2.5rem; }}
+            .hero-change {{ font-size: 0.95rem; padding: 6px 12px; }}
+            .hero-label {{ font-size: 0.65rem; margin-bottom: 16px; }}
+
+            .stats-row {{
+                grid-template-columns: repeat(2, 1fr);
+                margin: 24px 0;
+            }}
+            .stat-item {{ padding: 16px 12px; }}
+            .stat-label {{ font-size: 0.65rem; }}
+            .stat-value {{ font-size: 1.2rem; }}
+
+            .chart-container {{ padding: 16px; margin: 16px 0 24px; }}
+            .chart-header {{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }}
+            .chart-header > div {{
+                width: 100%;
+                justify-content: space-between;
+            }}
+            .chart-timeframes {{
+                width: 100%;
+                justify-content: flex-start;
+            }}
+            .ma-toggle {{
+                width: 100%;
+                justify-content: flex-start;
+                margin-bottom: 8px;
+            }}
+            .chart-wrapper {{ height: 250px; }}
+            .chart-stats {{
+                flex-wrap: wrap;
+                gap: 12px;
+            }}
+            .chart-stat {{
+                flex: 1 1 40%;
+                min-width: 80px;
+            }}
+
+            .card {{ padding: 16px; }}
+            .card-header {{ margin-bottom: 12px; padding-bottom: 12px; }}
+            .card-icon {{ width: 32px; height: 32px; font-size: 14px; }}
+            .card-title {{ font-size: 0.9rem; }}
+            .data-row {{ padding: 10px 0; }}
+            .data-label {{ font-size: 0.8rem; }}
+            .data-value {{ font-size: 0.85rem; }}
+
+            .section-header {{ margin-bottom: 16px; }}
+            .section-title {{ font-size: 1.2rem; }}
+            .section-subtitle {{ font-size: 0.85rem; }}
+
+            .mini-stats {{ grid-template-columns: repeat(2, 1fr); gap: 10px; }}
+            .mini-stat {{ padding: 12px; }}
+            .mini-stat-label {{ font-size: 0.6rem; }}
+            .mini-stat-value {{ font-size: 1rem; }}
+
             .history-table {{ font-size: 0.85rem; }}
             .history-table th, .history-table td {{ padding: 10px 12px; }}
+
+            .ma-legend {{ gap: 10px; }}
+            .ma-legend-item {{ font-size: 0.65rem; }}
+
+            .nav-date {{ font-size: 0.75rem; }}
+            .logo-text {{ font-size: 0.95rem; }}
+            .logo-icon {{ width: 30px; height: 30px; font-size: 16px; }}
+
+            footer {{ padding: 24px 0; }}
+            .footer-text {{ font-size: 0.8rem; }}
+            .footer-links {{ font-size: 0.7rem; }}
         }}
 
+        /* Mobile portrait */
         @media (max-width: 480px) {{
-            .stats-row {{ grid-template-columns: 1fr; }}
+            .container {{ padding: 0 12px; }}
+
+            .hero {{ padding: 30px 0 20px; }}
+            .hero-price {{ font-size: 2rem; }}
+            .hero-change {{ font-size: 0.85rem; }}
+
+            .stats-row {{
+                grid-template-columns: 1fr 1fr;
+                gap: 1px;
+            }}
+            .stat-item {{ padding: 12px 8px; }}
+            .stat-label {{ font-size: 0.6rem; }}
+            .stat-value {{ font-size: 1rem; }}
+
+            .chart-container {{ padding: 12px; }}
+            .chart-wrapper {{ height: 200px; }}
+            .timeframe-btn {{ padding: 5px 8px; font-size: 0.65rem; }}
+            .ma-toggle-btn {{ padding: 3px 6px; font-size: 0.6rem; }}
+            .chart-stat-label {{ font-size: 0.6rem; }}
+            .chart-stat-value {{ font-size: 0.85rem; }}
+
+            .mini-stats {{ grid-template-columns: repeat(2, 1fr); }}
+
             .history-table {{ font-size: 0.8rem; }}
-            .history-table th, .history-table td {{ padding: 8px 10px; }}
+            .history-table th, .history-table td {{ padding: 8px; }}
+            .history-year-cell {{ font-size: 0.85rem; }}
+            .history-price-cell {{ font-size: 0.85rem; }}
+            .history-change-cell {{ font-size: 0.75rem; }}
+
+            .data-row {{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }}
+            .data-label {{ font-size: 0.75rem; }}
+            .data-value {{ font-size: 0.9rem; }}
+
+            .fg-value {{ font-size: 3rem; }}
+            .fg-label {{ font-size: 0.95rem; }}
+
+            .logo-text {{ display: none; }}
+            .nav-date {{ font-size: 0.7rem; }}
+        }}
+
+        /* Very small screens */
+        @media (max-width: 360px) {{
+            .hero-price {{ font-size: 1.75rem; }}
+            .stat-value {{ font-size: 0.9rem; }}
+            .chart-timeframes {{ gap: 4px; }}
+            .timeframe-btn {{ padding: 4px 6px; }}
         }}
     </style>
 </head>

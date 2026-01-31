@@ -48,10 +48,12 @@ jobs:
           # Rename latest report to index.html
           latest=$(ls -t reports/*.html | head -1)
           cp "$latest" public/index.html
+          # Copy CNAME file for custom domain
+          cp CNAME public/CNAME
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          cname: ${{ vars.CUSTOM_DOMAIN }}
+          cname: thebitcoinpulse.com
