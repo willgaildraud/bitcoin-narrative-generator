@@ -3,7 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bitcoin Pulse - February 03, 2026</title>
+    <title>The Bitcoin Pulse - Live BTC Market Data & Analysis</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data. Track BTC price movements, Fear & Greed Index, hash rate, and network statistics in real-time.">
+    <meta name="keywords" content="Bitcoin, BTC, cryptocurrency, price tracker, market analysis, Fear and Greed Index, hash rate, blockchain, on-chain metrics">
+    <meta name="author" content="The Bitcoin Pulse">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thebitcoinpulse.com/">
+    <meta property="og:title" content="The Bitcoin Pulse - Live BTC Market Data & Analysis">
+    <meta property="og:description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data. Track BTC in real-time.">
+    <meta property="og:image" content="https://thebitcoinpulse.com/og-image.png">
+    <meta property="og:site_name" content="The Bitcoin Pulse">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://thebitcoinpulse.com/">
+    <meta name="twitter:title" content="The Bitcoin Pulse - Live BTC Market Data">
+    <meta name="twitter:description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data.">
+    <meta name="twitter:image" content="https://thebitcoinpulse.com/og-image.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thebitcoinpulse.com/">
+
+    <!-- Favicon (placeholder) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#8383;</text></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -128,7 +156,7 @@
             font-weight: 800;
             color: var(--text-primary);
             letter-spacing: -0.02em;
-            margin-bottom: 16px;
+            margin: 0 0 16px 0;
         }
 
         .hero-change {
@@ -392,6 +420,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-primary);
+            margin: 0;
         }
 
         /* Fear & Greed */
@@ -539,7 +568,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin: 0 0 8px 0;
         }
 
         .section-subtitle {
@@ -574,6 +603,447 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-top: 4px;
+        }
+
+        /* Info Icons and Tooltips */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            font-weight: 700;
+            font-style: normal;
+            color: var(--text-muted);
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            margin-left: 6px;
+            cursor: help;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+        }
+
+        .info-icon:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(246, 133, 27, 0.1);
+        }
+
+        /* Desktop Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--border-color);
+        }
+
+        .tooltip-container:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .tooltip-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-why {
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Glossary Modal */
+        .glossary-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .glossary-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .glossary-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glossary-overlay.active .glossary-modal {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .glossary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .glossary-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .glossary-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .glossary-close:hover {
+            background: var(--bg-darker);
+            color: var(--text-primary);
+        }
+
+        .glossary-search {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .glossary-search input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .glossary-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .glossary-search input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .glossary-filters {
+            display: flex;
+            gap: 8px;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .glossary-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+
+        .glossary-item {
+            padding: 16px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .glossary-item:hover {
+            border-color: var(--accent);
+        }
+
+        .glossary-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .glossary-item-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .glossary-item-category {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            background: rgba(246, 133, 27, 0.1);
+            border-radius: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .glossary-item-short {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .glossary-item-full {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .glossary-item.expanded .glossary-item-full {
+            display: block;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .glossary-item-why {
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        /* Mobile Bottom Sheet */
+        @media (max-width: 768px) {
+            .tooltip {
+                display: none !important;
+            }
+
+            .glossary-modal {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: translateY(100%);
+                width: 100%;
+                max-width: none;
+                max-height: 85vh;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .glossary-overlay.active .glossary-modal {
+                transform: translateY(0);
+            }
+
+            .glossary-filters {
+                padding: 12px 16px;
+            }
+
+            .glossary-content {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Nav Learn Link */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        /* Market Signals Card */
+        .signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .signal-item {
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .signal-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 6px;
+        }
+
+        .signal-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .signal-value.bullish, .signal-value.rising, .signal-value.high, .signal-value.strong {
+            color: var(--green);
+        }
+
+        .signal-value.bearish, .signal-value.falling, .signal-value.low, .signal-value.weak {
+            color: var(--red);
+        }
+
+        .signal-value.neutral, .signal-value.normal, .signal-value.stable, .signal-value.moderate, .signal-value.clear {
+            color: var(--text-secondary);
+        }
+
+        .signal-icon {
+            font-size: 1rem;
+        }
+
+        .signals-disclaimer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Trend Arrows */
+        .trend-arrow {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .trend-arrow.up {
+            color: var(--green);
+        }
+
+        .trend-arrow.down {
+            color: var(--red);
+        }
+
+        .trend-arrow.neutral {
+            color: var(--text-muted);
+        }
+
+        /* Sparklines */
+        .sparkline {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        .sparkline-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Lazy Load Chart Skeleton */
+        .chart-skeleton {
+            background: linear-gradient(90deg, var(--bg-darker) 25%, var(--bg-card-hover) 50%, var(--bg-darker) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+            height: 100%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Footer */
@@ -750,7 +1220,10 @@
                         <div class="logo-icon">&#8383;</div>
                         <span class="logo-text">The Bitcoin Pulse</span>
                     </a>
-                    <span class="nav-date">February 03, 2026</span>
+                    <div class="nav-links">
+                        <span class="nav-link" id="open-glossary">Learn</span>
+                        <span class="nav-date">February 03, 2026</span>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -758,12 +1231,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <div class="hero-price">$75,670</div>
+                <h1 class="hero-price">$75,755</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    -3.83% (24h)
+                    -3.89% (24h)
                 </div>
             </section>
 
@@ -774,17 +1247,74 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$73.48B</div>
+                    <div class="stat-value">$73.39B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-14.96%</div>
+                    <div class="stat-value red">-14.86%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-16.97%</div>
+                    <div class="stat-value red">-16.88%</div>
                 </div>
             </div>
+
+            
+            <!-- Market Signals Card -->
+            <div class="card mt-24" style="margin-bottom: 24px;">
+                <div class="card-header">
+                    <div class="card-icon">&#128161;</div>
+                    <h3 class="card-title">Market Signals</h3>
+                </div>
+                <div class="signals-grid">
+                    <div class="signal-item">
+                        <div class="signal-label">50D MA Trend</div>
+                        <div class="signal-value bearish">
+                            <span class="signal-icon">&#8595;</span>
+                            Below 50D MA
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">200D MA Trend</div>
+                        <div class="signal-value bearish">
+                            <span class="signal-icon">&#8595;</span>
+                            Below 200D MA
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">MA Cross</div>
+                        <div class="signal-value bearish">
+                            <span class="signal-icon">&#8595;</span>
+                            Death Cross
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Volume</div>
+                        <div class="signal-value normal">
+                            <span class="signal-icon">&#8594;</span>
+                            Normal Volume
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Mempool</div>
+                        <div class="signal-value clear">
+                            <span class="signal-icon">&#8595;</span>
+                            Clear
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Hash Rate</div>
+                        <div class="signal-value stable">
+                            <span class="signal-icon">&#8594;</span>
+                            Stable
+                        </div>
+                    </div>
+                </div>
+                <div class="signals-disclaimer">
+                    Rule-based signals for informational purposes only. Not financial advice.
+                </div>
+            </div>
+            
 
             <!-- Price Chart -->
             <div class="chart-container">
@@ -846,11 +1376,11 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128200;</div>
-                        <span class="card-title">30-Day Price Range</span>
+                        <h3 class="card-title">30-Day Price Range</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$75,670.00</span>
+                        <span class="data-value accent">$75,755.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -858,7 +1388,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$75,607.38</span>
+                        <span class="data-value">$75,755.15</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
@@ -866,7 +1396,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-40.0%</span>
+                        <span class="data-value" style="color: var(--red)">-39.9%</span>
                     </div>
                 </div>
 
@@ -874,19 +1404,19 @@
                 <div class="card">
             <div class="card-header">
                 <div class="card-icon">&#128200;</div>
-                <span class="card-title">Moving Averages</span>
+                <h3 class="card-title">Moving Averages</h3>
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$81,140 <small>(-6.7%)</small></span>
+                <span class="data-value" style="color: var(--red)">$81,153 <small>(-6.6%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$87,512 <small>(-13.5%)</small></span>
+                <span class="data-value" style="color: var(--red)">$87,517 <small>(-13.4%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$88,741 <small>(-14.7%)</small></span>
+                <span class="data-value" style="color: var(--red)">$88,743 <small>(-14.6%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -900,7 +1430,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128161;</div>
-                        <span class="card-title">Market Sentiment</span>
+                        <h3 class="card-title">Market Sentiment<span class="info-icon" data-metric="fear_greed" aria-label="Learn more">i</span></h3>
                     </div>
                     <div class="fg-container">
                         <div class="fg-value">17</div>
@@ -996,34 +1526,34 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#9939;</div>
-                        <span class="card-title">Block Info</span>
+                        <h3 class="card-title">Block Info</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Block Height</span>
-                        <span class="data-value">934,906</span>
+                        <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
+                        <span class="data-value">934,907</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Block Reward</span>
+                        <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">3.125 BTC</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$236,469</span>
+                        <span class="data-value">$236,734</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">10.4 min</span>
+                        <span class="data-value">10.6 min</span>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#9201;</div>
-                        <span class="card-title">Next Halving</span>
+                        <h3 class="card-title">Next Halving</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">115,094</span>
+                        <span class="data-value">115,093</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -1035,17 +1565,17 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">24,418</span>
+                        <span class="data-value">25,606</span>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128176;</div>
-                        <span class="card-title">Supply</span>
+                        <h3 class="card-title">Supply</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Circulating</span>
+                        <span class="data-label">Circulating<span class="info-icon" data-metric="circulating_supply" aria-label="Learn more">i</span></span>
                         <span class="data-value">19.98M BTC</span>
                     </div>
                     <div class="data-row">
@@ -1057,8 +1587,8 @@
                         <span class="data-value">95.16%</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Sats per $1</span>
-                        <span class="data-value">1,321</span>
+                        <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
+                        <span class="data-value">1,320</span>
                     </div>
                 </div>
             </div>
@@ -1066,23 +1596,23 @@
             <!-- Mini Stats -->
             <div class="mini-stats">
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Hash Rate</div>
+                    <div class="mini-stat-label">Hash Rate<span class="info-icon" data-metric="hash_rate" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">923 EH/s</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Transactions</div>
+                    <div class="mini-stat-label">Transactions<span class="info-icon" data-metric="tx_count" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">380,796</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Fee Rate</div>
+                    <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">3 sat/vB</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Nodes</div>
-                    <div class="mini-stat-value">9,535</div>
+                    <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
+                    <div class="mini-stat-value">10,478</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Difficulty</div>
+                    <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">141.7T</div>
                 </div>
                 <div class="mini-stat">
@@ -1101,10 +1631,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128101;</div>
-                        <span class="card-title">Address Activity</span>
+                        <h3 class="card-title">Address Activity</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Active Addresses (24h)</span>
+                        <span class="data-label">Active Addresses (24h)<span class="info-icon" data-metric="active_addresses" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">580,888</span>
                     </div>
                     <div class="data-row">
@@ -1116,7 +1646,7 @@
                         <span class="data-value">100,787,328</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Whale Txs (Recent)</span>
+                        <span class="data-label">Whale Txs (Recent)<span class="info-icon" data-metric="whale_transactions" aria-label="Learn more">i</span></span>
                         <span class="data-value">0</span>
                     </div>
                 </div>
@@ -1124,7 +1654,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128176;</div>
-                        <span class="card-title">Transaction Volume</span>
+                        <h3 class="card-title">Transaction Volume</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume (USD)</span>
@@ -1139,8 +1669,8 @@
                         <span class="data-value">$254193.14</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Mempool Size</span>
-                        <span class="data-value">24,418 txs</span>
+                        <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
+                        <span class="data-value">25,606 txs</span>
                     </div>
                 </div>
             </div>
@@ -1155,10 +1685,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#127760;</div>
-                        <span class="card-title">Market Dominance</span>
+                        <h3 class="card-title">Market Dominance</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">BTC Dominance</span>
+                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">57.2%</span>
                     </div>
                     <div class="data-row">
@@ -1166,7 +1696,7 @@
                         <span class="data-value">$2.64T</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">BTC Market Cap</span>
+                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
                         <span class="data-value">$1.51T</span>
                     </div>
                 </div>
@@ -1174,15 +1704,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128200;</div>
-                        <span class="card-title">Trading Volume</span>
+                        <h3 class="card-title">Trading Volume</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">24h Volume</span>
-                        <span class="data-value accent">$73.48B</span>
+                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
+                        <span class="data-value accent">$73.39B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.87%</span>
+                        <span class="data-value">4.85%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -1198,13 +1728,40 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 23:22 UTC</span> ·
+                <span id="last-update">Last updated: 23:50 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
     </footer>
 
+    <!-- Glossary Modal -->
+    <div class="glossary-overlay" id="glossary-overlay">
+        <div class="glossary-modal">
+            <div class="glossary-header">
+                <h2 class="glossary-title">Bitcoin Glossary</h2>
+                <button class="glossary-close" id="glossary-close" aria-label="Close glossary">&times;</button>
+            </div>
+            <div class="glossary-search">
+                <input type="text" id="glossary-search-input" placeholder="Search metrics..." autocomplete="off">
+            </div>
+            <div class="glossary-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="price">Price & Market</button>
+                <button class="filter-btn" data-category="sentiment">Sentiment</button>
+                <button class="filter-btn" data-category="network">Network</button>
+                <button class="filter-btn" data-category="supply">Supply</button>
+                <button class="filter-btn" data-category="trading">Trading</button>
+            </div>
+            <div class="glossary-content" id="glossary-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== Glossary Data =====
+        const glossaryData = {"metrics": {"fear_greed": {"key": "fear_greed", "displayName": "Fear & Greed Index", "shortDescription": "Market sentiment indicator (0-100)", "fullDescription": "Measures market sentiment by analyzing volatility, momentum, social media, and Bitcoin dominance. Values range from 0 (Extreme Fear) to 100 (Extreme Greed).", "whyItMatters": "Extreme fear often signals buying opportunities; extreme greed may indicate market tops. Contrarian investors use this to time entries and exits.", "sources": ["https://alternative.me/crypto/fear-and-greed-index/"], "category": "sentiment"}, "hash_rate": {"key": "hash_rate", "displayName": "Hash Rate", "shortDescription": "Total network computing power (EH/s)", "fullDescription": "The total computational power being used to mine and process Bitcoin transactions, measured in exahashes per second (EH/s). Higher hash rate means more security.", "whyItMatters": "A rising hash rate indicates strong miner confidence and network security. Declining hash rate may signal miner capitulation or infrastructure issues.", "sources": ["https://blockchain.info/charts/hash-rate"], "category": "network"}, "difficulty": {"key": "difficulty", "displayName": "Mining Difficulty", "shortDescription": "How hard it is to mine a block", "fullDescription": "A measure of how difficult it is to find a valid block hash. Adjusts every 2,016 blocks (~2 weeks) to maintain ~10 minute block times.", "whyItMatters": "Difficulty follows hash rate. Increasing difficulty means more competition among miners. Decreasing difficulty can indicate miners leaving the network.", "sources": ["https://blockchain.info/charts/difficulty"], "category": "network"}, "block_height": {"key": "block_height", "displayName": "Block Height", "shortDescription": "Current blockchain length", "fullDescription": "The number of blocks that have been mined since Bitcoin's genesis block (block 0) on January 3, 2009.", "whyItMatters": "Block height is used to track halving events (every 210,000 blocks) and measure the network's progress over time.", "sources": ["https://mempool.space/"], "category": "network"}, "block_reward": {"key": "block_reward", "displayName": "Block Reward", "shortDescription": "BTC rewarded per block mined", "fullDescription": "The amount of new Bitcoin created and awarded to miners for each block they successfully mine. Started at 50 BTC and halves every 210,000 blocks.", "whyItMatters": "Block rewards affect miner economics and Bitcoin's inflation rate. After each halving, Bitcoin becomes scarcer as new supply decreases.", "sources": ["https://mempool.space/"], "category": "supply"}, "halving": {"key": "halving", "displayName": "Bitcoin Halving", "shortDescription": "50% reduction in block rewards", "fullDescription": "An event that occurs every 210,000 blocks (~4 years) where the block reward is cut in half. Reduces Bitcoin's inflation rate and new supply entering the market.", "whyItMatters": "Halvings historically precede major bull runs due to supply shock. They represent Bitcoin's programmatic monetary policy.", "sources": ["https://www.bitcoinblockhalf.com/"], "category": "supply"}, "circulating_supply": {"key": "circulating_supply", "displayName": "Circulating Supply", "shortDescription": "BTC currently in existence", "fullDescription": "The total number of Bitcoin that have been mined and are currently in circulation. Maximum supply is capped at 21 million BTC.", "whyItMatters": "Shows how much of Bitcoin's total supply has been released. Currently over 94% of all Bitcoin that will ever exist has been mined.", "sources": ["https://www.coingecko.com/"], "category": "supply"}, "market_cap": {"key": "market_cap", "displayName": "Market Cap", "shortDescription": "Total value of all BTC", "fullDescription": "The total market value of Bitcoin calculated by multiplying the current price by the circulating supply.", "whyItMatters": "Market cap indicates Bitcoin's relative size compared to other assets. It's used to compare cryptocurrencies and track overall market growth.", "sources": ["https://www.coingecko.com/"], "category": "price"}, "volume_24h": {"key": "volume_24h", "displayName": "24h Trading Volume", "shortDescription": "Value traded in last 24 hours", "fullDescription": "The total value of Bitcoin traded across all exchanges in the past 24 hours, measured in USD.", "whyItMatters": "High volume confirms price trends; low volume during price moves may indicate weak conviction. Volume spikes often precede major price movements.", "sources": ["https://www.coingecko.com/"], "category": "trading"}, "ath": {"key": "ath", "displayName": "All-Time High (ATH)", "shortDescription": "Highest price ever reached", "fullDescription": "The highest price Bitcoin has ever reached in its trading history. Used as a key psychological and technical level.", "whyItMatters": "Breaking ATH often triggers FOMO and media attention. Distance from ATH indicates potential upside or how far price has fallen.", "sources": ["https://www.coingecko.com/"], "category": "price"}, "sma_7": {"key": "sma_7", "displayName": "7-Day Moving Average", "shortDescription": "Average price over 7 days", "fullDescription": "The simple moving average of Bitcoin's price over the last 7 days. Smooths out short-term volatility to show recent trend.", "whyItMatters": "Price above the 7D MA suggests short-term bullish momentum. Crossovers can signal trend changes.", "sources": [], "category": "trading"}, "sma_20": {"key": "sma_20", "displayName": "20-Day Moving Average", "shortDescription": "Average price over 20 days", "fullDescription": "The simple moving average of Bitcoin's price over the last 20 days. Commonly used to identify medium-term trends.", "whyItMatters": "The 20D MA is a key support/resistance level. Traders watch for price crosses above or below this average.", "sources": [], "category": "trading"}, "sma_50": {"key": "sma_50", "displayName": "50-Day Moving Average", "shortDescription": "Average price over 50 days", "fullDescription": "The simple moving average of Bitcoin's price over the last 50 days. Important indicator for medium-term trend direction.", "whyItMatters": "When price crosses above the 50D MA, it's often seen as bullish. The 50D MA often acts as dynamic support in uptrends.", "sources": [], "category": "trading"}, "sma_200": {"key": "sma_200", "displayName": "200-Day Moving Average", "shortDescription": "Average price over 200 days", "fullDescription": "The simple moving average of Bitcoin's price over the last 200 days. The most widely followed long-term trend indicator.", "whyItMatters": "Price above the 200D MA indicates a bull market; below suggests a bear market. Golden/death crosses with the 50D MA are major signals.", "sources": [], "category": "trading"}, "active_addresses": {"key": "active_addresses", "displayName": "Active Addresses", "shortDescription": "Unique addresses used today", "fullDescription": "The number of unique Bitcoin addresses that sent or received Bitcoin in the past 24 hours.", "whyItMatters": "Rising active addresses indicate growing network usage and adoption. Declining activity may signal reduced interest or consolidation.", "sources": ["https://blockchain.info/charts/n-unique-addresses"], "category": "network"}, "tx_count": {"key": "tx_count", "displayName": "Daily Transactions", "shortDescription": "Transactions confirmed today", "fullDescription": "The number of Bitcoin transactions confirmed on the blockchain in the past 24 hours.", "whyItMatters": "Transaction count reflects network demand and usage. High counts may lead to congestion and higher fees.", "sources": ["https://blockchain.info/charts/n-transactions"], "category": "network"}, "mempool": {"key": "mempool", "displayName": "Mempool Size", "shortDescription": "Pending transactions", "fullDescription": "The number of unconfirmed transactions waiting to be included in a block. Acts as a queue for Bitcoin transactions.", "whyItMatters": "Large mempool means network congestion and higher fees. Small mempool indicates fast, cheap transactions.", "sources": ["https://mempool.space/"], "category": "network"}, "fee_rate": {"key": "fee_rate", "displayName": "Fee Rate", "shortDescription": "Cost per transaction (sat/vB)", "fullDescription": "The fee required to get a transaction confirmed, measured in satoshis per virtual byte. Higher fees = faster confirmation.", "whyItMatters": "Fee rates indicate network demand. High fees during bull runs can make small transactions impractical. Low fees suggest reduced activity.", "sources": ["https://mempool.space/"], "category": "network"}, "btc_dominance": {"key": "btc_dominance", "displayName": "BTC Dominance", "shortDescription": "Bitcoin's share of crypto market", "fullDescription": "Bitcoin's market cap as a percentage of the total cryptocurrency market cap. Measures Bitcoin's relative importance.", "whyItMatters": "Rising dominance suggests investors prefer Bitcoin over altcoins. Falling dominance may indicate 'alt season' where altcoins outperform.", "sources": ["https://www.coingecko.com/"], "category": "trading"}, "funding_rate": {"key": "funding_rate", "displayName": "Funding Rate", "shortDescription": "Cost to hold leveraged positions", "fullDescription": "The periodic payment between long and short traders in perpetual futures markets. Keeps futures price aligned with spot price.", "whyItMatters": "Positive funding = longs pay shorts (bullish sentiment). Negative funding = shorts pay longs (bearish). Extreme rates often precede reversals.", "sources": ["https://www.coinglass.com/"], "category": "trading"}, "open_interest": {"key": "open_interest", "displayName": "Open Interest", "shortDescription": "Outstanding derivatives contracts", "fullDescription": "The total value of outstanding Bitcoin futures and perpetual swap contracts across all exchanges.", "whyItMatters": "Rising OI with rising price = strong trend. Rising OI with falling price = potential short squeeze setup. High OI increases liquidation risk.", "sources": ["https://www.coinglass.com/"], "category": "trading"}, "liquidations": {"key": "liquidations", "displayName": "Liquidations", "shortDescription": "Forced position closures", "fullDescription": "The dollar value of leveraged positions that were forcibly closed due to insufficient margin in the past 24 hours.", "whyItMatters": "Large liquidations cause cascading price moves. Long liquidations accelerate drops; short liquidations accelerate pumps.", "sources": ["https://www.coinglass.com/"], "category": "trading"}, "whale_transactions": {"key": "whale_transactions", "displayName": "Whale Transactions", "shortDescription": "Large BTC movements", "fullDescription": "Transactions moving large amounts of Bitcoin (typically 100+ BTC). Often tracked to identify potential market-moving activity.", "whyItMatters": "Whale movements to exchanges may signal selling pressure. Movements to cold storage suggest accumulation and long-term holding.", "sources": ["https://blockchair.com/"], "category": "network"}, "sats_per_dollar": {"key": "sats_per_dollar", "displayName": "Sats per Dollar", "shortDescription": "Satoshis you can buy for $1", "fullDescription": "The number of satoshis (the smallest Bitcoin unit, 0.00000001 BTC) that can be purchased for one US dollar.", "whyItMatters": "Makes Bitcoin more relatable for small investors. Useful for DCA strategies and understanding fractional Bitcoin ownership.", "sources": [], "category": "price"}, "utxo_count": {"key": "utxo_count", "displayName": "UTXO Count", "shortDescription": "Unspent transaction outputs", "fullDescription": "The total number of unspent transaction outputs in the Bitcoin network. Each UTXO represents spendable Bitcoin.", "whyItMatters": "Growing UTXO set indicates more distributed ownership. UTXO age distribution shows holder behavior patterns.", "sources": ["https://blockchair.com/"], "category": "network"}, "nodes": {"key": "nodes", "displayName": "Network Nodes", "shortDescription": "Computers running Bitcoin", "fullDescription": "The number of reachable full nodes running the Bitcoin software and validating transactions.", "whyItMatters": "More nodes = more decentralization and resilience. Node count reflects the network's health and censorship resistance.", "sources": ["https://blockchair.com/"], "category": "network"}}, "categories": {"price": {"name": "Price & Market", "icon": "chart_line", "description": "Price movements, market cap, and valuation metrics"}, "sentiment": {"name": "Sentiment", "icon": "lightbulb", "description": "Market mood and investor psychology indicators"}, "network": {"name": "Network Health", "icon": "link", "description": "On-chain metrics and blockchain activity"}, "supply": {"name": "Supply", "icon": "coins", "description": "Bitcoin issuance and scarcity metrics"}, "trading": {"name": "Trading", "icon": "chart_bar", "description": "Volume, derivatives, and technical indicators"}}};
+
         // ===== Configuration =====
         const PRICE_UPDATE_INTERVAL = 10000;  // 10 seconds for price
         const CHART_UPDATE_INTERVAL = 60000;  // 60 seconds for chart data
@@ -1213,7 +1770,7 @@
         let priceChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 75670;
+        let lastPrice = 75755;
         let isChartLoading = false;
 
         // MA visibility state
@@ -1702,7 +2259,178 @@
             console.log('  - Chart: every 60s');
             console.log('  - Extended data: every 2min');
             console.log('  - Moving averages: 7D, 20D, 50D');
+
+            // Initialize glossary
+            initGlossary();
         });
+
+        // ===== Glossary Functions =====
+        function initGlossary() {
+            const overlay = document.getElementById('glossary-overlay');
+            const closeBtn = document.getElementById('glossary-close');
+            const openBtn = document.getElementById('open-glossary');
+            const searchInput = document.getElementById('glossary-search-input');
+            const content = document.getElementById('glossary-content');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            let currentFilter = 'all';
+
+            // Open glossary
+            openBtn.addEventListener('click', () => {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                renderGlossaryItems();
+            });
+
+            // Close glossary
+            closeBtn.addEventListener('click', closeGlossary);
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeGlossary();
+            });
+
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeGlossary();
+                }
+            });
+
+            function closeGlossary() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Filter buttons
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.category;
+                    renderGlossaryItems();
+                });
+            });
+
+            // Search
+            searchInput.addEventListener('input', () => {
+                renderGlossaryItems();
+            });
+
+            // Render glossary items
+            function renderGlossaryItems() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const metrics = glossaryData.metrics || {};
+                const categories = glossaryData.categories || {};
+
+                let html = '';
+                Object.entries(metrics).forEach(([key, metric]) => {
+                    // Filter by category
+                    if (currentFilter !== 'all' && metric.category !== currentFilter) return;
+
+                    // Filter by search
+                    const searchable = (metric.displayName + ' ' + metric.shortDescription + ' ' + metric.fullDescription).toLowerCase();
+                    if (searchTerm && !searchable.includes(searchTerm)) return;
+
+                    const categoryInfo = categories[metric.category] || { name: metric.category };
+
+                    html += `
+                        <div class="glossary-item" data-metric="${key}">
+                            <div class="glossary-item-header">
+                                <span class="glossary-item-name">${metric.displayName}</span>
+                                <span class="glossary-item-category">${categoryInfo.name}</span>
+                            </div>
+                            <div class="glossary-item-short">${metric.shortDescription}</div>
+                            <div class="glossary-item-full">
+                                ${metric.fullDescription}
+                                <div class="glossary-item-why">${metric.whyItMatters}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                content.innerHTML = html || '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No metrics found</p>';
+
+                // Add click to expand
+                content.querySelectorAll('.glossary-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        item.classList.toggle('expanded');
+                    });
+                });
+            }
+
+            // Create floating tooltip element
+            const tooltip = document.createElement('div');
+            tooltip.className = 'floating-tooltip';
+            tooltip.style.cssText = `
+                position: fixed;
+                z-index: 10000;
+                max-width: 280px;
+                padding: 12px 16px;
+                background: #161b22;
+                border: 1px solid #30363d;
+                border-radius: 8px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            `;
+            document.body.appendChild(tooltip);
+
+            // Handle info icon hover for desktop tooltips
+            document.querySelectorAll('.info-icon').forEach(icon => {
+                const metricKey = icon.dataset.metric;
+                const metric = glossaryData.metrics[metricKey];
+
+                if (metric) {
+                    // Desktop hover
+                    icon.addEventListener('mouseenter', (e) => {
+                        if (window.innerWidth > 768) {
+                            tooltip.innerHTML = `
+                                <div style="font-size: 0.85rem; font-weight: 600; color: #f0f6fc; margin-bottom: 6px;">${metric.displayName}</div>
+                                <div style="font-size: 0.75rem; color: #8b949e; line-height: 1.5; margin-bottom: 8px;">${metric.fullDescription}</div>
+                                <div style="font-size: 0.7rem; color: #f6851b; font-style: italic;">${metric.whyItMatters}</div>
+                            `;
+
+                            const rect = icon.getBoundingClientRect();
+                            const tooltipWidth = 280;
+
+                            // Position tooltip above the icon
+                            let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                            let top = rect.top - 10;
+
+                            // Keep within viewport
+                            if (left < 10) left = 10;
+                            if (left + tooltipWidth > window.innerWidth - 10) {
+                                left = window.innerWidth - tooltipWidth - 10;
+                            }
+
+                            tooltip.style.left = left + 'px';
+                            tooltip.style.top = 'auto';
+                            tooltip.style.bottom = (window.innerHeight - top) + 'px';
+                            tooltip.style.width = tooltipWidth + 'px';
+                            tooltip.style.opacity = '1';
+                        }
+                    });
+
+                    icon.addEventListener('mouseleave', () => {
+                        tooltip.style.opacity = '0';
+                    });
+
+                    // Mobile/tablet click - open glossary
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (window.innerWidth <= 768) {
+                            overlay.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                            searchInput.value = metric.displayName || '';
+                            currentFilter = 'all';
+                            filterBtns.forEach(b => b.classList.remove('active'));
+                            filterBtns[0].classList.add('active');
+                            renderGlossaryItems();
+                        }
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
