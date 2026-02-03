@@ -148,8 +148,8 @@ class DataFetcher:
         """Calculate various moving averages from price data."""
         result = {}
 
-        # Calculate simple moving averages
-        for period in [7, 20, 50]:
+        # Calculate simple moving averages (including 200D for long-term trend)
+        for period in [7, 20, 50, 200]:
             if len(prices) >= period:
                 ma_values = []
                 for i in range(period - 1, len(prices)):
@@ -166,7 +166,7 @@ class DataFetcher:
             result["current_price"] = prices[-1]
 
             # Calculate price position relative to MAs
-            for period in [7, 20, 50]:
+            for period in [7, 20, 50, 200]:
                 ma_current = result.get(f"sma_{period}_current")
                 if ma_current:
                     result[f"price_vs_sma_{period}"] = ((prices[-1] - ma_current) / ma_current) * 100
@@ -273,6 +273,62 @@ class DataFetcher:
             print(f"Error fetching difficulty: {e}")
 
         return stats
+
+    def fetch_hash_rate_history(self, days: int = 30) -> dict[str, Any]:
+        """Fetch Bitcoin hash rate history for charts."""
+        self._rate_limit()
+
+        try:
+            response = self.session.get(
+                f"{BLOCKCHAIN_CHARTS_URL}/hash-rate",
+                params={"timespan": f"{days}days", "format": "json"},
+                timeout=30
+            )
+            if response.status_code == 200:
+                data = response.json()
+                values = data.get("values", [])
+                if values:
+                    # Convert to chart-friendly format [timestamp, value]
+                    chart_data = [[v.get("x", 0) * 1000, v.get("y", 0)] for v in values]
+                    return {
+                        "data": chart_data,
+                        "current": values[-1].get("y") if values else 0,
+                        "average": sum(v.get("y", 0) for v in values) / len(values) if values else 0,
+                        "high": max(v.get("y", 0) for v in values) if values else 0,
+                        "low": min(v.get("y", 0) for v in values) if values else 0,
+                    }
+        except requests.RequestException as e:
+            print(f"Error fetching hash rate history: {e}")
+
+        return {}
+
+    def fetch_active_addresses_history(self, days: int = 30) -> dict[str, Any]:
+        """Fetch active addresses history for charts."""
+        self._rate_limit()
+
+        try:
+            response = self.session.get(
+                f"{BLOCKCHAIN_CHARTS_URL}/n-unique-addresses",
+                params={"timespan": f"{days}days", "format": "json"},
+                timeout=30
+            )
+            if response.status_code == 200:
+                data = response.json()
+                values = data.get("values", [])
+                if values:
+                    # Convert to chart-friendly format [timestamp, value]
+                    chart_data = [[v.get("x", 0) * 1000, v.get("y", 0)] for v in values]
+                    return {
+                        "data": chart_data,
+                        "current": values[-1].get("y") if values else 0,
+                        "average": sum(v.get("y", 0) for v in values) / len(values) if values else 0,
+                        "high": max(v.get("y", 0) for v in values) if values else 0,
+                        "low": min(v.get("y", 0) for v in values) if values else 0,
+                    }
+        except requests.RequestException as e:
+            print(f"Error fetching active addresses history: {e}")
+
+        return {}
 
     def fetch_historical_prices_on_this_day(self) -> list[dict[str, Any]]:
         """Get Bitcoin prices on this day for previous years.
@@ -871,6 +927,9 @@ class DataFetcher:
         print("  → Fetching current price data from CoinGecko...")
         bitcoin_data = self.fetch_bitcoin_data()
 
+        print("  → Fetching 200-day price history (for MA200)...")
+        price_history_200d = self.fetch_price_history(days=200)
+
         print("  → Fetching 90-day price history (for moving averages)...")
         price_history_90d = self.fetch_price_history(days=90)
 
@@ -904,6 +963,12 @@ class DataFetcher:
         print("  → Fetching market/trading data...")
         market_data = self.fetch_market_trading_data()
 
+        print("  → Fetching hash rate history (30 days)...")
+        hash_rate_history = self.fetch_hash_rate_history(days=30)
+
+        print("  → Fetching active addresses history (30 days)...")
+        active_addresses_history = self.fetch_active_addresses_history(days=30)
+
         historical_prices = []
         historical_yearly_data = {}
         if include_historical:
@@ -916,6 +981,7 @@ class DataFetcher:
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "bitcoin": bitcoin_data,
+            "price_history_200d": price_history_200d,
             "price_history_90d": price_history_90d,
             "price_history_30d": price_history_30d,
             "price_history_7d": price_history_7d,
@@ -927,6 +993,8 @@ class DataFetcher:
             "supply_stats": supply_stats,
             "onchain_analytics": onchain_analytics,
             "market_data": market_data,
+            "hash_rate_history": hash_rate_history,
+            "active_addresses_history": active_addresses_history,
             "historical_on_this_day": historical_prices,
             "historical_yearly_data": historical_yearly_data,
         }

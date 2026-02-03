@@ -1,0 +1,265 @@
+{
+  "metrics": {
+    "fear_greed": {
+      "key": "fear_greed",
+      "displayName": "Fear & Greed Index",
+      "shortDescription": "Market sentiment indicator (0-100)",
+      "fullDescription": "Measures market sentiment by analyzing volatility, momentum, social media, and Bitcoin dominance. Values range from 0 (Extreme Fear) to 100 (Extreme Greed).",
+      "whyItMatters": "Extreme fear often signals buying opportunities; extreme greed may indicate market tops. Contrarian investors use this to time entries and exits.",
+      "sources": ["https://alternative.me/crypto/fear-and-greed-index/"],
+      "category": "sentiment"
+    },
+    "hash_rate": {
+      "key": "hash_rate",
+      "displayName": "Hash Rate",
+      "shortDescription": "Total network computing power (EH/s)",
+      "fullDescription": "The total computational power being used to mine and process Bitcoin transactions, measured in exahashes per second (EH/s). Higher hash rate means more security.",
+      "whyItMatters": "A rising hash rate indicates strong miner confidence and network security. Declining hash rate may signal miner capitulation or infrastructure issues.",
+      "sources": ["https://blockchain.info/charts/hash-rate"],
+      "category": "network"
+    },
+    "difficulty": {
+      "key": "difficulty",
+      "displayName": "Mining Difficulty",
+      "shortDescription": "How hard it is to mine a block",
+      "fullDescription": "A measure of how difficult it is to find a valid block hash. Adjusts every 2,016 blocks (~2 weeks) to maintain ~10 minute block times.",
+      "whyItMatters": "Difficulty follows hash rate. Increasing difficulty means more competition among miners. Decreasing difficulty can indicate miners leaving the network.",
+      "sources": ["https://blockchain.info/charts/difficulty"],
+      "category": "network"
+    },
+    "block_height": {
+      "key": "block_height",
+      "displayName": "Block Height",
+      "shortDescription": "Current blockchain length",
+      "fullDescription": "The number of blocks that have been mined since Bitcoin's genesis block (block 0) on January 3, 2009.",
+      "whyItMatters": "Block height is used to track halving events (every 210,000 blocks) and measure the network's progress over time.",
+      "sources": ["https://mempool.space/"],
+      "category": "network"
+    },
+    "block_reward": {
+      "key": "block_reward",
+      "displayName": "Block Reward",
+      "shortDescription": "BTC rewarded per block mined",
+      "fullDescription": "The amount of new Bitcoin created and awarded to miners for each block they successfully mine. Started at 50 BTC and halves every 210,000 blocks.",
+      "whyItMatters": "Block rewards affect miner economics and Bitcoin's inflation rate. After each halving, Bitcoin becomes scarcer as new supply decreases.",
+      "sources": ["https://mempool.space/"],
+      "category": "supply"
+    },
+    "halving": {
+      "key": "halving",
+      "displayName": "Bitcoin Halving",
+      "shortDescription": "50% reduction in block rewards",
+      "fullDescription": "An event that occurs every 210,000 blocks (~4 years) where the block reward is cut in half. Reduces Bitcoin's inflation rate and new supply entering the market.",
+      "whyItMatters": "Halvings historically precede major bull runs due to supply shock. They represent Bitcoin's programmatic monetary policy.",
+      "sources": ["https://www.bitcoinblockhalf.com/"],
+      "category": "supply"
+    },
+    "circulating_supply": {
+      "key": "circulating_supply",
+      "displayName": "Circulating Supply",
+      "shortDescription": "BTC currently in existence",
+      "fullDescription": "The total number of Bitcoin that have been mined and are currently in circulation. Maximum supply is capped at 21 million BTC.",
+      "whyItMatters": "Shows how much of Bitcoin's total supply has been released. Currently over 94% of all Bitcoin that will ever exist has been mined.",
+      "sources": ["https://www.coingecko.com/"],
+      "category": "supply"
+    },
+    "market_cap": {
+      "key": "market_cap",
+      "displayName": "Market Cap",
+      "shortDescription": "Total value of all BTC",
+      "fullDescription": "The total market value of Bitcoin calculated by multiplying the current price by the circulating supply.",
+      "whyItMatters": "Market cap indicates Bitcoin's relative size compared to other assets. It's used to compare cryptocurrencies and track overall market growth.",
+      "sources": ["https://www.coingecko.com/"],
+      "category": "price"
+    },
+    "volume_24h": {
+      "key": "volume_24h",
+      "displayName": "24h Trading Volume",
+      "shortDescription": "Value traded in last 24 hours",
+      "fullDescription": "The total value of Bitcoin traded across all exchanges in the past 24 hours, measured in USD.",
+      "whyItMatters": "High volume confirms price trends; low volume during price moves may indicate weak conviction. Volume spikes often precede major price movements.",
+      "sources": ["https://www.coingecko.com/"],
+      "category": "trading"
+    },
+    "ath": {
+      "key": "ath",
+      "displayName": "All-Time High (ATH)",
+      "shortDescription": "Highest price ever reached",
+      "fullDescription": "The highest price Bitcoin has ever reached in its trading history. Used as a key psychological and technical level.",
+      "whyItMatters": "Breaking ATH often triggers FOMO and media attention. Distance from ATH indicates potential upside or how far price has fallen.",
+      "sources": ["https://www.coingecko.com/"],
+      "category": "price"
+    },
+    "sma_7": {
+      "key": "sma_7",
+      "displayName": "7-Day Moving Average",
+      "shortDescription": "Average price over 7 days",
+      "fullDescription": "The simple moving average of Bitcoin's price over the last 7 days. Smooths out short-term volatility to show recent trend.",
+      "whyItMatters": "Price above the 7D MA suggests short-term bullish momentum. Crossovers can signal trend changes.",
+      "sources": [],
+      "category": "trading"
+    },
+    "sma_20": {
+      "key": "sma_20",
+      "displayName": "20-Day Moving Average",
+      "shortDescription": "Average price over 20 days",
+      "fullDescription": "The simple moving average of Bitcoin's price over the last 20 days. Commonly used to identify medium-term trends.",
+      "whyItMatters": "The 20D MA is a key support/resistance level. Traders watch for price crosses above or below this average.",
+      "sources": [],
+      "category": "trading"
+    },
+    "sma_50": {
+      "key": "sma_50",
+      "displayName": "50-Day Moving Average",
+      "shortDescription": "Average price over 50 days",
+      "fullDescription": "The simple moving average of Bitcoin's price over the last 50 days. Important indicator for medium-term trend direction.",
+      "whyItMatters": "When price crosses above the 50D MA, it's often seen as bullish. The 50D MA often acts as dynamic support in uptrends.",
+      "sources": [],
+      "category": "trading"
+    },
+    "sma_200": {
+      "key": "sma_200",
+      "displayName": "200-Day Moving Average",
+      "shortDescription": "Average price over 200 days",
+      "fullDescription": "The simple moving average of Bitcoin's price over the last 200 days. The most widely followed long-term trend indicator.",
+      "whyItMatters": "Price above the 200D MA indicates a bull market; below suggests a bear market. Golden/death crosses with the 50D MA are major signals.",
+      "sources": [],
+      "category": "trading"
+    },
+    "active_addresses": {
+      "key": "active_addresses",
+      "displayName": "Active Addresses",
+      "shortDescription": "Unique addresses used today",
+      "fullDescription": "The number of unique Bitcoin addresses that sent or received Bitcoin in the past 24 hours.",
+      "whyItMatters": "Rising active addresses indicate growing network usage and adoption. Declining activity may signal reduced interest or consolidation.",
+      "sources": ["https://blockchain.info/charts/n-unique-addresses"],
+      "category": "network"
+    },
+    "tx_count": {
+      "key": "tx_count",
+      "displayName": "Daily Transactions",
+      "shortDescription": "Transactions confirmed today",
+      "fullDescription": "The number of Bitcoin transactions confirmed on the blockchain in the past 24 hours.",
+      "whyItMatters": "Transaction count reflects network demand and usage. High counts may lead to congestion and higher fees.",
+      "sources": ["https://blockchain.info/charts/n-transactions"],
+      "category": "network"
+    },
+    "mempool": {
+      "key": "mempool",
+      "displayName": "Mempool Size",
+      "shortDescription": "Pending transactions",
+      "fullDescription": "The number of unconfirmed transactions waiting to be included in a block. Acts as a queue for Bitcoin transactions.",
+      "whyItMatters": "Large mempool means network congestion and higher fees. Small mempool indicates fast, cheap transactions.",
+      "sources": ["https://mempool.space/"],
+      "category": "network"
+    },
+    "fee_rate": {
+      "key": "fee_rate",
+      "displayName": "Fee Rate",
+      "shortDescription": "Cost per transaction (sat/vB)",
+      "fullDescription": "The fee required to get a transaction confirmed, measured in satoshis per virtual byte. Higher fees = faster confirmation.",
+      "whyItMatters": "Fee rates indicate network demand. High fees during bull runs can make small transactions impractical. Low fees suggest reduced activity.",
+      "sources": ["https://mempool.space/"],
+      "category": "network"
+    },
+    "btc_dominance": {
+      "key": "btc_dominance",
+      "displayName": "BTC Dominance",
+      "shortDescription": "Bitcoin's share of crypto market",
+      "fullDescription": "Bitcoin's market cap as a percentage of the total cryptocurrency market cap. Measures Bitcoin's relative importance.",
+      "whyItMatters": "Rising dominance suggests investors prefer Bitcoin over altcoins. Falling dominance may indicate 'alt season' where altcoins outperform.",
+      "sources": ["https://www.coingecko.com/"],
+      "category": "trading"
+    },
+    "funding_rate": {
+      "key": "funding_rate",
+      "displayName": "Funding Rate",
+      "shortDescription": "Cost to hold leveraged positions",
+      "fullDescription": "The periodic payment between long and short traders in perpetual futures markets. Keeps futures price aligned with spot price.",
+      "whyItMatters": "Positive funding = longs pay shorts (bullish sentiment). Negative funding = shorts pay longs (bearish). Extreme rates often precede reversals.",
+      "sources": ["https://www.coinglass.com/"],
+      "category": "trading"
+    },
+    "open_interest": {
+      "key": "open_interest",
+      "displayName": "Open Interest",
+      "shortDescription": "Outstanding derivatives contracts",
+      "fullDescription": "The total value of outstanding Bitcoin futures and perpetual swap contracts across all exchanges.",
+      "whyItMatters": "Rising OI with rising price = strong trend. Rising OI with falling price = potential short squeeze setup. High OI increases liquidation risk.",
+      "sources": ["https://www.coinglass.com/"],
+      "category": "trading"
+    },
+    "liquidations": {
+      "key": "liquidations",
+      "displayName": "Liquidations",
+      "shortDescription": "Forced position closures",
+      "fullDescription": "The dollar value of leveraged positions that were forcibly closed due to insufficient margin in the past 24 hours.",
+      "whyItMatters": "Large liquidations cause cascading price moves. Long liquidations accelerate drops; short liquidations accelerate pumps.",
+      "sources": ["https://www.coinglass.com/"],
+      "category": "trading"
+    },
+    "whale_transactions": {
+      "key": "whale_transactions",
+      "displayName": "Whale Transactions",
+      "shortDescription": "Large BTC movements",
+      "fullDescription": "Transactions moving large amounts of Bitcoin (typically 100+ BTC). Often tracked to identify potential market-moving activity.",
+      "whyItMatters": "Whale movements to exchanges may signal selling pressure. Movements to cold storage suggest accumulation and long-term holding.",
+      "sources": ["https://blockchair.com/"],
+      "category": "network"
+    },
+    "sats_per_dollar": {
+      "key": "sats_per_dollar",
+      "displayName": "Sats per Dollar",
+      "shortDescription": "Satoshis you can buy for $1",
+      "fullDescription": "The number of satoshis (the smallest Bitcoin unit, 0.00000001 BTC) that can be purchased for one US dollar.",
+      "whyItMatters": "Makes Bitcoin more relatable for small investors. Useful for DCA strategies and understanding fractional Bitcoin ownership.",
+      "sources": [],
+      "category": "price"
+    },
+    "utxo_count": {
+      "key": "utxo_count",
+      "displayName": "UTXO Count",
+      "shortDescription": "Unspent transaction outputs",
+      "fullDescription": "The total number of unspent transaction outputs in the Bitcoin network. Each UTXO represents spendable Bitcoin.",
+      "whyItMatters": "Growing UTXO set indicates more distributed ownership. UTXO age distribution shows holder behavior patterns.",
+      "sources": ["https://blockchair.com/"],
+      "category": "network"
+    },
+    "nodes": {
+      "key": "nodes",
+      "displayName": "Network Nodes",
+      "shortDescription": "Computers running Bitcoin",
+      "fullDescription": "The number of reachable full nodes running the Bitcoin software and validating transactions.",
+      "whyItMatters": "More nodes = more decentralization and resilience. Node count reflects the network's health and censorship resistance.",
+      "sources": ["https://blockchair.com/"],
+      "category": "network"
+    }
+  },
+  "categories": {
+    "price": {
+      "name": "Price & Market",
+      "icon": "chart_line",
+      "description": "Price movements, market cap, and valuation metrics"
+    },
+    "sentiment": {
+      "name": "Sentiment",
+      "icon": "lightbulb",
+      "description": "Market mood and investor psychology indicators"
+    },
+    "network": {
+      "name": "Network Health",
+      "icon": "link",
+      "description": "On-chain metrics and blockchain activity"
+    },
+    "supply": {
+      "name": "Supply",
+      "icon": "coins",
+      "description": "Bitcoin issuance and scarcity metrics"
+    },
+    "trading": {
+      "name": "Trading",
+      "icon": "chart_bar",
+      "description": "Volume, derivatives, and technical indicators"
+    }
+  }
+}

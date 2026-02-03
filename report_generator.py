@@ -1,7 +1,9 @@
 """Report generation module using Claude API or template-based fallback."""
 
 import json
+import os
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
@@ -19,10 +21,163 @@ class ReportGenerator:
         """
         self.use_ai = use_ai and bool(ANTHROPIC_API_KEY)
         self.client = None
+        self.glossary = self._load_glossary()
 
         if self.use_ai:
             import anthropic
             self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+    def _load_glossary(self) -> dict:
+        """Load glossary data from JSON file."""
+        glossary_path = Path(__file__).parent / "data" / "glossary.json"
+        try:
+            with open(glossary_path, "r") as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {"metrics": {}, "categories": {}}
+
+    def _get_glossary_json(self) -> str:
+        """Return glossary data as JSON string for embedding in HTML."""
+        return json.dumps(self.glossary, indent=None)
+
+    def _info_icon(self, metric_key: str) -> str:
+        """Generate an info icon with tooltip for a metric."""
+        metric = self.glossary.get("metrics", {}).get(metric_key)
+        if not metric:
+            return ""
+        return f'<span class="info-icon" data-metric="{metric_key}" aria-label="Learn more about {metric.get("displayName", metric_key)}">i</span>'
+
+    def _calculate_signals(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Calculate rule-based market signals from data."""
+        signals = {}
+        bitcoin = data.get("bitcoin", {})
+        history_200d = data.get("price_history_200d", {})
+        history_90d = data.get("price_history_90d", {})
+        history_30d = data.get("price_history_30d", {})
+        blockchain = data.get("blockchain", {})
+        block_stats = data.get("block_stats", {})
+        market_data = data.get("market_data", {})
+
+        # Use 200d history for MA200, fallback to 90d for shorter MAs
+        ma_data_200 = history_200d.get("moving_averages", {}) if history_200d else {}
+        ma_data_90 = history_90d.get("moving_averages", {}) if history_90d else {}
+
+        price = bitcoin.get("price_usd", 0) or 0
+        sma_50 = ma_data_200.get("sma_50_current") or ma_data_90.get("sma_50_current", 0) or 0
+        sma_200 = ma_data_200.get("sma_200_current", 0) or 0
+
+        # MA50 Trend Signal
+        if price and sma_50:
+            if price > sma_50:
+                signals["ma50_trend"] = {"status": "bullish", "label": "Above 50D MA", "icon": "up"}
+            else:
+                signals["ma50_trend"] = {"status": "bearish", "label": "Below 50D MA", "icon": "down"}
+        else:
+            signals["ma50_trend"] = {"status": "neutral", "label": "N/A", "icon": "neutral"}
+
+        # MA200 Trend Signal (long-term trend)
+        if price and sma_200:
+            if price > sma_200:
+                signals["ma200_trend"] = {"status": "bullish", "label": "Above 200D MA", "icon": "up"}
+            else:
+                signals["ma200_trend"] = {"status": "bearish", "label": "Below 200D MA", "icon": "down"}
+        else:
+            signals["ma200_trend"] = {"status": "neutral", "label": "N/A", "icon": "neutral"}
+
+        # Golden/Death Cross Signal (50D vs 200D)
+        if sma_50 and sma_200:
+            if sma_50 > sma_200:
+                signals["cross"] = {"status": "bullish", "label": "Golden Cross", "icon": "up"}
+            else:
+                signals["cross"] = {"status": "bearish", "label": "Death Cross", "icon": "down"}
+        else:
+            signals["cross"] = {"status": "neutral", "label": "N/A", "icon": "neutral"}
+
+        # Volume Signal (compare 24h volume to 30d average)
+        current_vol = bitcoin.get("volume_24h_usd", 0) or 0
+        avg_vol = history_30d.get("avg_volume", 0) or 1
+        vol_ratio = current_vol / avg_vol if avg_vol else 1
+
+        if vol_ratio > 1.5:
+            signals["volume"] = {"status": "high", "label": "High Volume", "icon": "up", "ratio": vol_ratio}
+        elif vol_ratio < 0.7:
+            signals["volume"] = {"status": "low", "label": "Low Volume", "icon": "down", "ratio": vol_ratio}
+        else:
+            signals["volume"] = {"status": "normal", "label": "Normal Volume", "icon": "neutral", "ratio": vol_ratio}
+
+        # Mempool/Fee Signal
+        fee_fastest = block_stats.get("fee_fastest", 0) or 0
+        if fee_fastest > 50:
+            signals["mempool"] = {"status": "congested", "label": "Congested", "icon": "up", "fee": fee_fastest}
+        elif fee_fastest > 20:
+            signals["mempool"] = {"status": "moderate", "label": "Moderate Fees", "icon": "neutral", "fee": fee_fastest}
+        else:
+            signals["mempool"] = {"status": "clear", "label": "Clear", "icon": "down", "fee": fee_fastest}
+
+        # Hash Rate Signal (7d vs 30d average)
+        hr_current = blockchain.get("hash_rate_current", 0) or 0
+        hr_avg = blockchain.get("hash_rate_30d_avg", 0) or 1
+        hr_change = ((hr_current - hr_avg) / hr_avg * 100) if hr_avg else 0
+
+        if hr_change > 5:
+            signals["hash_rate"] = {"status": "rising", "label": "Rising", "icon": "up", "change": hr_change}
+        elif hr_change < -5:
+            signals["hash_rate"] = {"status": "falling", "label": "Falling", "icon": "down", "change": hr_change}
+        else:
+            signals["hash_rate"] = {"status": "stable", "label": "Stable", "icon": "neutral", "change": hr_change}
+
+        # BTC Dominance Signal (use 7d change if available, otherwise estimate)
+        btc_dom = market_data.get("btc_dominance", 0) or 0
+        # For now we'll just show current dominance level as the signal
+        if btc_dom > 55:
+            signals["dominance"] = {"status": "strong", "label": f"{btc_dom:.1f}% Dominant", "icon": "up", "value": btc_dom}
+        elif btc_dom > 45:
+            signals["dominance"] = {"status": "moderate", "label": f"{btc_dom:.1f}%", "icon": "neutral", "value": btc_dom}
+        else:
+            signals["dominance"] = {"status": "weak", "label": f"{btc_dom:.1f}% Low", "icon": "down", "value": btc_dom}
+
+        return signals
+
+    def _trend_arrow(self, change: float, threshold: float = 0) -> str:
+        """Generate a trend arrow based on change percentage."""
+        if change > threshold:
+            return '<span class="trend-arrow up" title="Increasing">&#8593;</span>'
+        elif change < -threshold:
+            return '<span class="trend-arrow down" title="Decreasing">&#8595;</span>'
+        else:
+            return '<span class="trend-arrow neutral" title="Stable">&#8594;</span>'
+
+    def _generate_sparkline(self, values: list, width: int = 60, height: int = 20, color: str = "#f6851b") -> str:
+        """Generate an inline SVG sparkline from a list of values."""
+        if not values or len(values) < 2:
+            return ""
+
+        # Normalize values
+        min_val = min(values)
+        max_val = max(values)
+        val_range = max_val - min_val if max_val != min_val else 1
+
+        points = []
+        for i, v in enumerate(values):
+            x = (i / (len(values) - 1)) * width
+            y = height - ((v - min_val) / val_range) * height
+            points.append(f"{x:.1f},{y:.1f}")
+
+        path = "M" + " L".join(points)
+
+        # Determine color based on trend
+        start_val = values[0]
+        end_val = values[-1]
+        if end_val > start_val:
+            stroke_color = "#3fb950"  # green
+        elif end_val < start_val:
+            stroke_color = "#f85149"  # red
+        else:
+            stroke_color = color
+
+        return f'''<svg class="sparkline" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+            <path d="{path}" fill="none" stroke="{stroke_color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>'''
 
     def _format_number(self, num: float | None, decimals: int = 2) -> str:
         """Format large numbers with appropriate suffixes."""
@@ -400,6 +555,82 @@ Based on current data patterns:
         sma_20_data = ma_data.get('sma_20', []) if ma_data else []
         sma_50_data = ma_data.get('sma_50', []) if ma_data else []
 
+        # Calculate market signals
+        signals = self._calculate_signals(data) if data else {}
+
+        # Generate sparklines for key metrics
+        price_sparkline = ""
+        if full_price_data:
+            recent_prices = [p[1] for p in full_price_data[-30:]]
+            price_sparkline = self._generate_sparkline(recent_prices, width=60, height=20)
+
+        # Generate signals card HTML
+        def signal_icon(icon_type):
+            if icon_type == "up":
+                return '<span class="signal-icon">&#8593;</span>'
+            elif icon_type == "down":
+                return '<span class="signal-icon">&#8595;</span>'
+            else:
+                return '<span class="signal-icon">&#8594;</span>'
+
+        signals_html = ""
+        if signals:
+            signals_html = f'''
+            <!-- Market Signals Card -->
+            <div class="card mt-24" style="margin-bottom: 24px;">
+                <div class="card-header">
+                    <div class="card-icon">&#128161;</div>
+                    <h3 class="card-title">Market Signals</h3>
+                </div>
+                <div class="signals-grid">
+                    <div class="signal-item">
+                        <div class="signal-label">50D MA Trend</div>
+                        <div class="signal-value {signals.get("ma50_trend", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("ma50_trend", {}).get("icon", "neutral"))}
+                            {signals.get("ma50_trend", {}).get("label", "N/A")}
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">200D MA Trend</div>
+                        <div class="signal-value {signals.get("ma200_trend", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("ma200_trend", {}).get("icon", "neutral"))}
+                            {signals.get("ma200_trend", {}).get("label", "N/A")}
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">MA Cross</div>
+                        <div class="signal-value {signals.get("cross", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("cross", {}).get("icon", "neutral"))}
+                            {signals.get("cross", {}).get("label", "N/A")}
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Volume</div>
+                        <div class="signal-value {signals.get("volume", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("volume", {}).get("icon", "neutral"))}
+                            {signals.get("volume", {}).get("label", "Normal")}
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Mempool</div>
+                        <div class="signal-value {signals.get("mempool", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("mempool", {}).get("icon", "neutral"))}
+                            {signals.get("mempool", {}).get("label", "Normal")}
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-label">Hash Rate</div>
+                        <div class="signal-value {signals.get("hash_rate", {}).get("status", "neutral")}">
+                            {signal_icon(signals.get("hash_rate", {}).get("icon", "neutral"))}
+                            {signals.get("hash_rate", {}).get("label", "Stable")}
+                        </div>
+                    </div>
+                </div>
+                <div class="signals-disclaimer">
+                    Rule-based signals for informational purposes only. Not financial advice.
+                </div>
+            </div>
+            '''
 
         # Determine sentiment color
         if fg_value >= 75:
@@ -501,7 +732,7 @@ Based on current data patterns:
         ma_section = f'''<div class="card">
             <div class="card-header">
                 <div class="card-icon">&#128200;</div>
-                <span class="card-title">Moving Averages</span>
+                <h3 class="card-title">Moving Averages</h3>
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
@@ -528,7 +759,35 @@ Based on current data patterns:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bitcoin Pulse - {today}</title>
+    <title>The Bitcoin Pulse - Live BTC Market Data & Analysis</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data. Track BTC price movements, Fear & Greed Index, hash rate, and network statistics in real-time.">
+    <meta name="keywords" content="Bitcoin, BTC, cryptocurrency, price tracker, market analysis, Fear and Greed Index, hash rate, blockchain, on-chain metrics">
+    <meta name="author" content="The Bitcoin Pulse">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thebitcoinpulse.com/">
+    <meta property="og:title" content="The Bitcoin Pulse - Live BTC Market Data & Analysis">
+    <meta property="og:description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data. Track BTC in real-time.">
+    <meta property="og:image" content="https://thebitcoinpulse.com/og-image.png">
+    <meta property="og:site_name" content="The Bitcoin Pulse">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://thebitcoinpulse.com/">
+    <meta name="twitter:title" content="The Bitcoin Pulse - Live BTC Market Data">
+    <meta name="twitter:description" content="Live Bitcoin price, market analysis, on-chain metrics, and sentiment data.">
+    <meta name="twitter:image" content="https://thebitcoinpulse.com/og-image.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thebitcoinpulse.com/">
+
+    <!-- Favicon (placeholder) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#8383;</text></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -653,7 +912,7 @@ Based on current data patterns:
             font-weight: 800;
             color: var(--text-primary);
             letter-spacing: -0.02em;
-            margin-bottom: 16px;
+            margin: 0 0 16px 0;
         }}
 
         .hero-change {{
@@ -917,6 +1176,7 @@ Based on current data patterns:
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-primary);
+            margin: 0;
         }}
 
         /* Fear & Greed */
@@ -1064,7 +1324,7 @@ Based on current data patterns:
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin: 0 0 8px 0;
         }}
 
         .section-subtitle {{
@@ -1099,6 +1359,447 @@ Based on current data patterns:
             font-weight: 700;
             color: var(--text-primary);
             margin-top: 4px;
+        }}
+
+        /* Info Icons and Tooltips */
+        .info-icon {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            font-weight: 700;
+            font-style: normal;
+            color: var(--text-muted);
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            margin-left: 6px;
+            cursor: help;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+        }}
+
+        .info-icon:hover {{
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(246, 133, 27, 0.1);
+        }}
+
+        /* Desktop Tooltip */
+        .tooltip-container {{
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }}
+
+        .tooltip {{
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+        }}
+
+        .tooltip::after {{
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--border-color);
+        }}
+
+        .tooltip-container:hover .tooltip {{
+            opacity: 1;
+            visibility: visible;
+        }}
+
+        .tooltip-title {{
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }}
+
+        .tooltip-desc {{
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }}
+
+        .tooltip-why {{
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-style: italic;
+        }}
+
+        /* Glossary Modal */
+        .glossary-overlay {{
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }}
+
+        .glossary-overlay.active {{
+            opacity: 1;
+            visibility: visible;
+        }}
+
+        .glossary-modal {{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }}
+
+        .glossary-overlay.active .glossary-modal {{
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }}
+
+        .glossary-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }}
+
+        .glossary-title {{
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }}
+
+        .glossary-close {{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .glossary-close:hover {{
+            background: var(--bg-darker);
+            color: var(--text-primary);
+        }}
+
+        .glossary-search {{
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }}
+
+        .glossary-search input {{
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }}
+
+        .glossary-search input::placeholder {{
+            color: var(--text-muted);
+        }}
+
+        .glossary-search input:focus {{
+            outline: none;
+            border-color: var(--accent);
+        }}
+
+        .glossary-filters {{
+            display: flex;
+            gap: 8px;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }}
+
+        .filter-btn {{
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .filter-btn:hover {{
+            border-color: var(--accent);
+            color: var(--accent);
+        }}
+
+        .filter-btn.active {{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }}
+
+        .glossary-content {{
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }}
+
+        .glossary-item {{
+            padding: 16px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .glossary-item:hover {{
+            border-color: var(--accent);
+        }}
+
+        .glossary-item-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }}
+
+        .glossary-item-name {{
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }}
+
+        .glossary-item-category {{
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            background: rgba(246, 133, 27, 0.1);
+            border-radius: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+
+        .glossary-item-short {{
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }}
+
+        .glossary-item-full {{
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            display: none;
+        }}
+
+        .glossary-item.expanded .glossary-item-full {{
+            display: block;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }}
+
+        .glossary-item-why {{
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-style: italic;
+            margin-top: 8px;
+        }}
+
+        /* Mobile Bottom Sheet */
+        @media (max-width: 768px) {{
+            .tooltip {{
+                display: none !important;
+            }}
+
+            .glossary-modal {{
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: translateY(100%);
+                width: 100%;
+                max-width: none;
+                max-height: 85vh;
+                border-radius: 16px 16px 0 0;
+            }}
+
+            .glossary-overlay.active .glossary-modal {{
+                transform: translateY(0);
+            }}
+
+            .glossary-filters {{
+                padding: 12px 16px;
+            }}
+
+            .glossary-content {{
+                padding: 12px 16px;
+            }}
+        }}
+
+        /* Nav Learn Link */
+        .nav-links {{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }}
+
+        .nav-link {{
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }}
+
+        .nav-link:hover {{
+            color: var(--accent);
+        }}
+
+        /* Market Signals Card */
+        .signals-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }}
+
+        .signal-item {{
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }}
+
+        .signal-label {{
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 6px;
+        }}
+
+        .signal-value {{
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }}
+
+        .signal-value.bullish, .signal-value.rising, .signal-value.high, .signal-value.strong {{
+            color: var(--green);
+        }}
+
+        .signal-value.bearish, .signal-value.falling, .signal-value.low, .signal-value.weak {{
+            color: var(--red);
+        }}
+
+        .signal-value.neutral, .signal-value.normal, .signal-value.stable, .signal-value.moderate, .signal-value.clear {{
+            color: var(--text-secondary);
+        }}
+
+        .signal-icon {{
+            font-size: 1rem;
+        }}
+
+        .signals-disclaimer {{
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }}
+
+        /* Trend Arrows */
+        .trend-arrow {{
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: 4px;
+        }}
+
+        .trend-arrow.up {{
+            color: var(--green);
+        }}
+
+        .trend-arrow.down {{
+            color: var(--red);
+        }}
+
+        .trend-arrow.neutral {{
+            color: var(--text-muted);
+        }}
+
+        /* Sparklines */
+        .sparkline {{
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }}
+
+        .sparkline-container {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+
+        /* Lazy Load Chart Skeleton */
+        .chart-skeleton {{
+            background: linear-gradient(90deg, var(--bg-darker) 25%, var(--bg-card-hover) 50%, var(--bg-darker) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+            height: 100%;
+        }}
+
+        @keyframes shimmer {{
+            0% {{ background-position: 200% 0; }}
+            100% {{ background-position: -200% 0; }}
         }}
 
         /* Footer */
@@ -1275,7 +1976,10 @@ Based on current data patterns:
                         <div class="logo-icon">&#8383;</div>
                         <span class="logo-text">The Bitcoin Pulse</span>
                     </a>
-                    <span class="nav-date">{today}</span>
+                    <div class="nav-links">
+                        <span class="nav-link" id="open-glossary">Learn</span>
+                        <span class="nav-date">{today}</span>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -1283,7 +1987,7 @@ Based on current data patterns:
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <div class="hero-price">${price:,.0f}</div>
+                <h1 class="hero-price">${price:,.0f}</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         {"<path d='M18 15l-6-6-6 6'/>" if change_24h >= 0 else "<path d='M6 9l6 6 6-6'/>"}
@@ -1310,6 +2014,8 @@ Based on current data patterns:
                     <div class="stat-value {"green" if change_30d >= 0 else "red"}">{change_30d:+.2f}%</div>
                 </div>
             </div>
+
+            {signals_html}
 
             <!-- Price Chart -->
             <div class="chart-container">
@@ -1371,7 +2077,7 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128200;</div>
-                        <span class="card-title">30-Day Price Range</span>
+                        <h3 class="card-title">30-Day Price Range</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
@@ -1402,7 +2108,7 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128161;</div>
-                        <span class="card-title">Market Sentiment</span>
+                        <h3 class="card-title">Market Sentiment<span class="info-icon" data-metric="fear_greed" aria-label="Learn more">i</span></h3>
                     </div>
                     <div class="fg-container">
                         <div class="fg-value">{fg_value}</div>
@@ -1431,14 +2137,14 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#9939;</div>
-                        <span class="card-title">Block Info</span>
+                        <h3 class="card-title">Block Info</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Block Height</span>
+                        <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
                         <span class="data-value">{block_height:,}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Block Reward</span>
+                        <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">{block_reward} BTC</span>
                     </div>
                     <div class="data-row">
@@ -1454,7 +2160,7 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#9201;</div>
-                        <span class="card-title">Next Halving</span>
+                        <h3 class="card-title">Next Halving</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
@@ -1477,10 +2183,10 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128176;</div>
-                        <span class="card-title">Supply</span>
+                        <h3 class="card-title">Supply</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Circulating</span>
+                        <span class="data-label">Circulating<span class="info-icon" data-metric="circulating_supply" aria-label="Learn more">i</span></span>
                         <span class="data-value">{circulating/1e6:.2f}M BTC</span>
                     </div>
                     <div class="data-row">
@@ -1492,7 +2198,7 @@ Based on current data patterns:
                         <span class="data-value">{(circulating/21000000)*100:.2f}%</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Sats per $1</span>
+                        <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
                         <span class="data-value">{sats_per_dollar:,}</span>
                     </div>
                 </div>
@@ -1501,23 +2207,23 @@ Based on current data patterns:
             <!-- Mini Stats -->
             <div class="mini-stats">
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Hash Rate</div>
+                    <div class="mini-stat-label">Hash Rate<span class="info-icon" data-metric="hash_rate" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">{hash_rate/1e6:,.0f} EH/s</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Transactions</div>
+                    <div class="mini-stat-label">Transactions<span class="info-icon" data-metric="tx_count" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">{tx_count:,.0f}</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Fee Rate</div>
+                    <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">{fee_fastest} sat/vB</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Nodes</div>
+                    <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">{nodes:,}</div>
                 </div>
                 <div class="mini-stat">
-                    <div class="mini-stat-label">Difficulty</div>
+                    <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
                     <div class="mini-stat-value">{blockchain.get('difficulty_current', 0)/1e12:.1f}T</div>
                 </div>
                 <div class="mini-stat">
@@ -1536,10 +2242,10 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128101;</div>
-                        <span class="card-title">Address Activity</span>
+                        <h3 class="card-title">Address Activity</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Active Addresses (24h)</span>
+                        <span class="data-label">Active Addresses (24h)<span class="info-icon" data-metric="active_addresses" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">{active_addresses:,.0f}</span>
                     </div>
                     <div class="data-row">
@@ -1551,7 +2257,7 @@ Based on current data patterns:
                         <span class="data-value">{new_addresses:,.0f}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Whale Txs (Recent)</span>
+                        <span class="data-label">Whale Txs (Recent)<span class="info-icon" data-metric="whale_transactions" aria-label="Learn more">i</span></span>
                         <span class="data-value">{whale_txs}</span>
                     </div>
                 </div>
@@ -1559,7 +2265,7 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128176;</div>
-                        <span class="card-title">Transaction Volume</span>
+                        <h3 class="card-title">Transaction Volume</h3>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume (USD)</span>
@@ -1574,7 +2280,7 @@ Based on current data patterns:
                         <span class="data-value">${avg_tx_fee:.2f}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Mempool Size</span>
+                        <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
                         <span class="data-value">{mempool_count:,} txs</span>
                     </div>
                 </div>
@@ -1590,10 +2296,10 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#127760;</div>
-                        <span class="card-title">Market Dominance</span>
+                        <h3 class="card-title">Market Dominance</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">BTC Dominance</span>
+                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">{btc_dominance:.1f}%</span>
                     </div>
                     <div class="data-row">
@@ -1601,7 +2307,7 @@ Based on current data patterns:
                         <span class="data-value">{fmt(total_crypto_mcap)}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">BTC Market Cap</span>
+                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
                         <span class="data-value">{fmt(market_cap)}</span>
                     </div>
                 </div>
@@ -1609,10 +2315,10 @@ Based on current data patterns:
                 <div class="card">
                     <div class="card-header">
                         <div class="card-icon">&#128200;</div>
-                        <span class="card-title">Trading Volume</span>
+                        <h3 class="card-title">Trading Volume</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">24h Volume</span>
+                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
                         <span class="data-value accent">{fmt(volume)}</span>
                     </div>
                     <div class="data-row">
@@ -1639,7 +2345,34 @@ Based on current data patterns:
         </div>
     </footer>
 
+    <!-- Glossary Modal -->
+    <div class="glossary-overlay" id="glossary-overlay">
+        <div class="glossary-modal">
+            <div class="glossary-header">
+                <h2 class="glossary-title">Bitcoin Glossary</h2>
+                <button class="glossary-close" id="glossary-close" aria-label="Close glossary">&times;</button>
+            </div>
+            <div class="glossary-search">
+                <input type="text" id="glossary-search-input" placeholder="Search metrics..." autocomplete="off">
+            </div>
+            <div class="glossary-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="price">Price & Market</button>
+                <button class="filter-btn" data-category="sentiment">Sentiment</button>
+                <button class="filter-btn" data-category="network">Network</button>
+                <button class="filter-btn" data-category="supply">Supply</button>
+                <button class="filter-btn" data-category="trading">Trading</button>
+            </div>
+            <div class="glossary-content" id="glossary-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== Glossary Data =====
+        const glossaryData = {self._get_glossary_json()};
+
         // ===== Configuration =====
         const PRICE_UPDATE_INTERVAL = 10000;  // 10 seconds for price
         const CHART_UPDATE_INTERVAL = 60000;  // 60 seconds for chart data
@@ -2137,7 +2870,178 @@ Based on current data patterns:
             console.log('  - Chart: every 60s');
             console.log('  - Extended data: every 2min');
             console.log('  - Moving averages: 7D, 20D, 50D');
+
+            // Initialize glossary
+            initGlossary();
         }});
+
+        // ===== Glossary Functions =====
+        function initGlossary() {{
+            const overlay = document.getElementById('glossary-overlay');
+            const closeBtn = document.getElementById('glossary-close');
+            const openBtn = document.getElementById('open-glossary');
+            const searchInput = document.getElementById('glossary-search-input');
+            const content = document.getElementById('glossary-content');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            let currentFilter = 'all';
+
+            // Open glossary
+            openBtn.addEventListener('click', () => {{
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                renderGlossaryItems();
+            }});
+
+            // Close glossary
+            closeBtn.addEventListener('click', closeGlossary);
+            overlay.addEventListener('click', (e) => {{
+                if (e.target === overlay) closeGlossary();
+            }});
+
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {{
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {{
+                    closeGlossary();
+                }}
+            }});
+
+            function closeGlossary() {{
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }}
+
+            // Filter buttons
+            filterBtns.forEach(btn => {{
+                btn.addEventListener('click', () => {{
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.category;
+                    renderGlossaryItems();
+                }});
+            }});
+
+            // Search
+            searchInput.addEventListener('input', () => {{
+                renderGlossaryItems();
+            }});
+
+            // Render glossary items
+            function renderGlossaryItems() {{
+                const searchTerm = searchInput.value.toLowerCase();
+                const metrics = glossaryData.metrics || {{}};
+                const categories = glossaryData.categories || {{}};
+
+                let html = '';
+                Object.entries(metrics).forEach(([key, metric]) => {{
+                    // Filter by category
+                    if (currentFilter !== 'all' && metric.category !== currentFilter) return;
+
+                    // Filter by search
+                    const searchable = (metric.displayName + ' ' + metric.shortDescription + ' ' + metric.fullDescription).toLowerCase();
+                    if (searchTerm && !searchable.includes(searchTerm)) return;
+
+                    const categoryInfo = categories[metric.category] || {{ name: metric.category }};
+
+                    html += `
+                        <div class="glossary-item" data-metric="${{key}}">
+                            <div class="glossary-item-header">
+                                <span class="glossary-item-name">${{metric.displayName}}</span>
+                                <span class="glossary-item-category">${{categoryInfo.name}}</span>
+                            </div>
+                            <div class="glossary-item-short">${{metric.shortDescription}}</div>
+                            <div class="glossary-item-full">
+                                ${{metric.fullDescription}}
+                                <div class="glossary-item-why">${{metric.whyItMatters}}</div>
+                            </div>
+                        </div>
+                    `;
+                }});
+
+                content.innerHTML = html || '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No metrics found</p>';
+
+                // Add click to expand
+                content.querySelectorAll('.glossary-item').forEach(item => {{
+                    item.addEventListener('click', () => {{
+                        item.classList.toggle('expanded');
+                    }});
+                }});
+            }}
+
+            // Create floating tooltip element
+            const tooltip = document.createElement('div');
+            tooltip.className = 'floating-tooltip';
+            tooltip.style.cssText = `
+                position: fixed;
+                z-index: 10000;
+                max-width: 280px;
+                padding: 12px 16px;
+                background: #161b22;
+                border: 1px solid #30363d;
+                border-radius: 8px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            `;
+            document.body.appendChild(tooltip);
+
+            // Handle info icon hover for desktop tooltips
+            document.querySelectorAll('.info-icon').forEach(icon => {{
+                const metricKey = icon.dataset.metric;
+                const metric = glossaryData.metrics[metricKey];
+
+                if (metric) {{
+                    // Desktop hover
+                    icon.addEventListener('mouseenter', (e) => {{
+                        if (window.innerWidth > 768) {{
+                            tooltip.innerHTML = `
+                                <div style="font-size: 0.85rem; font-weight: 600; color: #f0f6fc; margin-bottom: 6px;">${{metric.displayName}}</div>
+                                <div style="font-size: 0.75rem; color: #8b949e; line-height: 1.5; margin-bottom: 8px;">${{metric.fullDescription}}</div>
+                                <div style="font-size: 0.7rem; color: #f6851b; font-style: italic;">${{metric.whyItMatters}}</div>
+                            `;
+
+                            const rect = icon.getBoundingClientRect();
+                            const tooltipWidth = 280;
+
+                            // Position tooltip above the icon
+                            let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                            let top = rect.top - 10;
+
+                            // Keep within viewport
+                            if (left < 10) left = 10;
+                            if (left + tooltipWidth > window.innerWidth - 10) {{
+                                left = window.innerWidth - tooltipWidth - 10;
+                            }}
+
+                            tooltip.style.left = left + 'px';
+                            tooltip.style.top = 'auto';
+                            tooltip.style.bottom = (window.innerHeight - top) + 'px';
+                            tooltip.style.width = tooltipWidth + 'px';
+                            tooltip.style.opacity = '1';
+                        }}
+                    }});
+
+                    icon.addEventListener('mouseleave', () => {{
+                        tooltip.style.opacity = '0';
+                    }});
+
+                    // Mobile/tablet click - open glossary
+                    icon.addEventListener('click', (e) => {{
+                        e.stopPropagation();
+                        if (window.innerWidth <= 768) {{
+                            overlay.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                            searchInput.value = metric.displayName || '';
+                            currentFilter = 'all';
+                            filterBtns.forEach(b => b.classList.remove('active'));
+                            filterBtns[0].classList.add('active');
+                            renderGlossaryItems();
+                        }}
+                    }});
+                }}
+            }});
+        }}
     </script>
 </body>
 </html>'''

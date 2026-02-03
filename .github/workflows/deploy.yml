@@ -51,6 +51,30 @@ jobs:
           # Copy CNAME file for custom domain
           cp CNAME public/CNAME
 
+      - name: Generate SEO files
+        run: |
+          # Generate robots.txt
+          echo "User-agent: *" > public/robots.txt
+          echo "Allow: /" >> public/robots.txt
+          echo "" >> public/robots.txt
+          echo "Sitemap: https://thebitcoinpulse.com/sitemap.xml" >> public/robots.txt
+          echo "" >> public/robots.txt
+          echo "Crawl-delay: 10" >> public/robots.txt
+
+          # Generate sitemap.xml with current timestamp
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          cat > public/sitemap.xml << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+              <loc>https://thebitcoinpulse.com/</loc>
+              <lastmod>${TIMESTAMP}</lastmod>
+              <changefreq>hourly</changefreq>
+              <priority>1.0</priority>
+            </url>
+          </urlset>
+          EOF
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
