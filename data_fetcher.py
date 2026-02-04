@@ -605,6 +605,20 @@ class DataFetcher:
                 datetime.utcnow() + timedelta(minutes=minutes_until)
             ).strftime("%Y-%m-%d")
 
+            # Difficulty adjustment info (every 2016 blocks)
+            blocks_in_epoch = stats["block_height"] % 2016
+            stats["blocks_since_adjustment"] = blocks_in_epoch
+            stats["blocks_until_adjustment"] = 2016 - blocks_in_epoch
+            stats["adjustment_progress_pct"] = round((blocks_in_epoch / 2016) * 100, 1)
+            adjustment_minutes = stats["blocks_until_adjustment"] * 10
+            stats["next_adjustment_estimate"] = (
+                datetime.utcnow() + timedelta(minutes=adjustment_minutes)
+            ).strftime("%Y-%m-%d")
+
+            # Blocks mined today (rough estimate based on time of day)
+            # More accurate: 144 blocks per day average
+            stats["expected_daily_blocks"] = 144
+
         self._rate_limit()
 
         # Get recommended fees

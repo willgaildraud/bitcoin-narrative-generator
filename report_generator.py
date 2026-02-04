@@ -505,6 +505,23 @@ Based on current data patterns:
             minutes_until = blocks_until_halving * 10
             next_halving = (datetime.now() + timedelta(minutes=minutes_until)).strftime("%Y-%m-%d")
 
+        # Difficulty adjustment info
+        blocks_until_adjustment = block_stats.get('blocks_until_adjustment', 0) or 0
+        adjustment_progress_pct = block_stats.get('adjustment_progress_pct', 0) or 0
+        next_adjustment = block_stats.get('next_adjustment_estimate', 'TBD')
+
+        # Calculate if not available
+        if block_height and not blocks_until_adjustment:
+            blocks_in_epoch = block_height % 2016
+            blocks_until_adjustment = 2016 - blocks_in_epoch
+            adjustment_progress_pct = round((blocks_in_epoch / 2016) * 100, 1)
+            from datetime import timedelta
+            adjustment_minutes = blocks_until_adjustment * 10
+            next_adjustment = (datetime.now() + timedelta(minutes=adjustment_minutes)).strftime("%Y-%m-%d")
+
+        # Days until halving
+        days_until_halving = round(blocks_until_halving * 10 / 60 / 24) if blocks_until_halving else 0
+
         # Network stats
         minutes_between = network_stats.get('minutes_between_blocks', 10) or 10
         avg_tx_fee = network_stats.get('avg_tx_fee_usd_7d', 0) or 0
@@ -561,6 +578,44 @@ Based on current data patterns:
 
         # Convert news to JSON for embedding in JavaScript
         news_json = json.dumps(bitcoin_news) if bitcoin_news else "[]"
+
+        # Generate "Today's Bitcoin Pulse" summary (neutral, factual, no predictions)
+        def generate_pulse_summary():
+            parts = []
+
+            # Price movement
+            if change_24h > 2:
+                parts.append(f"Bitcoin is up {change_24h:.1f}% today")
+            elif change_24h > 0:
+                parts.append(f"Bitcoin is up {change_24h:.1f}% today")
+            elif change_24h > -2:
+                parts.append(f"Bitcoin is down {abs(change_24h):.1f}% today")
+            else:
+                parts.append(f"Bitcoin is down {abs(change_24h):.1f}% today")
+
+            # Sentiment
+            if fg_value >= 75:
+                parts.append("Sentiment is in extreme greed")
+            elif fg_value >= 55:
+                parts.append("Sentiment is greedy")
+            elif fg_value >= 45:
+                parts.append("Sentiment is neutral")
+            elif fg_value >= 25:
+                parts.append("Sentiment is fearful")
+            else:
+                parts.append("Sentiment is in extreme fear")
+
+            # Halving countdown
+            if days_until_halving > 0:
+                parts.append(f"{days_until_halving} days remain until the halving")
+
+            # Network activity (optional)
+            if hash_rate > 0:
+                parts.append("Network activity is steady")
+
+            return ". ".join(parts) + "."
+
+        pulse_summary = generate_pulse_summary()
 
         # Generate sparklines for key metrics
         price_sparkline = ""
@@ -1712,6 +1767,82 @@ Based on current data patterns:
             color: var(--accent);
         }}
 
+        /* Today's Pulse Summary */
+        .pulse-summary {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            text-align: center;
+        }}
+
+        .pulse-summary-text {{
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }}
+
+        .pulse-summary-label {{
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }}
+
+        /* Time Anchors Grid */
+        .time-anchors {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }}
+
+        .time-anchor {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }}
+
+        .time-anchor-value {{
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }}
+
+        .time-anchor-label {{
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+
+        .time-anchor-sub {{
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 4px;
+        }}
+
+        .progress-bar-small {{
+            width: 100%;
+            height: 4px;
+            background: var(--bg-darker);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }}
+
+        .progress-bar-small-fill {{
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }}
+
         /* Halving Countdown Widget */
         .halving-widget {{
             background: linear-gradient(135deg, rgba(246, 133, 27, 0.1) 0%, rgba(246, 133, 27, 0.05) 100%);
@@ -2662,6 +2793,38 @@ Based on current data patterns:
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
                     <div class="stat-value {"green" if change_30d >= 0 else "red"}">{change_30d:+.2f}%</div>
+                </div>
+            </div>
+
+            <!-- Today's Bitcoin Pulse Summary -->
+            <div class="pulse-summary">
+                <div class="pulse-summary-label">Today's Pulse</div>
+                <div class="pulse-summary-text">{pulse_summary}</div>
+            </div>
+
+            <!-- Time Anchors -->
+            <div class="time-anchors">
+                <div class="time-anchor">
+                    <div class="time-anchor-value">{days_until_halving}</div>
+                    <div class="time-anchor-label">Days to Halving</div>
+                    <div class="time-anchor-sub">{next_halving}</div>
+                </div>
+                <div class="time-anchor">
+                    <div class="time-anchor-value">{blocks_until_adjustment:,}</div>
+                    <div class="time-anchor-label">Blocks to Difficulty Adj.</div>
+                    <div class="progress-bar-small">
+                        <div class="progress-bar-small-fill" style="width: {adjustment_progress_pct}%"></div>
+                    </div>
+                </div>
+                <div class="time-anchor">
+                    <div class="time-anchor-value">{block_height:,}</div>
+                    <div class="time-anchor-label">Current Block</div>
+                    <div class="time-anchor-sub">#{block_height}</div>
+                </div>
+                <div class="time-anchor">
+                    <div class="time-anchor-value">{fg_value}</div>
+                    <div class="time-anchor-label">Fear & Greed</div>
+                    <div class="time-anchor-sub">{fg_class}</div>
                 </div>
             </div>
 
