@@ -673,6 +673,13 @@ Based on current data patterns:
         today_short = datetime.now().strftime("%B %d")
         time_now = datetime.now().strftime("%H:%M UTC")
 
+        # Firebase configuration from environment variables
+        import os
+        firebase_api_key = os.environ.get('FIREBASE_API_KEY', '')
+        firebase_project_id = os.environ.get('FIREBASE_PROJECT_ID', '')
+        firebase_sender_id = os.environ.get('FIREBASE_SENDER_ID', '')
+        firebase_app_id = os.environ.get('FIREBASE_APP_ID', '')
+
         # Generate historical prices HTML as a clean table
         historical_section = ""
         if historical_prices:
@@ -796,6 +803,9 @@ Based on current data patterns:
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK for community features -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 
@@ -2451,14 +2461,128 @@ Based on current data patterns:
             margin: 0;
         }}
 
-        .giscus {{
-            margin-top: 16px;
+        .comment-form {{
+            margin-bottom: 24px;
         }}
 
-        .giscus-loading {{
-            text-align: center;
-            padding: 40px;
+        .comment-input-group {{
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }}
+
+        .comment-name-input {{
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }}
+
+        .comment-name-input:focus {{
+            outline: none;
+            border-color: var(--accent);
+        }}
+
+        .comment-textarea {{
+            width: 100%;
+            min-height: 80px;
+            padding: 12px 16px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 12px;
+        }}
+
+        .comment-textarea:focus {{
+            outline: none;
+            border-color: var(--accent);
+        }}
+
+        .comment-submit {{
+            padding: 10px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }}
+
+        .comment-submit:hover {{
+            opacity: 0.9;
+        }}
+
+        .comment-submit:disabled {{
+            opacity: 0.5;
+            cursor: not-allowed;
+        }}
+
+        .comments-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }}
+
+        .comment-item {{
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }}
+
+        .comment-meta {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }}
+
+        .comment-author {{
+            font-weight: 600;
+            color: var(--accent);
+        }}
+
+        .comment-time {{
+            font-size: 0.75rem;
             color: var(--text-muted);
+        }}
+
+        .comment-text {{
+            color: var(--text-primary);
+            line-height: 1.5;
+        }}
+
+        .comments-empty {{
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+        }}
+
+        .comments-loading {{
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+        }}
+
+        .firebase-setup-notice {{
+            background: rgba(246, 133, 27, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: var(--text-primary);
+        }}
+
+        .firebase-setup-notice a {{
+            color: var(--accent);
         }}
 
         @media (max-width: 768px) {{
@@ -2989,8 +3113,17 @@ Based on current data patterns:
                         <span class="comments-icon">&#128172;</span>
                         <h3 class="comments-title">Discussion</h3>
                     </div>
-                    <div class="giscus" id="giscus-container">
-                        <div class="giscus-loading">Loading comments...</div>
+                    <div id="comments-container">
+                        <div class="comment-form" id="comment-form">
+                            <input type="text" class="comment-name-input" id="comment-name"
+                                   placeholder="Your name" maxlength="50">
+                            <textarea class="comment-textarea" id="comment-text"
+                                      placeholder="Share your thoughts on today's market..." maxlength="500"></textarea>
+                            <button class="comment-submit" id="comment-submit">Post Comment</button>
+                        </div>
+                        <div class="comments-list" id="comments-list">
+                            <div class="comments-loading">Loading comments...</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3546,7 +3679,8 @@ Based on current data patterns:
             // Load news feed
             loadNewsFeed();
 
-            // Initialize community features
+            // Initialize community features (Firebase-powered)
+            initFirebase();
             initPoll();
             initSentiment();
             initGiscus();
@@ -3697,53 +3831,79 @@ Based on current data patterns:
             return `${{diffDays}}d ago`;
         }}
 
-        // ===== Community Poll =====
+        // ===== Firebase Configuration =====
+        // To enable community features, create a Firebase project at https://console.firebase.google.com
+        // 1. Create new project -> Enable Realtime Database -> Set rules to allow read/write
+        // 2. Get your config from Project Settings -> Your apps -> Add web app
+        // 3. Add these values as GitHub secrets: FIREBASE_API_KEY, FIREBASE_PROJECT_ID, etc.
+        const firebaseConfig = {{
+            apiKey: "{firebase_api_key}",
+            authDomain: "{firebase_project_id}.firebaseapp.com",
+            databaseURL: "https://{firebase_project_id}-default-rtdb.firebaseio.com",
+            projectId: "{firebase_project_id}",
+            storageBucket: "{firebase_project_id}.appspot.com",
+            messagingSenderId: "{firebase_sender_id}",
+            appId: "{firebase_app_id}"
+        }};
+
+        let db = null;
+        let firebaseEnabled = false;
+
+        function initFirebase() {{
+            try {{
+                if (firebaseConfig.apiKey && firebaseConfig.apiKey !== '' && !firebaseConfig.apiKey.includes('{{')) {{
+                    firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    firebaseEnabled = true;
+                    console.log('Firebase initialized successfully');
+                }} else {{
+                    console.log('Firebase not configured - using local storage fallback');
+                }}
+            }} catch (e) {{
+                console.log('Firebase init error:', e);
+            }}
+        }}
+
+        // ===== Community Poll (Firebase) =====
         function initPoll() {{
             const pollOptions = document.querySelectorAll('.poll-option');
-            const pollKey = 'btcpulse_poll_' + new Date().toISOString().split('T')[0];
-            const votesKey = 'btcpulse_poll_votes';
-
-            // Initialize or get simulated community votes
-            let votes = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
             const today = new Date().toISOString().split('T')[0];
-
-            // Reset votes daily - start fresh with 0 votes
-            if (votes.date !== today) {{
-                votes = {{
-                    date: today,
-                    up10: 0,
-                    up: 0,
-                    flat: 0,
-                    down: 0,
-                    down10: 0
-                }};
-                localStorage.setItem(votesKey, JSON.stringify(votes));
-            }}
-
-            // Check if user already voted today
+            const pollKey = 'btcpulse_poll_' + today;
             const userVote = localStorage.getItem(pollKey);
 
-            if (userVote) {{
-                showPollResults(votes, userVote);
+            if (firebaseEnabled) {{
+                // Listen for real-time vote updates
+                db.ref('polls/' + today).on('value', (snapshot) => {{
+                    const votes = snapshot.val() || {{ up10: 0, up: 0, flat: 0, down: 0, down10: 0 }};
+                    updatePollDisplay(votes, userVote);
+                }});
+            }} else {{
+                // Fallback to localStorage
+                const votes = {{ up10: 0, up: 0, flat: 0, down: 0, down10: 0 }};
+                updatePollDisplay(votes, userVote);
             }}
 
             pollOptions.forEach(option => {{
-                option.addEventListener('click', () => {{
-                    if (localStorage.getItem(pollKey)) return; // Already voted
+                option.addEventListener('click', async () => {{
+                    if (localStorage.getItem(pollKey)) return;
 
                     const selected = option.dataset.option;
                     localStorage.setItem(pollKey, selected);
 
-                    // Add user's vote
-                    votes[selected] = (votes[selected] || 0) + 1;
-                    localStorage.setItem(votesKey, JSON.stringify(votes));
+                    if (firebaseEnabled) {{
+                        // Increment vote in Firebase
+                        const voteRef = db.ref('polls/' + today + '/' + selected);
+                        voteRef.transaction((current) => (current || 0) + 1);
+                    }}
 
-                    showPollResults(votes, selected);
+                    // Update UI immediately
+                    option.classList.add('selected');
+                    document.querySelectorAll('.poll-option').forEach(opt => opt.classList.add('voted'));
                 }});
             }});
         }}
 
-        function showPollResults(votes, userVote) {{
+        function updatePollDisplay(votes, userVote) {{
             const options = ['up10', 'up', 'flat', 'down', 'down10'];
             const total = options.reduce((sum, opt) => sum + (votes[opt] || 0), 0);
 
@@ -3752,76 +3912,59 @@ Based on current data patterns:
                 const count = votes[opt] || 0;
                 const pct = total > 0 ? Math.round((count / total) * 100) : 0;
 
-                option.classList.add('voted');
-                if (opt === userVote) {{
-                    option.classList.add('selected');
+                if (userVote) {{
+                    option.classList.add('voted');
+                    if (opt === userVote) option.classList.add('selected');
                 }}
 
                 option.querySelector('.poll-option-bar').style.width = pct + '%';
                 option.querySelector('.poll-option-pct').textContent = pct + '%';
             }});
 
-            document.getElementById('poll-total').textContent = `${{total.toLocaleString()}} votes today`;
+            document.getElementById('poll-total').textContent = total > 0
+                ? `${{total.toLocaleString()}} votes today`
+                : 'Be the first to vote!';
         }}
 
-        // ===== Sentiment Widget =====
+        // ===== Sentiment Widget (Firebase) =====
         function initSentiment() {{
             const buttons = document.querySelectorAll('.sentiment-btn');
-            const sentimentKey = 'btcpulse_sentiment_' + new Date().toISOString().split('T')[0];
-            const votesKey = 'btcpulse_sentiment_votes';
-
-            // Initialize or get simulated community sentiment
-            let sentiment = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
             const today = new Date().toISOString().split('T')[0];
-
-            // Reset daily - start fresh with 0 votes
-            if (sentiment.date !== today) {{
-                sentiment = {{
-                    date: today,
-                    bullish: 0,
-                    bearish: 0
-                }};
-                localStorage.setItem(votesKey, JSON.stringify(sentiment));
-            }}
-
-            // Check if user already voted
+            const sentimentKey = 'btcpulse_sentiment_' + today;
             const userVote = localStorage.getItem(sentimentKey);
 
-            updateSentimentBar(sentiment);
-
-            if (userVote) {{
-                buttons.forEach(btn => {{
-                    btn.classList.add('voted');
-                    if (btn.dataset.sentiment === userVote) {{
-                        btn.classList.add('selected');
-                    }}
+            if (firebaseEnabled) {{
+                // Listen for real-time sentiment updates
+                db.ref('sentiment/' + today).on('value', (snapshot) => {{
+                    const sentiment = snapshot.val() || {{ bullish: 0, bearish: 0 }};
+                    updateSentimentDisplay(sentiment, userVote);
                 }});
+            }} else {{
+                const sentiment = {{ bullish: 0, bearish: 0 }};
+                updateSentimentDisplay(sentiment, userVote);
             }}
 
             buttons.forEach(btn => {{
-                btn.addEventListener('click', () => {{
-                    if (localStorage.getItem(sentimentKey)) return; // Already voted
+                btn.addEventListener('click', async () => {{
+                    if (localStorage.getItem(sentimentKey)) return;
 
                     const vote = btn.dataset.sentiment;
                     localStorage.setItem(sentimentKey, vote);
 
-                    // Add user's vote
-                    sentiment[vote] = (sentiment[vote] || 0) + 1;
-                    localStorage.setItem(votesKey, JSON.stringify(sentiment));
+                    if (firebaseEnabled) {{
+                        const voteRef = db.ref('sentiment/' + today + '/' + vote);
+                        voteRef.transaction((current) => (current || 0) + 1);
+                    }}
 
                     buttons.forEach(b => {{
                         b.classList.add('voted');
-                        if (b.dataset.sentiment === vote) {{
-                            b.classList.add('selected');
-                        }}
+                        if (b.dataset.sentiment === vote) b.classList.add('selected');
                     }});
-
-                    updateSentimentBar(sentiment);
                 }});
             }});
         }}
 
-        function updateSentimentBar(sentiment) {{
+        function updateSentimentDisplay(sentiment, userVote) {{
             const total = (sentiment.bullish || 0) + (sentiment.bearish || 0);
             const bullPct = total > 0 ? Math.round((sentiment.bullish / total) * 100) : 50;
             const bearPct = 100 - bullPct;
@@ -3830,33 +3973,103 @@ Based on current data patterns:
             document.getElementById('sentiment-bear').style.width = bearPct + '%';
             document.getElementById('sentiment-bull-pct').textContent = bullPct + '%';
             document.getElementById('sentiment-bear-pct').textContent = bearPct + '%';
-            document.getElementById('sentiment-total').textContent = `${{total.toLocaleString()}} votes today`;
+            document.getElementById('sentiment-total').textContent = total > 0
+                ? `${{total.toLocaleString()}} votes today`
+                : 'Cast your vote!';
+
+            if (userVote) {{
+                document.querySelectorAll('.sentiment-btn').forEach(btn => {{
+                    btn.classList.add('voted');
+                    if (btn.dataset.sentiment === userVote) btn.classList.add('selected');
+                }});
+            }}
         }}
 
-        // ===== Discussion Section =====
+        // ===== Comments Section (Firebase) =====
         function initGiscus() {{
-            const container = document.getElementById('giscus-container');
+            const container = document.getElementById('comments-container');
+            const commentsList = document.getElementById('comments-list');
+            const submitBtn = document.getElementById('comment-submit');
+            const nameInput = document.getElementById('comment-name');
+            const textInput = document.getElementById('comment-text');
+            const today = new Date().toISOString().split('T')[0];
 
-            container.innerHTML = `
-                <div style="text-align: center; padding: 24px;">
-                    <p style="color: var(--text-primary); font-size: 1rem; margin-bottom: 16px;">
-                        Share your thoughts with the community
-                    </p>
-                    <a href="https://github.com/willgaildraud/bitcoin-narrative-generator/discussions"
-                       target="_blank" rel="noopener"
-                       style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
-                              background: var(--accent); color: white; text-decoration: none;
-                              border-radius: 8px; font-weight: 600; transition: opacity 0.2s;">
-                        <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                        </svg>
-                        Join Discussion on GitHub
-                    </a>
-                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 16px;">
-                        Free GitHub account required to comment
-                    </p>
-                </div>
-            `;
+            if (!firebaseEnabled) {{
+                commentsList.innerHTML = `
+                    <div class="firebase-setup-notice">
+                        <p><strong>Comments require Firebase setup</strong></p>
+                        <p style="font-size: 0.85rem; margin-top: 8px;">
+                            To enable community features, the site owner needs to configure Firebase.
+                            <br>See the <a href="https://github.com/willgaildraud/bitcoin-narrative-generator" target="_blank">README</a> for setup instructions.
+                        </p>
+                    </div>
+                `;
+                submitBtn.disabled = true;
+                return;
+            }}
+
+            // Load comments
+            db.ref('comments/' + today).orderByChild('timestamp').on('value', (snapshot) => {{
+                const comments = [];
+                snapshot.forEach((child) => {{
+                    comments.push({{ id: child.key, ...child.val() }});
+                }});
+
+                if (comments.length === 0) {{
+                    commentsList.innerHTML = '<div class="comments-empty">No comments yet. Be the first to share your thoughts!</div>';
+                }} else {{
+                    commentsList.innerHTML = comments.reverse().map(c => `
+                        <div class="comment-item">
+                            <div class="comment-meta">
+                                <span class="comment-author">${{escapeHtml(c.name)}}</span>
+                                <span class="comment-time">${{formatTimeAgo(c.timestamp)}}</span>
+                            </div>
+                            <div class="comment-text">${{escapeHtml(c.text)}}</div>
+                        </div>
+                    `).join('');
+                }}
+            }});
+
+            // Submit comment
+            submitBtn.addEventListener('click', async () => {{
+                const name = nameInput.value.trim();
+                const text = textInput.value.trim();
+
+                if (!name || !text) {{
+                    alert('Please enter your name and comment');
+                    return;
+                }}
+
+                if (text.length > 500) {{
+                    alert('Comment is too long (max 500 characters)');
+                    return;
+                }}
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Posting...';
+
+                try {{
+                    await db.ref('comments/' + today).push({{
+                        name: name.substring(0, 50),
+                        text: text.substring(0, 500),
+                        timestamp: Date.now()
+                    }});
+
+                    nameInput.value = '';
+                    textInput.value = '';
+                }} catch (e) {{
+                    alert('Error posting comment. Please try again.');
+                }}
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Post Comment';
+            }});
+        }}
+
+        function escapeHtml(text) {{
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }}
 
         // ===== Glossary Functions =====
