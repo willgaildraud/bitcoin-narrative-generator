@@ -3606,7 +3606,7 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">${block_reward_usd:,.0f}</span>
+                        <span class="data-value" id="reward-value" data-usd="{block_reward_usd}">${block_reward_usd:,.0f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
@@ -3685,7 +3685,7 @@ Based on current data patterns:
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Avg Fee</div>
-                    <div class="mini-stat-value">${avg_tx_fee:.2f}</div>
+                    <div class="mini-stat-value" id="avg-fee-mini" data-usd="{avg_tx_fee}">${avg_tx_fee:.2f}</div>
                 </div>
             </div>
 
@@ -3725,8 +3725,8 @@ Based on current data patterns:
                         <h3 class="card-title">Transaction Volume</h3>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">24h Volume (USD)</span>
-                        <span class="data-value accent">{fmt(tx_volume_usd)}</span>
+                        <span class="data-label">24h Volume</span>
+                        <span class="data-value accent" id="onchain-volume-24h" data-usd="{tx_volume_usd}">{fmt(tx_volume_usd)}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Daily Transactions</span>
@@ -3734,7 +3734,7 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Tx Fee</span>
-                        <span class="data-value">${avg_tx_fee:.2f}</span>
+                        <span class="data-value" id="avg-tx-fee" data-usd="{avg_tx_fee}">${avg_tx_fee:.2f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
@@ -4493,6 +4493,30 @@ Based on current data patterns:
             const txVolume24hEl = document.getElementById('tx-volume-24h');
             if (txVolume24hEl && txVolume24hEl.dataset.usd) {{
                 txVolume24hEl.textContent = formatLarge(parseFloat(txVolume24hEl.dataset.usd));
+            }}
+
+            // Block Info - Reward Value
+            const rewardValueEl = document.getElementById('reward-value');
+            if (rewardValueEl && rewardValueEl.dataset.usd) {{
+                rewardValueEl.textContent = formatConvertedPrice(parseFloat(rewardValueEl.dataset.usd), 0);
+            }}
+
+            // Mini Stats - Avg Fee
+            const avgFeeMiniEl = document.getElementById('avg-fee-mini');
+            if (avgFeeMiniEl && avgFeeMiniEl.dataset.usd) {{
+                avgFeeMiniEl.textContent = formatConvertedPrice(parseFloat(avgFeeMiniEl.dataset.usd), 2);
+            }}
+
+            // On-Chain Analytics - 24h Volume
+            const onchainVolume24hEl = document.getElementById('onchain-volume-24h');
+            if (onchainVolume24hEl && onchainVolume24hEl.dataset.usd) {{
+                onchainVolume24hEl.textContent = formatLarge(parseFloat(onchainVolume24hEl.dataset.usd));
+            }}
+
+            // On-Chain Analytics - Avg Tx Fee
+            const avgTxFeeEl = document.getElementById('avg-tx-fee');
+            if (avgTxFeeEl && avgTxFeeEl.dataset.usd) {{
+                avgTxFeeEl.textContent = formatConvertedPrice(parseFloat(avgTxFeeEl.dataset.usd), 2);
             }}
 
             // Comparison table prices - store USD in data attribute on first run
