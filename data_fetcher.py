@@ -920,6 +920,43 @@ class DataFetcher:
 
         return stats
 
+    def fetch_bitcoin_news(self, limit: int = 5) -> list[dict]:
+        """Fetch latest crypto news from Cointelegraph RSS feed."""
+        news_items = []
+
+        # Primary source: Cointelegraph RSS via rss2json
+        try:
+            url = "https://api.rss2json.com/v1/api.json"
+            params = {"rss_url": "https://cointelegraph.com/rss"}
+
+            self._rate_limit()
+            response = self.session.get(url, params=params, timeout=15)
+
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "ok":
+                    items = data.get("items", [])
+
+                    # Filter for Bitcoin-related news and limit results
+                    btc_keywords = ["bitcoin", "btc", "crypto", "halving", "mining"]
+                    for item in items:
+                        title = item.get("title", "").lower()
+                        # Include if title mentions Bitcoin/crypto or if we need more items
+                        if any(kw in title for kw in btc_keywords) or len(news_items) < limit:
+                            news_items.append({
+                                "title": item.get("title", ""),
+                                "url": item.get("link", ""),
+                                "source": "Cointelegraph",
+                                "published_at": item.get("pubDate", ""),
+                                "domain": "cointelegraph.com"
+                            })
+                            if len(news_items) >= limit:
+                                break
+        except requests.RequestException:
+            pass
+
+        return news_items
+
     def fetch_all_data(self, include_historical: bool = True) -> dict[str, Any]:
         """Fetch all Bitcoin market data from all sources."""
         print("Fetching Bitcoin market data...")
@@ -969,6 +1006,9 @@ class DataFetcher:
         print("  → Fetching active addresses history (30 days)...")
         active_addresses_history = self.fetch_active_addresses_history(days=30)
 
+        print("  → Fetching Bitcoin news...")
+        bitcoin_news = self.fetch_bitcoin_news(limit=5)
+
         historical_prices = []
         historical_yearly_data = {}
         if include_historical:
@@ -997,6 +1037,7 @@ class DataFetcher:
             "active_addresses_history": active_addresses_history,
             "historical_on_this_day": historical_prices,
             "historical_yearly_data": historical_yearly_data,
+            "bitcoin_news": bitcoin_news,
         }
 
 

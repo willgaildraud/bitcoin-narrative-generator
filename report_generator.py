@@ -472,6 +472,7 @@ Based on current data patterns:
         historical_yearly = data.get("historical_yearly_data", {}) if data else {}
         onchain = data.get("onchain_analytics", {}) if data else {}
         market = data.get("market_data", {}) if data else {}
+        bitcoin_news = data.get("bitcoin_news", []) if data else []
 
         price = bitcoin.get('price_usd', 0) or 0
         change_24h = bitcoin.get('price_change_24h_percent', 0) or 0
@@ -557,6 +558,9 @@ Based on current data patterns:
 
         # Calculate market signals
         signals = self._calculate_signals(data) if data else {}
+
+        # Convert news to JSON for embedding in JavaScript
+        news_json = json.dumps(bitcoin_news) if bitcoin_news else "[]"
 
         # Generate sparklines for key metrics
         price_sparkline = ""
@@ -3299,46 +3303,34 @@ Based on current data patterns:
         }}
 
         // ===== News Feed =====
-        async function loadNewsFeed() {{
+        const NEWS_DATA = {news_json};
+
+        function loadNewsFeed() {{
             const newsContainer = document.getElementById('news-feed');
+            const news = NEWS_DATA;
 
-            try {{
-                // Fetch from CryptoPanic API (free, no auth required for public feed)
-                const response = await fetch('https://cryptopanic.com/api/free/v1/posts/?auth_token=public&currencies=BTC&kind=news&public=true');
-
-                if (!response.ok) throw new Error('News fetch failed');
-
-                const data = await response.json();
-                const news = data.results?.slice(0, 5) || [];
-
-                if (news.length === 0) {{
-                    newsContainer.innerHTML = '<div class="news-loading">No recent news available</div>';
-                    return;
-                }}
-
-                newsContainer.innerHTML = news.map(item => `
-                    <a href="${{item.url}}" target="_blank" rel="noopener" class="news-item">
-                        <div class="news-content">
-                            <div class="news-source">${{item.source?.title || 'Bitcoin News'}}</div>
-                            <div class="news-title">${{item.title}}</div>
-                            <div class="news-time">${{formatTimeAgo(item.published_at)}}</div>
-                        </div>
-                    </a>
-                `).join('');
-
-            }} catch (error) {{
-                console.log('News feed error:', error);
-                // Fallback to static placeholder
+            if (!news || news.length === 0) {{
                 newsContainer.innerHTML = `
                     <div class="news-item" style="cursor: default;">
                         <div class="news-content">
                             <div class="news-source">Bitcoin News</div>
-                            <div class="news-title">Unable to load news feed. Visit major crypto news sites for latest updates.</div>
+                            <div class="news-title">No recent news available. Visit bitcoinmagazine.com or coindesk.com for updates.</div>
                             <div class="news-time">--</div>
                         </div>
                     </div>
                 `;
+                return;
             }}
+
+            newsContainer.innerHTML = news.map(item => `
+                <a href="${{item.url}}" target="_blank" rel="noopener" class="news-item">
+                    <div class="news-content">
+                        <div class="news-source">${{item.source || 'Bitcoin News'}}</div>
+                        <div class="news-title">${{item.title}}</div>
+                        <div class="news-time">${{formatTimeAgo(item.published_at)}}</div>
+                    </div>
+                </a>
+            `).join('');
         }}
 
         function formatTimeAgo(dateString) {{
