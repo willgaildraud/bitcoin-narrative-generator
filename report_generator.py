@@ -3848,12 +3848,11 @@ Based on current data patterns:
         let showMA50 = false;
 
         // ===== Formatters =====
-        function formatPrice(n) {{
-            if (typeof currentCurrency !== 'undefined' && currentCurrency.code !== 'USD') {{
-                const converted = n * currentCurrency.rate;
-                return currentCurrency.symbol + converted.toLocaleString('en-US', {{maximumFractionDigits: 0}});
-            }}
-            return '$' + n.toLocaleString('en-US', {{maximumFractionDigits: 0}});
+        function formatPrice(n, skipConversion = false) {{
+            const symbol = (typeof currentCurrency !== 'undefined') ? currentCurrency.symbol : '$';
+            const rate = (typeof currentCurrency !== 'undefined' && !skipConversion) ? currentCurrency.rate : 1;
+            const converted = n * rate;
+            return symbol + converted.toLocaleString('en-US', {{maximumFractionDigits: 0}});
         }}
 
         function formatPriceDecimal(n, skipConversion = false) {{
@@ -4099,7 +4098,7 @@ Based on current data patterns:
                             grid: {{ color: 'rgba(48, 54, 61, 0.5)', drawBorder: false }},
                             ticks: {{
                                 color: '#6e7681',
-                                callback: (val) => formatPrice(val)
+                                callback: (val) => formatPrice(val, true)
                             }}
                         }}
                     }}
