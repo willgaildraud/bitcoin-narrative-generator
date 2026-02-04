@@ -3707,15 +3707,15 @@ Based on current data patterns:
             let votes = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
             const today = new Date().toISOString().split('T')[0];
 
-            // Reset votes daily
+            // Reset votes daily - start fresh with 0 votes
             if (votes.date !== today) {{
                 votes = {{
                     date: today,
-                    up10: Math.floor(Math.random() * 50) + 20,
-                    up: Math.floor(Math.random() * 80) + 40,
-                    flat: Math.floor(Math.random() * 60) + 30,
-                    down: Math.floor(Math.random() * 70) + 35,
-                    down10: Math.floor(Math.random() * 40) + 15
+                    up10: 0,
+                    up: 0,
+                    flat: 0,
+                    down: 0,
+                    down10: 0
                 }};
                 localStorage.setItem(votesKey, JSON.stringify(votes));
             }}
@@ -3774,12 +3774,12 @@ Based on current data patterns:
             let sentiment = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
             const today = new Date().toISOString().split('T')[0];
 
-            // Reset daily
+            // Reset daily - start fresh with 0 votes
             if (sentiment.date !== today) {{
                 sentiment = {{
                     date: today,
-                    bullish: Math.floor(Math.random() * 200) + 100,
-                    bearish: Math.floor(Math.random() * 150) + 80
+                    bullish: 0,
+                    bearish: 0
                 }};
                 localStorage.setItem(votesKey, JSON.stringify(sentiment));
             }}
@@ -3833,47 +3833,30 @@ Based on current data patterns:
             document.getElementById('sentiment-total').textContent = `${{total.toLocaleString()}} votes today`;
         }}
 
-        // ===== Giscus Comments =====
+        // ===== Discussion Section =====
         function initGiscus() {{
             const container = document.getElementById('giscus-container');
-            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 
-            // Giscus script - uses GitHub Discussions
-            // You need to configure this at https://giscus.app/
-            const script = document.createElement('script');
-            script.src = 'https://giscus.app/client.js';
-            script.setAttribute('data-repo', 'willgaildraud/bitcoin-narrative-generator');
-            script.setAttribute('data-repo-id', ''); // Get this from giscus.app
-            script.setAttribute('data-category', 'General');
-            script.setAttribute('data-category-id', ''); // Get this from giscus.app
-            script.setAttribute('data-mapping', 'pathname');
-            script.setAttribute('data-strict', '0');
-            script.setAttribute('data-reactions-enabled', '1');
-            script.setAttribute('data-emit-metadata', '0');
-            script.setAttribute('data-input-position', 'top');
-            script.setAttribute('data-theme', theme);
-            script.setAttribute('data-lang', 'en');
-            script.setAttribute('data-loading', 'lazy');
-            script.crossOrigin = 'anonymous';
-            script.async = true;
-
-            container.innerHTML = '';
-            container.appendChild(script);
-
-            // Fallback message if Giscus isn't configured yet
-            setTimeout(() => {{
-                if (container.querySelector('iframe') === null) {{
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 30px; color: var(--text-muted);">
-                            <p>Comments coming soon!</p>
-                            <p style="font-size: 0.85rem; margin-top: 8px;">Join the discussion on
-                                <a href="https://github.com/willgaildraud/bitcoin-narrative-generator/discussions"
-                                   target="_blank" rel="noopener" style="color: var(--accent);">GitHub Discussions</a>
-                            </p>
-                        </div>
-                    `;
-                }}
-            }}, 3000);
+            container.innerHTML = `
+                <div style="text-align: center; padding: 24px;">
+                    <p style="color: var(--text-primary); font-size: 1rem; margin-bottom: 16px;">
+                        Share your thoughts with the community
+                    </p>
+                    <a href="https://github.com/willgaildraud/bitcoin-narrative-generator/discussions"
+                       target="_blank" rel="noopener"
+                       style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+                              background: var(--accent); color: white; text-decoration: none;
+                              border-radius: 8px; font-weight: 600; transition: opacity 0.2s;">
+                        <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        Join Discussion on GitHub
+                    </a>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 16px;">
+                        Free GitHub account required to comment
+                    </p>
+                </div>
+            `;
         }}
 
         // ===== Glossary Functions =====
