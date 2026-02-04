@@ -3259,11 +3259,11 @@ Based on current data patterns:
             <div class="stats-row">
                 <div class="stat-item">
                     <div class="stat-label">Market Cap</div>
-                    <div class="stat-value">{fmt(market_cap)}</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="{market_cap}">{fmt(market_cap)}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">{fmt(volume)}</div>
+                    <div class="stat-value" id="stat-volume" data-usd="{volume}">{fmt(volume)}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
@@ -3279,27 +3279,6 @@ Based on current data patterns:
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
                 <div class="pulse-summary-text">{pulse_summary}</div>
-            </div>
-
-            <!-- Market Conditions Score -->
-            <div class="market-score-card">
-                <div class="market-score-header">
-                    <h3 class="market-score-title">Market Conditions</h3>
-                    <div class="market-score-badge" style="background: {market_score_color}20; color: {market_score_color};">
-                        <span class="market-score-value">{market_score}/5</span>
-                        <span>{market_score_label}</span>
-                    </div>
-                </div>
-                <div class="market-score-details">
-                    {"".join(f'''<div class="score-item">
-                        <span class="score-check {"active" if active else "inactive"}">{"✓" if active else "✗"}</span>
-                        <span class="score-item-label">{label}</span>
-                        <span class="score-item-value">{detail}</span>
-                    </div>''' for label, active, detail in market_score_details)}
-                </div>
-                <div class="market-score-disclaimer">
-                    Based on historical patterns only. Not financial advice. Past performance does not indicate future results.
-                </div>
             </div>
 
             <!-- What Changed Today -->
@@ -3418,6 +3397,27 @@ Based on current data patterns:
                     <div class="halving-info-item">Current Block: <strong>{block_height:,}</strong></div>
                     <div class="halving-info-item">Current Reward: <strong>{block_reward} BTC</strong></div>
                     <div class="halving-info-item">Post-Halving: <strong>{block_reward/2} BTC</strong></div>
+                </div>
+            </div>
+
+            <!-- Market Conditions Score -->
+            <div class="market-score-card">
+                <div class="market-score-header">
+                    <h3 class="market-score-title">Market Conditions</h3>
+                    <div class="market-score-badge" style="background: {market_score_color}20; color: {market_score_color};">
+                        <span class="market-score-value">{market_score}/5</span>
+                        <span>{market_score_label}</span>
+                    </div>
+                </div>
+                <div class="market-score-details">
+                    {"".join(f'''<div class="score-item">
+                        <span class="score-check {"active" if active else "inactive"}">{"✓" if active else "✗"}</span>
+                        <span class="score-item-label">{label}</span>
+                        <span class="score-item-value">{detail}</span>
+                    </div>''' for label, active, detail in market_score_details)}
+                </div>
+                <div class="market-score-disclaimer">
+                    Based on historical patterns only. Not financial advice. Past performance does not indicate future results.
                 </div>
             </div>
 
@@ -3852,12 +3852,11 @@ Based on current data patterns:
             return '$' + n.toLocaleString('en-US', {{maximumFractionDigits: 0}});
         }}
 
-        function formatPriceDecimal(n) {{
-            if (typeof currentCurrency !== 'undefined' && currentCurrency.code !== 'USD') {{
-                const converted = n * currentCurrency.rate;
-                return currentCurrency.symbol + converted.toLocaleString('en-US', {{minimumFractionDigits: 2, maximumFractionDigits: 2}});
-            }}
-            return '$' + n.toLocaleString('en-US', {{minimumFractionDigits: 2, maximumFractionDigits: 2}});
+        function formatPriceDecimal(n, skipConversion = false) {{
+            const symbol = (typeof currentCurrency !== 'undefined') ? currentCurrency.symbol : '$';
+            const rate = (typeof currentCurrency !== 'undefined' && !skipConversion) ? currentCurrency.rate : 1;
+            const converted = n * rate;
+            return symbol + converted.toLocaleString('en-US', {{minimumFractionDigits: 2, maximumFractionDigits: 2}});
         }}
 
         function formatPercent(n) {{
@@ -3865,11 +3864,14 @@ Based on current data patterns:
             return sign + n.toFixed(2) + '%';
         }}
 
-        function formatLarge(n) {{
-            if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
-            if (n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
-            if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
-            return '$' + n.toLocaleString();
+        function formatLarge(n, skipConversion = false) {{
+            const symbol = (typeof currentCurrency !== 'undefined') ? currentCurrency.symbol : '$';
+            const rate = (typeof currentCurrency !== 'undefined' && !skipConversion) ? currentCurrency.rate : 1;
+            const converted = n * rate;
+            if (converted >= 1e12) return symbol + (converted/1e12).toFixed(2) + 'T';
+            if (converted >= 1e9) return symbol + (converted/1e9).toFixed(2) + 'B';
+            if (converted >= 1e6) return symbol + (converted/1e6).toFixed(2) + 'M';
+            return symbol + converted.toLocaleString();
         }}
 
         // ===== Chart Functions =====
@@ -4067,7 +4069,7 @@ Based on current data patterns:
                                     const date = new Date(items[0].label);
                                     return date.toLocaleString();
                                 }},
-                                label: (item) => item.dataset.label + ': ' + formatPriceDecimal(item.raw)
+                                label: (item) => item.dataset.label + ': ' + formatPriceDecimal(item.raw, true)
                             }}
                         }}
                     }},
@@ -4156,15 +4158,16 @@ Based on current data patterns:
 
                 priceChart.update('none');
 
-                // Update chart stats
-                const high = Math.max(...prices);
-                const low = Math.min(...prices);
-                const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-                const change = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
+                // Update chart stats - calculate from USD values, let formatPriceDecimal handle conversion
+                const usdPrices = chartDataUSD.map(p => p[1]);
+                const highUSD = Math.max(...usdPrices);
+                const lowUSD = Math.min(...usdPrices);
+                const avgUSD = usdPrices.reduce((a, b) => a + b, 0) / usdPrices.length;
+                const change = ((usdPrices[usdPrices.length - 1] - usdPrices[0]) / usdPrices[0]) * 100;
 
-                document.getElementById('chart-high').textContent = formatPriceDecimal(high);
-                document.getElementById('chart-low').textContent = formatPriceDecimal(low);
-                document.getElementById('chart-avg').textContent = formatPriceDecimal(avg);
+                document.getElementById('chart-high').textContent = formatPriceDecimal(highUSD);
+                document.getElementById('chart-low').textContent = formatPriceDecimal(lowUSD);
+                document.getElementById('chart-avg').textContent = formatPriceDecimal(avgUSD);
 
                 const changeEl = document.getElementById('chart-change');
                 changeEl.textContent = formatPercent(change);
@@ -4178,20 +4181,24 @@ Based on current data patterns:
             isChartLoading = false;
         }}
 
-        function addPriceToChart(newPrice) {{
-            if (!priceChart || chartData.length === 0) return;
+        function addPriceToChart(newPriceUSD) {{
+            if (!priceChart || chartDataUSD.length === 0) return;
 
             const now = Date.now();
-            chartData.push([now, newPrice]);
+            chartDataUSD.push([now, newPriceUSD]);
+            chartData.push([now, newPriceUSD]);
 
             // Remove old data points if too many
             const maxPoints = currentTimeframe <= 1 ? 96 : (currentTimeframe * 24);
-            if (chartData.length > maxPoints) {{
+            if (chartDataUSD.length > maxPoints) {{
+                chartDataUSD.shift();
                 chartData.shift();
             }}
 
-            priceChart.data.labels = chartData.map(p => p[0]);
-            priceChart.data.datasets[0].data = chartData.map(p => p[1]);
+            // Convert to current currency for display
+            const rate = (typeof currentCurrency !== 'undefined') ? currentCurrency.rate : 1;
+            priceChart.data.labels = chartDataUSD.map(p => p[0]);
+            priceChart.data.datasets[0].data = chartDataUSD.map(p => p[1] * rate);
             priceChart.update('none');
         }}
 
@@ -4236,18 +4243,25 @@ Based on current data patterns:
                         heroChange.style.color = change >= 0 ? '#3fb950' : '#f85149';
                     }}
 
-                    // Update stats row
-                    const statItems = document.querySelectorAll('.stat-item');
-                    if (statItems[0]) statItems[0].querySelector('.stat-value').textContent = formatLarge(btc.usd_market_cap);
-                    if (statItems[1]) statItems[1].querySelector('.stat-value').textContent = formatLarge(btc.usd_24h_vol);
+                    // Update stats row - update USD values and convert
+                    const marketCapEl = document.getElementById('stat-market-cap');
+                    if (marketCapEl) {{
+                        marketCapEl.dataset.usd = btc.usd_market_cap;
+                        marketCapEl.textContent = formatLarge(btc.usd_market_cap);
+                    }}
+                    const volumeEl = document.getElementById('stat-volume');
+                    if (volumeEl) {{
+                        volumeEl.dataset.usd = btc.usd_24h_vol;
+                        volumeEl.textContent = formatLarge(btc.usd_24h_vol);
+                    }}
 
-                    // Update current price in cards
+                    // Update current price in cards - use USD value, let formatPriceDecimal convert
                     const priceValues = document.querySelectorAll('.data-value.accent');
-                    if (priceValues[0]) priceValues[0].textContent = formatPriceDecimal(newPrice);
+                    if (priceValues[0]) priceValues[0].textContent = formatPriceDecimal(newPriceUSD);
 
-                    // Add to chart if timeframe is 24h
+                    // Add to chart if timeframe is 24h - store USD value
                     if (currentTimeframe <= 1) {{
-                        addPriceToChart(newPrice);
+                        addPriceToChart(newPriceUSD);
                     }}
 
                     // Update timestamp
@@ -4403,6 +4417,17 @@ Based on current data patterns:
             if (heroPrice) {{
                 heroPrice.innerHTML = formatConvertedPrice(basePriceUSD) +
                     '<span class="price-currency">' + currentCurrency.code + '</span>';
+            }}
+
+            // Market Cap and 24h Volume - use formatLarge with conversion
+            const marketCapEl = document.getElementById('stat-market-cap');
+            if (marketCapEl && marketCapEl.dataset.usd) {{
+                marketCapEl.textContent = formatLarge(parseFloat(marketCapEl.dataset.usd));
+            }}
+
+            const volumeEl = document.getElementById('stat-volume');
+            if (volumeEl && volumeEl.dataset.usd) {{
+                volumeEl.textContent = formatLarge(parseFloat(volumeEl.dataset.usd));
             }}
 
             // Comparison table prices - store USD in data attribute on first run
