@@ -3031,88 +3031,14 @@ Based on current data patterns:
                 </div>
             </div>
 
-            <!-- Community Section -->
+            <!-- Daily Discussion Section -->
             <div class="section-header mt-40">
-                <h2 class="section-title">Community Pulse</h2>
-                <p class="section-subtitle">What does the community think?</p>
+                <h2 class="section-title">Daily Discussion</h2>
+                <p class="section-subtitle">Share your thoughts - conversation resets daily</p>
             </div>
 
-            <div class="community-grid">
-                <!-- Daily Poll -->
-                <div class="poll-card">
-                    <div class="poll-question">Where will BTC be in 24 hours?</div>
-                    <div class="poll-options" id="poll-options">
-                        <div class="poll-option" data-option="up10">
-                            <div class="poll-option-bar" style="width: 0%"></div>
-                            <div class="poll-option-content">
-                                <span class="poll-option-text">Up 5%+ </span>
-                                <span class="poll-option-pct">0%</span>
-                            </div>
-                        </div>
-                        <div class="poll-option" data-option="up">
-                            <div class="poll-option-bar" style="width: 0%"></div>
-                            <div class="poll-option-content">
-                                <span class="poll-option-text">Slightly up (0-5%)</span>
-                                <span class="poll-option-pct">0%</span>
-                            </div>
-                        </div>
-                        <div class="poll-option" data-option="flat">
-                            <div class="poll-option-bar" style="width: 0%"></div>
-                            <div class="poll-option-content">
-                                <span class="poll-option-text">Flat (sideways)</span>
-                                <span class="poll-option-pct">0%</span>
-                            </div>
-                        </div>
-                        <div class="poll-option" data-option="down">
-                            <div class="poll-option-bar" style="width: 0%"></div>
-                            <div class="poll-option-content">
-                                <span class="poll-option-text">Slightly down (0-5%)</span>
-                                <span class="poll-option-pct">0%</span>
-                            </div>
-                        </div>
-                        <div class="poll-option" data-option="down10">
-                            <div class="poll-option-bar" style="width: 0%"></div>
-                            <div class="poll-option-content">
-                                <span class="poll-option-text">Down 5%+ </span>
-                                <span class="poll-option-pct">0%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="poll-total" id="poll-total">Cast your vote!</div>
-                </div>
-
-                <!-- Sentiment Widget -->
-                <div class="sentiment-card">
-                    <div class="sentiment-question">What's your outlook?</div>
-                    <div class="sentiment-buttons" id="sentiment-buttons">
-                        <button class="sentiment-btn bullish" data-sentiment="bullish">
-                            <span class="sentiment-icon">&#128640;</span>
-                            <span class="sentiment-label">Bullish</span>
-                        </button>
-                        <button class="sentiment-btn bearish" data-sentiment="bearish">
-                            <span class="sentiment-icon">&#128059;</span>
-                            <span class="sentiment-label">Bearish</span>
-                        </button>
-                    </div>
-                    <div class="sentiment-bar-container" id="sentiment-bar">
-                        <div class="sentiment-bar-bull" id="sentiment-bull" style="width: 50%">
-                            <span class="sentiment-bar-pct" id="sentiment-bull-pct">50%</span>
-                        </div>
-                        <div class="sentiment-bar-bear" id="sentiment-bear" style="width: 50%">
-                            <span class="sentiment-bar-pct" id="sentiment-bear-pct">50%</span>
-                        </div>
-                    </div>
-                    <div class="sentiment-total" id="sentiment-total">Join the community!</div>
-                </div>
-            </div>
-
-            <!-- Comments Section -->
-            <div class="comments-section">
+            <div class="comments-section" style="margin-top: 0;">
                 <div class="comments-card">
-                    <div class="comments-header">
-                        <span class="comments-icon">&#128172;</span>
-                        <h3 class="comments-title">Discussion</h3>
-                    </div>
                     <div id="comments-container">
                         <div class="comment-form" id="comment-form">
                             <input type="text" class="comment-name-input" id="comment-name"
@@ -3681,9 +3607,7 @@ Based on current data patterns:
 
             // Initialize community features (Firebase-powered)
             initFirebase();
-            initPoll();
-            initSentiment();
-            initGiscus();
+            initComments();
         }});
 
         // ===== Halving Countdown =====
@@ -3864,129 +3788,8 @@ Based on current data patterns:
             }}
         }}
 
-        // ===== Community Poll (Firebase) =====
-        function initPoll() {{
-            const pollOptions = document.querySelectorAll('.poll-option');
-            const today = new Date().toISOString().split('T')[0];
-            const pollKey = 'btcpulse_poll_' + today;
-            const userVote = localStorage.getItem(pollKey);
-
-            if (firebaseEnabled) {{
-                // Listen for real-time vote updates
-                db.ref('polls/' + today).on('value', (snapshot) => {{
-                    const votes = snapshot.val() || {{ up10: 0, up: 0, flat: 0, down: 0, down10: 0 }};
-                    updatePollDisplay(votes, userVote);
-                }});
-            }} else {{
-                // Fallback to localStorage
-                const votes = {{ up10: 0, up: 0, flat: 0, down: 0, down10: 0 }};
-                updatePollDisplay(votes, userVote);
-            }}
-
-            pollOptions.forEach(option => {{
-                option.addEventListener('click', async () => {{
-                    if (localStorage.getItem(pollKey)) return;
-
-                    const selected = option.dataset.option;
-                    localStorage.setItem(pollKey, selected);
-
-                    if (firebaseEnabled) {{
-                        // Increment vote in Firebase
-                        const voteRef = db.ref('polls/' + today + '/' + selected);
-                        voteRef.transaction((current) => (current || 0) + 1);
-                    }}
-
-                    // Update UI immediately
-                    option.classList.add('selected');
-                    document.querySelectorAll('.poll-option').forEach(opt => opt.classList.add('voted'));
-                }});
-            }});
-        }}
-
-        function updatePollDisplay(votes, userVote) {{
-            const options = ['up10', 'up', 'flat', 'down', 'down10'];
-            const total = options.reduce((sum, opt) => sum + (votes[opt] || 0), 0);
-
-            document.querySelectorAll('.poll-option').forEach(option => {{
-                const opt = option.dataset.option;
-                const count = votes[opt] || 0;
-                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-
-                if (userVote) {{
-                    option.classList.add('voted');
-                    if (opt === userVote) option.classList.add('selected');
-                }}
-
-                option.querySelector('.poll-option-bar').style.width = pct + '%';
-                option.querySelector('.poll-option-pct').textContent = pct + '%';
-            }});
-
-            document.getElementById('poll-total').textContent = total > 0
-                ? `${{total.toLocaleString()}} votes today`
-                : 'Be the first to vote!';
-        }}
-
-        // ===== Sentiment Widget (Firebase) =====
-        function initSentiment() {{
-            const buttons = document.querySelectorAll('.sentiment-btn');
-            const today = new Date().toISOString().split('T')[0];
-            const sentimentKey = 'btcpulse_sentiment_' + today;
-            const userVote = localStorage.getItem(sentimentKey);
-
-            if (firebaseEnabled) {{
-                // Listen for real-time sentiment updates
-                db.ref('sentiment/' + today).on('value', (snapshot) => {{
-                    const sentiment = snapshot.val() || {{ bullish: 0, bearish: 0 }};
-                    updateSentimentDisplay(sentiment, userVote);
-                }});
-            }} else {{
-                const sentiment = {{ bullish: 0, bearish: 0 }};
-                updateSentimentDisplay(sentiment, userVote);
-            }}
-
-            buttons.forEach(btn => {{
-                btn.addEventListener('click', async () => {{
-                    if (localStorage.getItem(sentimentKey)) return;
-
-                    const vote = btn.dataset.sentiment;
-                    localStorage.setItem(sentimentKey, vote);
-
-                    if (firebaseEnabled) {{
-                        const voteRef = db.ref('sentiment/' + today + '/' + vote);
-                        voteRef.transaction((current) => (current || 0) + 1);
-                    }}
-
-                    buttons.forEach(b => {{
-                        b.classList.add('voted');
-                        if (b.dataset.sentiment === vote) b.classList.add('selected');
-                    }});
-                }});
-            }});
-        }}
-
-        function updateSentimentDisplay(sentiment, userVote) {{
-            const total = (sentiment.bullish || 0) + (sentiment.bearish || 0);
-            const bullPct = total > 0 ? Math.round((sentiment.bullish / total) * 100) : 50;
-            const bearPct = 100 - bullPct;
-
-            document.getElementById('sentiment-bull').style.width = bullPct + '%';
-            document.getElementById('sentiment-bear').style.width = bearPct + '%';
-            document.getElementById('sentiment-bull-pct').textContent = bullPct + '%';
-            document.getElementById('sentiment-bear-pct').textContent = bearPct + '%';
-            document.getElementById('sentiment-total').textContent = total > 0
-                ? `${{total.toLocaleString()}} votes today`
-                : 'Cast your vote!';
-
-            if (userVote) {{
-                document.querySelectorAll('.sentiment-btn').forEach(btn => {{
-                    btn.classList.add('voted');
-                    if (btn.dataset.sentiment === userVote) btn.classList.add('selected');
-                }});
-            }}
-        }}
-
-        // ===== Comments Section (Firebase) =====
-        function initGiscus() {{
+        // ===== Daily Comments (Firebase) =====
+        function initComments() {{
             const container = document.getElementById('comments-container');
             const commentsList = document.getElementById('comments-list');
             const submitBtn = document.getElementById('comment-submit');
