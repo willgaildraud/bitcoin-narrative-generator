@@ -519,8 +519,8 @@ Based on current data patterns:
             adjustment_minutes = blocks_until_adjustment * 10
             next_adjustment = (datetime.now() + timedelta(minutes=adjustment_minutes)).strftime("%Y-%m-%d")
 
-        # Days until halving
-        days_until_halving = round(blocks_until_halving * 10 / 60 / 24) if blocks_until_halving else 0
+        # Days until halving (use floor to match JavaScript calculation)
+        days_until_halving = int(blocks_until_halving * 10 / 60 / 24) if blocks_until_halving else 0
 
         # Network stats
         minutes_between = network_stats.get('minutes_between_blocks', 10) or 10
@@ -1791,58 +1791,6 @@ Based on current data patterns:
             margin-bottom: 10px;
         }}
 
-        /* Time Anchors Grid */
-        .time-anchors {{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin: 20px 0;
-        }}
-
-        .time-anchor {{
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-        }}
-
-        .time-anchor-value {{
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }}
-
-        .time-anchor-label {{
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }}
-
-        .time-anchor-sub {{
-            font-size: 0.75rem;
-            color: var(--accent);
-            margin-top: 4px;
-        }}
-
-        .progress-bar-small {{
-            width: 100%;
-            height: 4px;
-            background: var(--bg-darker);
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }}
-
-        .progress-bar-small-fill {{
-            height: 100%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }}
-
         /* Halving Countdown Widget */
         .halving-widget {{
             background: linear-gradient(135deg, rgba(246, 133, 27, 0.1) 0%, rgba(246, 133, 27, 0.05) 100%);
@@ -2800,32 +2748,6 @@ Based on current data patterns:
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
                 <div class="pulse-summary-text">{pulse_summary}</div>
-            </div>
-
-            <!-- Time Anchors -->
-            <div class="time-anchors">
-                <div class="time-anchor">
-                    <div class="time-anchor-value">{days_until_halving}</div>
-                    <div class="time-anchor-label">Days to Halving</div>
-                    <div class="time-anchor-sub">{next_halving}</div>
-                </div>
-                <div class="time-anchor">
-                    <div class="time-anchor-value">{blocks_until_adjustment:,}</div>
-                    <div class="time-anchor-label">Blocks to Difficulty Adj.</div>
-                    <div class="progress-bar-small">
-                        <div class="progress-bar-small-fill" style="width: {adjustment_progress_pct}%"></div>
-                    </div>
-                </div>
-                <div class="time-anchor">
-                    <div class="time-anchor-value">{block_height:,}</div>
-                    <div class="time-anchor-label">Current Block</div>
-                    <div class="time-anchor-sub">#{block_height}</div>
-                </div>
-                <div class="time-anchor">
-                    <div class="time-anchor-value">{fg_value}</div>
-                    <div class="time-anchor-label">Fear & Greed</div>
-                    <div class="time-anchor-sub">{fg_class}</div>
-                </div>
             </div>
 
             <!-- Halving Countdown Widget -->
