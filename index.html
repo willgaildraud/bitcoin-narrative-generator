@@ -2391,19 +2391,19 @@
             <!-- 1. Live Bitcoin Price -->
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$73,102</h1>
+                <h1 class="hero-price">$72,938</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    -4.38% (24h)
+                    -4.25% (24h)
                 </div>
             </section>
 
             <!-- 2. Today's Pulse -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is down 4.4% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is down 4.3% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
             </div>
 
             <!-- 3. Market Conditions Score -->
@@ -2423,15 +2423,15 @@
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 200D MA</span>
-                        <span class="score-item-value">Price -29.2% below</span>
+                        <span class="score-item-value">Price -29.4% below</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 50D MA</span>
-                        <span class="score-item-value">Price -17.3% below</span>
+                        <span class="score-item-value">Price -17.5% below</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">>30% from ATH</span>
-                        <span class="score-item-value">-42.0% from ATH</span>
+                        <span class="score-item-value">-42.1% from ATH</span>
                     </div><div class="score-item">
                         <span class="score-check inactive">✗</span>
                         <span class="score-item-label">Hash Rate Rising</span>
@@ -2449,7 +2449,7 @@
                 <ul class="changes-list">
                     <li>
                         <span class="change-icon down">↓</span>
-                        <span>Price fell 3.35% to $73,102</span>
+                        <span>Price fell 3.57% to $72,938</span>
                     </li>
                     <li>
                         <span class="change-icon down">↓</span>
@@ -2482,8 +2482,8 @@
                         <tr>
                             <td class="metric-name">Price</td>
                             <td>$75,639</td>
-                            <td>$73,102</td>
-                            <td class="delta negative">-3.35%</td>
+                            <td>$72,938</td>
+                            <td class="delta negative">-3.57%</td>
                         </tr>
                         <tr>
                             <td class="metric-name">Fear & Greed</td>
@@ -2504,19 +2504,19 @@
             <div class="stats-row">
                 <div class="stat-item">
                     <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="stat-market-cap" data-usd="1463173641310">$1.46T</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="1461658828988">$1.46T</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value" id="stat-volume" data-usd="71295476318">$71.30B</div>
+                    <div class="stat-value" id="stat-volume" data-usd="71276831893">$71.28B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-17.89%</div>
+                    <div class="stat-value red">-18.07%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-22.45%</div>
+                    <div class="stat-value red">-22.62%</div>
                 </div>
             </div>
 
@@ -2593,23 +2593,23 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$73,102.00</span>
+                        <span class="data-value accent" id="price-current" data-usd="72938">$72,938.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
-                        <span class="data-value">$97,007.78</span>
+                        <span class="data-value" id="price-high-30d" data-usd="97007.78078881276">$97,007.78</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$73,103.35</span>
+                        <span class="data-value" id="price-low-30d" data-usd="72934.45045190635">$72,934.45</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
-                        <span class="data-value">$126,080</span>
+                        <span class="data-value" id="price-ath" data-usd="126080">$126,080</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-42.0%</span>
+                        <span class="data-value" style="color: var(--red)">-42.1%</span>
                     </div>
                 </div>
 
@@ -2621,15 +2621,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$78,841 <small>(-7.3%)</small></span>
+                <span class="data-value" id="ma-7d" data-usd="78827.72367026296" data-pct="-7.377332237230619" style="color: var(--red)">$78,828 <small>(-7.4%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,387 <small>(-15.4%)</small></span>
+                <span class="data-value" id="ma-20d" data-usd="86381.86005503955" data-pct="-15.477230342642972" style="color: var(--red)">$86,382 <small>(-15.5%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$88,446 <small>(-17.3%)</small></span>
+                <span class="data-value" id="ma-50d" data-usd="88443.77081721179" data-pct="-17.447729867875715" style="color: var(--red)">$88,444 <small>(-17.4%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2672,11 +2672,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value">$2.56T</span>
+                        <span class="data-value" id="total-crypto-mcap" data-usd="2542869296809.2886">$2.54T</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value">$1.46T</span>
+                        <span class="data-value" id="btc-market-cap" data-usd="1461658828988">$1.46T</span>
                     </div>
                 </div>
 
@@ -2688,15 +2688,15 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">$71.30B</span>
+                        <span class="data-value accent" id="trading-volume-24h" data-usd="71276831893">$71.28B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.87%</span>
+                        <span class="data-value">4.88%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
-                        <span class="data-value">$13.34B</span>
+                        <span class="data-value" id="tx-volume-24h" data-usd="13344411909.709486">$13.34B</span>
                     </div>
                 </div>
             </div>
@@ -2757,7 +2757,7 @@
                     </div>
                 </div>
                 <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>935,038</strong></div>
+                    <div class="halving-info-item">Current Block: <strong>935,040</strong></div>
                     <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
                     <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
                 </div>
@@ -2847,7 +2847,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
-                        <span class="data-value">935,038</span>
+                        <span class="data-value">935,040</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
@@ -2855,11 +2855,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$228,444</span>
+                        <span class="data-value">$227,931</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">9.5 min</span>
+                        <span class="data-value">9.6 min</span>
                     </div>
                 </div>
 
@@ -2870,7 +2870,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">114,962</span>
+                        <span class="data-value">114,960</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -2882,7 +2882,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">23,141</span>
+                        <span class="data-value">20,420</span>
                     </div>
                 </div>
 
@@ -2905,7 +2905,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
-                        <span class="data-value">1,367</span>
+                        <span class="data-value">1,371</span>
                     </div>
                 </div>
             </div>
@@ -2922,11 +2922,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">3 sat/vB</div>
+                    <div class="mini-stat-value">1 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">10,392</div>
+                    <div class="mini-stat-value">9,756</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2987,7 +2987,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">23,141 txs</span>
+                        <span class="data-value">20,420 txs</span>
                     </div>
                 </div>
             </div>
@@ -3044,7 +3044,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 21:27 UTC</span> ·
+                <span id="last-update">Last updated: 21:48 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -3087,8 +3087,8 @@
         let currentTimeframe = 7;
         let chartData = [];
         let chartDataUSD = [];  // Store original USD data for conversion
-        let lastPrice = 73102;
-        let lastPriceUSD = 73102;  // Store USD price for conversion
+        let lastPrice = 72938;
+        let lastPriceUSD = 72938;  // Store USD price for conversion
         let isChartLoading = false;
 
         // MA visibility state
@@ -3594,7 +3594,7 @@
 
         // ===== Currency Conversion =====
         let currentCurrency = { code: 'USD', symbol: '$', rate: 1 };
-        const basePriceUSD = 73102;
+        const basePriceUSD = 72938;
 
         function initCurrencySelector() {
             const selector = document.getElementById('currency-selector');
@@ -3680,6 +3680,68 @@
             const volumeEl = document.getElementById('stat-volume');
             if (volumeEl && volumeEl.dataset.usd) {
                 volumeEl.textContent = formatLarge(parseFloat(volumeEl.dataset.usd));
+            }
+
+            // 30-Day Price Range card
+            const priceCurrentEl = document.getElementById('price-current');
+            if (priceCurrentEl && priceCurrentEl.dataset.usd) {
+                priceCurrentEl.textContent = formatConvertedPrice(parseFloat(priceCurrentEl.dataset.usd), 2);
+            }
+
+            const priceHigh30dEl = document.getElementById('price-high-30d');
+            if (priceHigh30dEl && priceHigh30dEl.dataset.usd) {
+                priceHigh30dEl.textContent = formatConvertedPrice(parseFloat(priceHigh30dEl.dataset.usd), 2);
+            }
+
+            const priceLow30dEl = document.getElementById('price-low-30d');
+            if (priceLow30dEl && priceLow30dEl.dataset.usd) {
+                priceLow30dEl.textContent = formatConvertedPrice(parseFloat(priceLow30dEl.dataset.usd), 2);
+            }
+
+            const priceAthEl = document.getElementById('price-ath');
+            if (priceAthEl && priceAthEl.dataset.usd) {
+                priceAthEl.textContent = formatConvertedPrice(parseFloat(priceAthEl.dataset.usd));
+            }
+
+            // Moving Averages card
+            const ma7dEl = document.getElementById('ma-7d');
+            if (ma7dEl && ma7dEl.dataset.usd && parseFloat(ma7dEl.dataset.usd) > 0) {
+                const pct = parseFloat(ma7dEl.dataset.pct);
+                ma7dEl.innerHTML = formatConvertedPrice(parseFloat(ma7dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }
+
+            const ma20dEl = document.getElementById('ma-20d');
+            if (ma20dEl && ma20dEl.dataset.usd && parseFloat(ma20dEl.dataset.usd) > 0) {
+                const pct = parseFloat(ma20dEl.dataset.pct);
+                ma20dEl.innerHTML = formatConvertedPrice(parseFloat(ma20dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }
+
+            const ma50dEl = document.getElementById('ma-50d');
+            if (ma50dEl && ma50dEl.dataset.usd && parseFloat(ma50dEl.dataset.usd) > 0) {
+                const pct = parseFloat(ma50dEl.dataset.pct);
+                ma50dEl.innerHTML = formatConvertedPrice(parseFloat(ma50dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }
+
+            // Market Dominance card
+            const totalCryptoMcapEl = document.getElementById('total-crypto-mcap');
+            if (totalCryptoMcapEl && totalCryptoMcapEl.dataset.usd) {
+                totalCryptoMcapEl.textContent = formatLarge(parseFloat(totalCryptoMcapEl.dataset.usd));
+            }
+
+            const btcMarketCapEl = document.getElementById('btc-market-cap');
+            if (btcMarketCapEl && btcMarketCapEl.dataset.usd) {
+                btcMarketCapEl.textContent = formatLarge(parseFloat(btcMarketCapEl.dataset.usd));
+            }
+
+            // Trading Volume card
+            const tradingVolume24hEl = document.getElementById('trading-volume-24h');
+            if (tradingVolume24hEl && tradingVolume24hEl.dataset.usd) {
+                tradingVolume24hEl.textContent = formatLarge(parseFloat(tradingVolume24hEl.dataset.usd));
+            }
+
+            const txVolume24hEl = document.getElementById('tx-volume-24h');
+            if (txVolume24hEl && txVolume24hEl.dataset.usd) {
+                txVolume24hEl.textContent = formatLarge(parseFloat(txVolume24hEl.dataset.usd));
             }
 
             // Comparison table prices - store USD in data attribute on first run
@@ -3866,8 +3928,8 @@
 
         // ===== Halving Countdown =====
         const HALVING_DATA = {
-            blocksUntilHalving: 114962,
-            currentBlock: 935038,
+            blocksUntilHalving: 114960,
+            currentBlock: 935040,
             nextHalvingBlock: 1050000,
             lastHalvingBlock: 840000
         };
@@ -3966,7 +4028,7 @@
         }
 
         // ===== News Feed =====
-        const NEWS_DATA = [{"title": "Bitcoin open interest falls by $55B in 30 days: What\u2019s next for BTC price?", "url": "https://cointelegraph.com/news/bitcoin-open-interest-falls-by-dollar55b-in-30-days-what-s-next-for-btc-price?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 19:45:00", "domain": "cointelegraph.com"}, {"title": "US won't 'bail out' Bitcoin, says Treasury Secretary Bessent", "url": "https://cointelegraph.com/news/us-treasury-bessent-wont-bail-out-bitcoin?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 18:48:33", "domain": "cointelegraph.com"}, {"title": "Price predictions 2/4: BTC, ETH, BNB, XRP, SOL, DOGE, ADA, BCH, HYPE, XMR", "url": "https://cointelegraph.com/news/price-predictions-2-4-btc-eth-bnb-xrp-sol-doge-ada-bch-hype-xmr?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 18:43:50", "domain": "cointelegraph.com"}, {"title": "Early Bitcoin Dev Calls on Adam Back to Resign After Epstein Files Revelations", "url": "https://decrypt.co/356929/bitcoin-dev-calls-adam-back-resign-epstein-files", "source": "Decrypt", "published_at": "2026-02-04 19:22:00", "domain": "decrypt.co"}, {"title": "Can the Government 'Bail Out' Bitcoin? Congressman Prompts Bizarre Exchange With Treasury Secretary", "url": "https://decrypt.co/356936/can-government-bitcoin-congressman-bizarre-exchange-treasury-secretary", "source": "Decrypt", "published_at": "2026-02-04 18:34:31", "domain": "decrypt.co"}];
+        const NEWS_DATA = [{"title": "Bitcoin open interest falls by $55B in 30 days: What\u2019s next for BTC price?", "url": "https://cointelegraph.com/news/bitcoin-open-interest-falls-by-dollar55b-in-30-days-what-s-next-for-btc-price?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 19:45:00", "domain": "cointelegraph.com"}, {"title": "US won't 'bail out' Bitcoin, says Treasury Secretary Bessent", "url": "https://cointelegraph.com/news/us-treasury-bessent-wont-bail-out-bitcoin?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 18:48:33", "domain": "cointelegraph.com"}, {"title": "Price predictions 2/4: BTC, ETH, BNB, XRP, SOL, DOGE, ADA, BCH, HYPE, XMR", "url": "https://cointelegraph.com/news/price-predictions-2-4-btc-eth-bnb-xrp-sol-doge-ada-bch-hype-xmr?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-02-04 18:43:50", "domain": "cointelegraph.com"}, {"title": "Early Bitcoin Dev Calls on Adam Back to Resign After Epstein Files Revelations", "url": "https://decrypt.co/356929/bitcoin-dev-calls-adam-back-resign-epstein-files", "source": "Decrypt", "published_at": "2026-02-04 19:22:00", "domain": "decrypt.co"}];
 
         function loadNewsFeed() {
             const newsContainer = document.getElementById('news-feed');
