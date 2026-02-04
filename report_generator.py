@@ -1013,6 +1013,14 @@ Based on current data patterns:
             margin: 0 0 16px 0;
         }}
 
+        .price-currency {{
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 8px;
+            vertical-align: middle;
+        }}
+
         .hero-change {{
             display: inline-flex;
             align-items: center;
@@ -1794,6 +1802,78 @@ Based on current data patterns:
 
         .nav-link:hover {{
             color: var(--accent);
+        }}
+
+        /* Currency Selector */
+        .currency-selector {{
+            position: relative;
+        }}
+
+        .currency-btn {{
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }}
+
+        .currency-btn:hover {{
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }}
+
+        .currency-dropdown {{
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 120px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 100;
+        }}
+
+        .currency-selector.open .currency-dropdown {{
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }}
+
+        .currency-option {{
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }}
+
+        .currency-option:hover {{
+            background: var(--bg-darker);
+            color: var(--text-primary);
+        }}
+
+        .currency-option.active {{
+            color: var(--accent);
+        }}
+
+        .currency-flag {{
+            font-size: 1rem;
         }}
 
         /* Today's Pulse Summary */
@@ -3051,6 +3131,35 @@ Based on current data patterns:
                         <span class="logo-text">The Bitcoin Pulse</span>
                     </a>
                     <div class="nav-links">
+                        <div class="currency-selector" id="currency-selector">
+                            <button class="currency-btn" id="currency-btn">
+                                <span id="currency-display">USD</span>
+                                <span>▼</span>
+                            </button>
+                            <div class="currency-dropdown" id="currency-dropdown">
+                                <div class="currency-option active" data-currency="USD" data-symbol="$" data-rate="1">
+                                    <span class="currency-flag">🇺🇸</span> USD
+                                </div>
+                                <div class="currency-option" data-currency="EUR" data-symbol="€" data-rate="0.92">
+                                    <span class="currency-flag">🇪🇺</span> EUR
+                                </div>
+                                <div class="currency-option" data-currency="GBP" data-symbol="£" data-rate="0.79">
+                                    <span class="currency-flag">🇬🇧</span> GBP
+                                </div>
+                                <div class="currency-option" data-currency="JPY" data-symbol="¥" data-rate="149.5">
+                                    <span class="currency-flag">🇯🇵</span> JPY
+                                </div>
+                                <div class="currency-option" data-currency="AUD" data-symbol="A$" data-rate="1.53">
+                                    <span class="currency-flag">🇦🇺</span> AUD
+                                </div>
+                                <div class="currency-option" data-currency="CAD" data-symbol="C$" data-rate="1.36">
+                                    <span class="currency-flag">🇨🇦</span> CAD
+                                </div>
+                                <div class="currency-option" data-currency="INR" data-symbol="₹" data-rate="83.1">
+                                    <span class="currency-flag">🇮🇳</span> INR
+                                </div>
+                            </div>
+                        </div>
                         <span class="nav-link" id="open-glossary">Learn</span>
                         <div class="share-container">
                             <button class="share-btn" id="share-btn">
@@ -4089,8 +4198,146 @@ Based on current data patterns:
             await updateFearGreed();
         }}
 
+        // ===== Currency Conversion =====
+        let currentCurrency = {{ code: 'USD', symbol: '$', rate: 1 }};
+        const basePriceUSD = {price};
+
+        function initCurrencySelector() {{
+            const selector = document.getElementById('currency-selector');
+            const btn = document.getElementById('currency-btn');
+            const dropdown = document.getElementById('currency-dropdown');
+            const display = document.getElementById('currency-display');
+            const options = dropdown.querySelectorAll('.currency-option');
+
+            // Load saved preference
+            const saved = localStorage.getItem('btcPulseCurrency');
+            if (saved) {{
+                try {{
+                    const savedCurrency = JSON.parse(saved);
+                    currentCurrency = savedCurrency;
+                    display.textContent = savedCurrency.code;
+                    options.forEach(opt => {{
+                        opt.classList.toggle('active', opt.dataset.currency === savedCurrency.code);
+                    }});
+                    convertAllPrices();
+                }} catch (e) {{}}
+            }}
+
+            // Toggle dropdown
+            btn.addEventListener('click', (e) => {{
+                e.stopPropagation();
+                selector.classList.toggle('open');
+            }});
+
+            // Select currency
+            options.forEach(opt => {{
+                opt.addEventListener('click', () => {{
+                    const code = opt.dataset.currency;
+                    const symbol = opt.dataset.symbol;
+                    const rate = parseFloat(opt.dataset.rate);
+
+                    currentCurrency = {{ code, symbol, rate }};
+                    display.textContent = code;
+                    localStorage.setItem('btcPulseCurrency', JSON.stringify(currentCurrency));
+
+                    options.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    selector.classList.remove('open');
+
+                    convertAllPrices();
+                }});
+            }});
+
+            // Close on outside click
+            document.addEventListener('click', () => {{
+                selector.classList.remove('open');
+            }});
+        }}
+
+        function convertPrice(usdPrice) {{
+            return usdPrice * currentCurrency.rate;
+        }}
+
+        function formatConvertedPrice(usdPrice, decimals = 0) {{
+            const converted = convertPrice(usdPrice);
+            if (currentCurrency.code === 'JPY' || currentCurrency.code === 'INR') {{
+                return currentCurrency.symbol + Math.round(converted).toLocaleString();
+            }}
+            return currentCurrency.symbol + converted.toLocaleString(undefined, {{
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            }});
+        }}
+
+        function convertAllPrices() {{
+            // Hero price
+            const heroPrice = document.querySelector('.hero-price');
+            if (heroPrice) {{
+                const priceText = heroPrice.textContent;
+                const usdMatch = priceText.match(/[\\d,]+/);
+                if (usdMatch) {{
+                    heroPrice.innerHTML = formatConvertedPrice(basePriceUSD) +
+                        '<span class="price-currency">' + currentCurrency.code + '</span>';
+                }}
+            }}
+
+            // Share card price
+            const shareCardPrice = document.querySelector('.share-card-price');
+            if (shareCardPrice) {{
+                shareCardPrice.textContent = formatConvertedPrice(basePriceUSD);
+            }}
+
+            // Comparison table prices
+            document.querySelectorAll('.comparison-table td').forEach(td => {{
+                if (td.textContent.startsWith('$')) {{
+                    const num = parseFloat(td.textContent.replace(/[$,]/g, ''));
+                    if (!isNaN(num)) {{
+                        td.textContent = formatConvertedPrice(num);
+                    }}
+                }}
+            }});
+
+            // Changes list prices
+            document.querySelectorAll('.changes-list span').forEach(span => {{
+                const text = span.textContent;
+                if (text.includes('$')) {{
+                    const match = text.match(/\\$([\\d,]+)/);
+                    if (match) {{
+                        const num = parseFloat(match[1].replace(/,/g, ''));
+                        span.textContent = text.replace(/\\$[\\d,]+/, formatConvertedPrice(num));
+                    }}
+                }}
+            }});
+
+            // Historical table
+            document.querySelectorAll('.history-price-cell').forEach(cell => {{
+                const text = cell.textContent;
+                if (text.startsWith('$')) {{
+                    const num = parseFloat(text.replace(/[$,]/g, ''));
+                    if (!isNaN(num)) {{
+                        cell.textContent = formatConvertedPrice(num);
+                    }}
+                }}
+            }});
+
+            // Market cap (stored in trillions for USD)
+            const marketCapEl = document.querySelector('.stat-item .stat-value');
+            // Skip market cap conversion for simplicity - it's already formatted
+
+            // Track currency change
+            if (typeof gtag === 'function') {{
+                gtag('event', 'currency_change', {{
+                    'event_category': 'settings',
+                    'event_label': currentCurrency.code
+                }});
+            }}
+        }}
+
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', async function() {{
+            // Initialize currency selector
+            initCurrencySelector();
+
             // Initialize main price chart
             initChart();
 
