@@ -837,15 +837,15 @@ Based on current data patterns:
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: {"var(--green)" if price > sma_7 and sma_7 else "var(--red)" if sma_7 else "var(--text-secondary)"}">{f"${sma_7:,.0f}" if sma_7 else "N/A"} {f"<small>({price_vs_sma_7:+.1f}%)</small>" if sma_7 else ""}</span>
+                <span class="data-value" id="ma-7d" data-usd="{sma_7 if sma_7 else 0}" data-pct="{price_vs_sma_7 if sma_7 else 0}" style="color: {"var(--green)" if price > sma_7 and sma_7 else "var(--red)" if sma_7 else "var(--text-secondary)"}">{f"${sma_7:,.0f}" if sma_7 else "N/A"} {f"<small>({price_vs_sma_7:+.1f}%)</small>" if sma_7 else ""}</span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: {"var(--green)" if price > sma_20 and sma_20 else "var(--red)" if sma_20 else "var(--text-secondary)"}">{f"${sma_20:,.0f}" if sma_20 else "N/A"} {f"<small>({price_vs_sma_20:+.1f}%)</small>" if sma_20 else ""}</span>
+                <span class="data-value" id="ma-20d" data-usd="{sma_20 if sma_20 else 0}" data-pct="{price_vs_sma_20 if sma_20 else 0}" style="color: {"var(--green)" if price > sma_20 and sma_20 else "var(--red)" if sma_20 else "var(--text-secondary)"}">{f"${sma_20:,.0f}" if sma_20 else "N/A"} {f"<small>({price_vs_sma_20:+.1f}%)</small>" if sma_20 else ""}</span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: {"var(--green)" if price > sma_50 and sma_50 else "var(--red)" if sma_50 else "var(--text-secondary)"}">{f"${sma_50:,.0f}" if sma_50 else "N/A"} {f"<small>({price_vs_sma_50:+.1f}%)</small>" if sma_50 else ""}</span>
+                <span class="data-value" id="ma-50d" data-usd="{sma_50 if sma_50 else 0}" data-pct="{price_vs_sma_50 if sma_50 else 0}" style="color: {"var(--green)" if price > sma_50 and sma_50 else "var(--red)" if sma_50 else "var(--text-secondary)"}">{f"${sma_50:,.0f}" if sma_50 else "N/A"} {f"<small>({price_vs_sma_50:+.1f}%)</small>" if sma_50 else ""}</span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -3434,19 +3434,19 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">${price:,.2f}</span>
+                        <span class="data-value accent" id="price-current" data-usd="{price}">${price:,.2f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
-                        <span class="data-value">${high_30d:,.2f}</span>
+                        <span class="data-value" id="price-high-30d" data-usd="{high_30d}">${high_30d:,.2f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">${low_30d:,.2f}</span>
+                        <span class="data-value" id="price-low-30d" data-usd="{low_30d}">${low_30d:,.2f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
-                        <span class="data-value">${ath:,.0f}</span>
+                        <span class="data-value" id="price-ath" data-usd="{ath}">${ath:,.0f}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
@@ -3490,11 +3490,11 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value">{fmt(total_crypto_mcap)}</span>
+                        <span class="data-value" id="total-crypto-mcap" data-usd="{total_crypto_mcap}">{fmt(total_crypto_mcap)}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value">{fmt(market_cap)}</span>
+                        <span class="data-value" id="btc-market-cap" data-usd="{market_cap}">{fmt(market_cap)}</span>
                     </div>
                 </div>
 
@@ -3506,7 +3506,7 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">{fmt(volume)}</span>
+                        <span class="data-value accent" id="trading-volume-24h" data-usd="{volume}">{fmt(volume)}</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
@@ -3514,7 +3514,7 @@ Based on current data patterns:
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
-                        <span class="data-value">{fmt(tx_volume_usd)}</span>
+                        <span class="data-value" id="tx-volume-24h" data-usd="{tx_volume_usd}">{fmt(tx_volume_usd)}</span>
                     </div>
                 </div>
             </div>
@@ -4431,6 +4431,68 @@ Based on current data patterns:
             const volumeEl = document.getElementById('stat-volume');
             if (volumeEl && volumeEl.dataset.usd) {{
                 volumeEl.textContent = formatLarge(parseFloat(volumeEl.dataset.usd));
+            }}
+
+            // 30-Day Price Range card
+            const priceCurrentEl = document.getElementById('price-current');
+            if (priceCurrentEl && priceCurrentEl.dataset.usd) {{
+                priceCurrentEl.textContent = formatConvertedPrice(parseFloat(priceCurrentEl.dataset.usd), 2);
+            }}
+
+            const priceHigh30dEl = document.getElementById('price-high-30d');
+            if (priceHigh30dEl && priceHigh30dEl.dataset.usd) {{
+                priceHigh30dEl.textContent = formatConvertedPrice(parseFloat(priceHigh30dEl.dataset.usd), 2);
+            }}
+
+            const priceLow30dEl = document.getElementById('price-low-30d');
+            if (priceLow30dEl && priceLow30dEl.dataset.usd) {{
+                priceLow30dEl.textContent = formatConvertedPrice(parseFloat(priceLow30dEl.dataset.usd), 2);
+            }}
+
+            const priceAthEl = document.getElementById('price-ath');
+            if (priceAthEl && priceAthEl.dataset.usd) {{
+                priceAthEl.textContent = formatConvertedPrice(parseFloat(priceAthEl.dataset.usd));
+            }}
+
+            // Moving Averages card
+            const ma7dEl = document.getElementById('ma-7d');
+            if (ma7dEl && ma7dEl.dataset.usd && parseFloat(ma7dEl.dataset.usd) > 0) {{
+                const pct = parseFloat(ma7dEl.dataset.pct);
+                ma7dEl.innerHTML = formatConvertedPrice(parseFloat(ma7dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }}
+
+            const ma20dEl = document.getElementById('ma-20d');
+            if (ma20dEl && ma20dEl.dataset.usd && parseFloat(ma20dEl.dataset.usd) > 0) {{
+                const pct = parseFloat(ma20dEl.dataset.pct);
+                ma20dEl.innerHTML = formatConvertedPrice(parseFloat(ma20dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }}
+
+            const ma50dEl = document.getElementById('ma-50d');
+            if (ma50dEl && ma50dEl.dataset.usd && parseFloat(ma50dEl.dataset.usd) > 0) {{
+                const pct = parseFloat(ma50dEl.dataset.pct);
+                ma50dEl.innerHTML = formatConvertedPrice(parseFloat(ma50dEl.dataset.usd)) + ' <small>(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</small>';
+            }}
+
+            // Market Dominance card
+            const totalCryptoMcapEl = document.getElementById('total-crypto-mcap');
+            if (totalCryptoMcapEl && totalCryptoMcapEl.dataset.usd) {{
+                totalCryptoMcapEl.textContent = formatLarge(parseFloat(totalCryptoMcapEl.dataset.usd));
+            }}
+
+            const btcMarketCapEl = document.getElementById('btc-market-cap');
+            if (btcMarketCapEl && btcMarketCapEl.dataset.usd) {{
+                btcMarketCapEl.textContent = formatLarge(parseFloat(btcMarketCapEl.dataset.usd));
+            }}
+
+            // Trading Volume card
+            const tradingVolume24hEl = document.getElementById('trading-volume-24h');
+            if (tradingVolume24hEl && tradingVolume24hEl.dataset.usd) {{
+                tradingVolume24hEl.textContent = formatLarge(parseFloat(tradingVolume24hEl.dataset.usd));
+            }}
+
+            const txVolume24hEl = document.getElementById('tx-volume-24h');
+            if (txVolume24hEl && txVolume24hEl.dataset.usd) {{
+                txVolume24hEl.textContent = formatLarge(parseFloat(txVolume24hEl.dataset.usd));
             }}
 
             // Comparison table prices - store USD in data attribute on first run
