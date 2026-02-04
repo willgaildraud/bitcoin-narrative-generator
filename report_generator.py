@@ -3245,6 +3245,7 @@ Based on current data patterns:
         </nav>
 
         <div class="container">
+            <!-- 1. Live Bitcoin Price -->
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
                 <h1 class="hero-price">${price:,.0f}</h1>
@@ -3256,32 +3257,34 @@ Based on current data patterns:
                 </div>
             </section>
 
-            <div class="stats-row">
-                <div class="stat-item">
-                    <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="stat-market-cap" data-usd="{market_cap}">{fmt(market_cap)}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">24h Volume</div>
-                    <div class="stat-value" id="stat-volume" data-usd="{volume}">{fmt(volume)}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">7d Change</div>
-                    <div class="stat-value {"green" if change_7d >= 0 else "red"}">{change_7d:+.2f}%</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">30d Change</div>
-                    <div class="stat-value {"green" if change_30d >= 0 else "red"}">{change_30d:+.2f}%</div>
-                </div>
-            </div>
-
-            <!-- Today's Bitcoin Pulse Summary -->
+            <!-- 2. Today's Pulse -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
                 <div class="pulse-summary-text">{pulse_summary}</div>
             </div>
 
-            <!-- What Changed Today -->
+            <!-- 3. Market Conditions Score -->
+            <div class="market-score-card">
+                <div class="market-score-header">
+                    <h3 class="market-score-title">Market Conditions</h3>
+                    <div class="market-score-badge" style="background: {market_score_color}20; color: {market_score_color};">
+                        <span class="market-score-value">{market_score}/5</span>
+                        <span>{market_score_label}</span>
+                    </div>
+                </div>
+                <div class="market-score-details">
+                    {"".join(f'''<div class="score-item">
+                        <span class="score-check {"active" if active else "inactive"}">{"✓" if active else "✗"}</span>
+                        <span class="score-item-label">{label}</span>
+                        <span class="score-item-value">{detail}</span>
+                    </div>''' for label, active, detail in market_score_details)}
+                </div>
+                <div class="market-score-disclaimer">
+                    Based on historical patterns only. Not financial advice. Past performance does not indicate future results.
+                </div>
+            </div>
+
+            <!-- 4. What Changed Today -->
             <div class="changes-card">
                 <h3 class="changes-title">What Changed Today</h3>
                 <ul class="changes-list">
@@ -3304,7 +3307,7 @@ Based on current data patterns:
                 </ul>
             </div>
 
-            <!-- Yesterday vs Today Comparison -->
+            <!-- 5. Yesterday vs Today -->
             <div class="comparison-card">
                 <h3 class="comparison-title">Yesterday vs Today</h3>
                 <table class="comparison-table">
@@ -3338,90 +3341,27 @@ Based on current data patterns:
                 </table>
             </div>
 
-            <!-- Education Drawer -->
-            <div class="education-drawer" id="education-drawer">
-                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
-                    <span>What am I looking at?</span>
-                    <span class="education-toggle-icon">▼</span>
-                </button>
-                <div class="education-content">
-                    <div class="education-inner">
-                        <div class="education-section">
-                            <h4>What is Bitcoin?</h4>
-                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
-                        </div>
-                        <div class="education-section">
-                            <h4>Why does the halving matter?</h4>
-                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
-                        </div>
-                        <div class="education-section">
-                            <h4>Why is supply capped at 21 million?</h4>
-                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
-                        </div>
-                    </div>
+            <!-- 6. Stats Row -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">Market Cap</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="{market_cap}">{fmt(market_cap)}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">24h Volume</div>
+                    <div class="stat-value" id="stat-volume" data-usd="{volume}">{fmt(volume)}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">7d Change</div>
+                    <div class="stat-value {"green" if change_7d >= 0 else "red"}">{change_7d:+.2f}%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">30d Change</div>
+                    <div class="stat-value {"green" if change_30d >= 0 else "red"}">{change_30d:+.2f}%</div>
                 </div>
             </div>
 
-            <!-- Halving Countdown Widget -->
-            <div class="halving-widget">
-                <div class="halving-title">Next Bitcoin Halving</div>
-                <div class="halving-countdown" id="halving-countdown">
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-days">--</div>
-                        <div class="countdown-label">Days</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-hours">--</div>
-                        <div class="countdown-label">Hours</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-mins">--</div>
-                        <div class="countdown-label">Minutes</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-blocks">--</div>
-                        <div class="countdown-label">Blocks</div>
-                    </div>
-                </div>
-                <div class="halving-progress">
-                    <div class="halving-progress-bar">
-                        <div class="halving-progress-fill" id="halving-progress" style="width: 0%"></div>
-                    </div>
-                    <div class="halving-stats">
-                        <span>Last Halving (2024)</span>
-                        <span id="halving-progress-pct">0%</span>
-                        <span>Next Halving (~{next_halving})</span>
-                    </div>
-                </div>
-                <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>{block_height:,}</strong></div>
-                    <div class="halving-info-item">Current Reward: <strong>{block_reward} BTC</strong></div>
-                    <div class="halving-info-item">Post-Halving: <strong>{block_reward/2} BTC</strong></div>
-                </div>
-            </div>
-
-            <!-- Market Conditions Score -->
-            <div class="market-score-card">
-                <div class="market-score-header">
-                    <h3 class="market-score-title">Market Conditions</h3>
-                    <div class="market-score-badge" style="background: {market_score_color}20; color: {market_score_color};">
-                        <span class="market-score-value">{market_score}/5</span>
-                        <span>{market_score_label}</span>
-                    </div>
-                </div>
-                <div class="market-score-details">
-                    {"".join(f'''<div class="score-item">
-                        <span class="score-check {"active" if active else "inactive"}">{"✓" if active else "✗"}</span>
-                        <span class="score-item-label">{label}</span>
-                        <span class="score-item-value">{detail}</span>
-                    </div>''' for label, active, detail in market_score_details)}
-                </div>
-                <div class="market-score-disclaimer">
-                    Based on historical patterns only. Not financial advice. Past performance does not indicate future results.
-                </div>
-            </div>
-
-            <!-- Price Chart -->
+            <!-- 7. Price Chart -->
             <div class="chart-container">
                 <div class="chart-header">
                     <div style="display: flex; align-items: center; gap: 16px;">
@@ -3479,6 +3419,12 @@ Based on current data patterns:
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
+            <!-- 8. Combined Market Overview Section -->
+            <div class="section-header">
+                <h2 class="section-title">Market Overview</h2>
+                <p class="section-subtitle">Price ranges, averages, sentiment, and trading data</p>
+            </div>
+
             <div class="grid-3 mb-24">
                 <!-- Price Range Card -->
                 <div class="card">
@@ -3531,7 +3477,111 @@ Based on current data patterns:
                 </div>
             </div>
 
-            <!-- Historical Prices -->
+            <div class="grid-2 mb-24">
+                <!-- Market Dominance Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">&#127760;</div>
+                        <h3 class="card-title">Market Dominance</h3>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
+                        <span class="data-value accent">{btc_dominance:.1f}%</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Total Crypto MCap</span>
+                        <span class="data-value">{fmt(total_crypto_mcap)}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
+                        <span class="data-value">{fmt(market_cap)}</span>
+                    </div>
+                </div>
+
+                <!-- Trading Volume Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">&#128200;</div>
+                        <h3 class="card-title">Trading Volume</h3>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
+                        <span class="data-value accent">{fmt(volume)}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Volume/MCap Ratio</span>
+                        <span class="data-value">{(volume/market_cap*100) if market_cap else 0:.2f}%</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">24h Tx Volume</span>
+                        <span class="data-value">{fmt(tx_volume_usd)}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Education Drawer -->
+            <div class="education-drawer" id="education-drawer">
+                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
+                    <span>What am I looking at?</span>
+                    <span class="education-toggle-icon">▼</span>
+                </button>
+                <div class="education-content">
+                    <div class="education-inner">
+                        <div class="education-section">
+                            <h4>What is Bitcoin?</h4>
+                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why does the halving matter?</h4>
+                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why is supply capped at 21 million?</h4>
+                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Halving Countdown Widget -->
+            <div class="halving-widget">
+                <div class="halving-title">Next Bitcoin Halving</div>
+                <div class="halving-countdown" id="halving-countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-days">--</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-hours">--</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-mins">--</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-blocks">--</div>
+                        <div class="countdown-label">Blocks</div>
+                    </div>
+                </div>
+                <div class="halving-progress">
+                    <div class="halving-progress-bar">
+                        <div class="halving-progress-fill" id="halving-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="halving-stats">
+                        <span>Last Halving (2024)</span>
+                        <span id="halving-progress-pct">0%</span>
+                        <span>Next Halving (~{next_halving})</span>
+                    </div>
+                </div>
+                <div class="halving-info">
+                    <div class="halving-info-item">Current Block: <strong>{block_height:,}</strong></div>
+                    <div class="halving-info-item">Current Reward: <strong>{block_reward} BTC</strong></div>
+                    <div class="halving-info-item">Post-Halving: <strong>{block_reward/2} BTC</strong></div>
+                </div>
+            </div>
+
+            <!-- 11. Historical Prices -->
             {historical_section}
 
             <!-- Block Stats -->
@@ -3689,52 +3739,6 @@ Based on current data patterns:
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
                         <span class="data-value">{mempool_count:,} txs</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Market & Trading Data -->
-            <div class="section-header mt-40">
-                <h2 class="section-title">Market & Trading Data</h2>
-                <p class="section-subtitle">Futures, dominance, and liquidations</p>
-            </div>
-
-            <div class="grid-2 mb-24">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">&#127760;</div>
-                        <h3 class="card-title">Market Dominance</h3>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">{btc_dominance:.1f}%</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value">{fmt(total_crypto_mcap)}</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value">{fmt(market_cap)}</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">&#128200;</div>
-                        <h3 class="card-title">Trading Volume</h3>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">{fmt(volume)}</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">{(volume/market_cap*100) if market_cap else 0:.2f}%</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">24h Tx Volume</span>
-                        <span class="data-value">{fmt(tx_volume_usd)}</span>
                     </div>
                 </div>
             </div>
