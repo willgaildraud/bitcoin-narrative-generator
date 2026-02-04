@@ -2214,6 +2214,264 @@ Based on current data patterns:
             .chart-timeframes {{ gap: 4px; }}
             .timeframe-btn {{ padding: 4px 6px; }}
         }}
+
+        /* Community Section */
+        .community-section {{
+            margin-top: 40px;
+        }}
+
+        .community-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }}
+
+        /* Daily Poll */
+        .poll-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }}
+
+        .poll-question {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }}
+
+        .poll-options {{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }}
+
+        .poll-option {{
+            position: relative;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }}
+
+        .poll-option:hover:not(.voted) {{
+            border-color: var(--accent);
+        }}
+
+        .poll-option.selected {{
+            border-color: var(--accent);
+            background: rgba(246, 133, 27, 0.1);
+        }}
+
+        .poll-option.voted {{
+            cursor: default;
+        }}
+
+        .poll-option-bar {{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(246, 133, 27, 0.15);
+            transition: width 0.5s ease;
+            z-index: 0;
+        }}
+
+        .poll-option-content {{
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+
+        .poll-option-text {{
+            font-weight: 500;
+            color: var(--text-primary);
+        }}
+
+        .poll-option-pct {{
+            font-weight: 600;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }}
+
+        .poll-option.voted .poll-option-pct {{
+            opacity: 1;
+        }}
+
+        .poll-total {{
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }}
+
+        /* Sentiment Widget */
+        .sentiment-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }}
+
+        .sentiment-question {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }}
+
+        .sentiment-buttons {{
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }}
+
+        .sentiment-btn {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 32px;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .sentiment-btn:hover:not(.voted) {{
+            transform: translateY(-2px);
+        }}
+
+        .sentiment-btn.bullish:hover:not(.voted),
+        .sentiment-btn.bullish.selected {{
+            border-color: var(--green);
+            background: rgba(34, 197, 94, 0.1);
+        }}
+
+        .sentiment-btn.bearish:hover:not(.voted),
+        .sentiment-btn.bearish.selected {{
+            border-color: var(--red);
+            background: rgba(239, 68, 68, 0.1);
+        }}
+
+        .sentiment-btn.voted {{
+            cursor: default;
+        }}
+
+        .sentiment-icon {{
+            font-size: 2rem;
+        }}
+
+        .sentiment-label {{
+            font-weight: 600;
+            color: var(--text-primary);
+        }}
+
+        .sentiment-bar-container {{
+            background: var(--bg-darker);
+            border-radius: 20px;
+            height: 32px;
+            overflow: hidden;
+            display: flex;
+        }}
+
+        .sentiment-bar-bull {{
+            background: linear-gradient(90deg, var(--green), #4ade80);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 12px;
+            transition: width 0.5s ease;
+        }}
+
+        .sentiment-bar-bear {{
+            background: linear-gradient(90deg, #f87171, var(--red));
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            transition: width 0.5s ease;
+        }}
+
+        .sentiment-bar-pct {{
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }}
+
+        .sentiment-total {{
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }}
+
+        /* Comments Section */
+        .comments-section {{
+            margin-top: 32px;
+        }}
+
+        .comments-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }}
+
+        .comments-header {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }}
+
+        .comments-icon {{
+            font-size: 1.5rem;
+        }}
+
+        .comments-title {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }}
+
+        .giscus {{
+            margin-top: 16px;
+        }}
+
+        .giscus-loading {{
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }}
+
+        @media (max-width: 768px) {{
+            .community-grid {{
+                grid-template-columns: 1fr;
+            }}
+            .sentiment-btn {{
+                padding: 16px 24px;
+            }}
+            .sentiment-icon {{
+                font-size: 1.5rem;
+            }}
+        }}
     </style>
 </head>
 <body>
@@ -2646,6 +2904,94 @@ Based on current data patterns:
             <div class="card mb-24">
                 <div class="news-grid" id="news-feed">
                     <div class="news-loading">Loading latest news...</div>
+                </div>
+            </div>
+
+            <!-- Community Section -->
+            <div class="section-header mt-40">
+                <h2 class="section-title">Community Pulse</h2>
+                <p class="section-subtitle">What does the community think?</p>
+            </div>
+
+            <div class="community-grid">
+                <!-- Daily Poll -->
+                <div class="poll-card">
+                    <div class="poll-question">Where will BTC be in 24 hours?</div>
+                    <div class="poll-options" id="poll-options">
+                        <div class="poll-option" data-option="up10">
+                            <div class="poll-option-bar" style="width: 0%"></div>
+                            <div class="poll-option-content">
+                                <span class="poll-option-text">Up 5%+ </span>
+                                <span class="poll-option-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="poll-option" data-option="up">
+                            <div class="poll-option-bar" style="width: 0%"></div>
+                            <div class="poll-option-content">
+                                <span class="poll-option-text">Slightly up (0-5%)</span>
+                                <span class="poll-option-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="poll-option" data-option="flat">
+                            <div class="poll-option-bar" style="width: 0%"></div>
+                            <div class="poll-option-content">
+                                <span class="poll-option-text">Flat (sideways)</span>
+                                <span class="poll-option-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="poll-option" data-option="down">
+                            <div class="poll-option-bar" style="width: 0%"></div>
+                            <div class="poll-option-content">
+                                <span class="poll-option-text">Slightly down (0-5%)</span>
+                                <span class="poll-option-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="poll-option" data-option="down10">
+                            <div class="poll-option-bar" style="width: 0%"></div>
+                            <div class="poll-option-content">
+                                <span class="poll-option-text">Down 5%+ </span>
+                                <span class="poll-option-pct">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="poll-total" id="poll-total">Cast your vote!</div>
+                </div>
+
+                <!-- Sentiment Widget -->
+                <div class="sentiment-card">
+                    <div class="sentiment-question">What's your outlook?</div>
+                    <div class="sentiment-buttons" id="sentiment-buttons">
+                        <button class="sentiment-btn bullish" data-sentiment="bullish">
+                            <span class="sentiment-icon">&#128640;</span>
+                            <span class="sentiment-label">Bullish</span>
+                        </button>
+                        <button class="sentiment-btn bearish" data-sentiment="bearish">
+                            <span class="sentiment-icon">&#128059;</span>
+                            <span class="sentiment-label">Bearish</span>
+                        </button>
+                    </div>
+                    <div class="sentiment-bar-container" id="sentiment-bar">
+                        <div class="sentiment-bar-bull" id="sentiment-bull" style="width: 50%">
+                            <span class="sentiment-bar-pct" id="sentiment-bull-pct">50%</span>
+                        </div>
+                        <div class="sentiment-bar-bear" id="sentiment-bear" style="width: 50%">
+                            <span class="sentiment-bar-pct" id="sentiment-bear-pct">50%</span>
+                        </div>
+                    </div>
+                    <div class="sentiment-total" id="sentiment-total">Join the community!</div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-card">
+                    <div class="comments-header">
+                        <span class="comments-icon">&#128172;</span>
+                        <h3 class="comments-title">Discussion</h3>
+                    </div>
+                    <div class="giscus" id="giscus-container">
+                        <div class="giscus-loading">Loading comments...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3199,6 +3545,11 @@ Based on current data patterns:
 
             // Load news feed
             loadNewsFeed();
+
+            // Initialize community features
+            initPoll();
+            initSentiment();
+            initGiscus();
         }});
 
         // ===== Halving Countdown =====
@@ -3344,6 +3695,185 @@ Based on current data patterns:
             if (diffMins < 60) return `${{diffMins}}m ago`;
             if (diffHours < 24) return `${{diffHours}}h ago`;
             return `${{diffDays}}d ago`;
+        }}
+
+        // ===== Community Poll =====
+        function initPoll() {{
+            const pollOptions = document.querySelectorAll('.poll-option');
+            const pollKey = 'btcpulse_poll_' + new Date().toISOString().split('T')[0];
+            const votesKey = 'btcpulse_poll_votes';
+
+            // Initialize or get simulated community votes
+            let votes = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Reset votes daily
+            if (votes.date !== today) {{
+                votes = {{
+                    date: today,
+                    up10: Math.floor(Math.random() * 50) + 20,
+                    up: Math.floor(Math.random() * 80) + 40,
+                    flat: Math.floor(Math.random() * 60) + 30,
+                    down: Math.floor(Math.random() * 70) + 35,
+                    down10: Math.floor(Math.random() * 40) + 15
+                }};
+                localStorage.setItem(votesKey, JSON.stringify(votes));
+            }}
+
+            // Check if user already voted today
+            const userVote = localStorage.getItem(pollKey);
+
+            if (userVote) {{
+                showPollResults(votes, userVote);
+            }}
+
+            pollOptions.forEach(option => {{
+                option.addEventListener('click', () => {{
+                    if (localStorage.getItem(pollKey)) return; // Already voted
+
+                    const selected = option.dataset.option;
+                    localStorage.setItem(pollKey, selected);
+
+                    // Add user's vote
+                    votes[selected] = (votes[selected] || 0) + 1;
+                    localStorage.setItem(votesKey, JSON.stringify(votes));
+
+                    showPollResults(votes, selected);
+                }});
+            }});
+        }}
+
+        function showPollResults(votes, userVote) {{
+            const options = ['up10', 'up', 'flat', 'down', 'down10'];
+            const total = options.reduce((sum, opt) => sum + (votes[opt] || 0), 0);
+
+            document.querySelectorAll('.poll-option').forEach(option => {{
+                const opt = option.dataset.option;
+                const count = votes[opt] || 0;
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+
+                option.classList.add('voted');
+                if (opt === userVote) {{
+                    option.classList.add('selected');
+                }}
+
+                option.querySelector('.poll-option-bar').style.width = pct + '%';
+                option.querySelector('.poll-option-pct').textContent = pct + '%';
+            }});
+
+            document.getElementById('poll-total').textContent = `${{total.toLocaleString()}} votes today`;
+        }}
+
+        // ===== Sentiment Widget =====
+        function initSentiment() {{
+            const buttons = document.querySelectorAll('.sentiment-btn');
+            const sentimentKey = 'btcpulse_sentiment_' + new Date().toISOString().split('T')[0];
+            const votesKey = 'btcpulse_sentiment_votes';
+
+            // Initialize or get simulated community sentiment
+            let sentiment = JSON.parse(localStorage.getItem(votesKey) || '{{}}');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Reset daily
+            if (sentiment.date !== today) {{
+                sentiment = {{
+                    date: today,
+                    bullish: Math.floor(Math.random() * 200) + 100,
+                    bearish: Math.floor(Math.random() * 150) + 80
+                }};
+                localStorage.setItem(votesKey, JSON.stringify(sentiment));
+            }}
+
+            // Check if user already voted
+            const userVote = localStorage.getItem(sentimentKey);
+
+            updateSentimentBar(sentiment);
+
+            if (userVote) {{
+                buttons.forEach(btn => {{
+                    btn.classList.add('voted');
+                    if (btn.dataset.sentiment === userVote) {{
+                        btn.classList.add('selected');
+                    }}
+                }});
+            }}
+
+            buttons.forEach(btn => {{
+                btn.addEventListener('click', () => {{
+                    if (localStorage.getItem(sentimentKey)) return; // Already voted
+
+                    const vote = btn.dataset.sentiment;
+                    localStorage.setItem(sentimentKey, vote);
+
+                    // Add user's vote
+                    sentiment[vote] = (sentiment[vote] || 0) + 1;
+                    localStorage.setItem(votesKey, JSON.stringify(sentiment));
+
+                    buttons.forEach(b => {{
+                        b.classList.add('voted');
+                        if (b.dataset.sentiment === vote) {{
+                            b.classList.add('selected');
+                        }}
+                    }});
+
+                    updateSentimentBar(sentiment);
+                }});
+            }});
+        }}
+
+        function updateSentimentBar(sentiment) {{
+            const total = (sentiment.bullish || 0) + (sentiment.bearish || 0);
+            const bullPct = total > 0 ? Math.round((sentiment.bullish / total) * 100) : 50;
+            const bearPct = 100 - bullPct;
+
+            document.getElementById('sentiment-bull').style.width = bullPct + '%';
+            document.getElementById('sentiment-bear').style.width = bearPct + '%';
+            document.getElementById('sentiment-bull-pct').textContent = bullPct + '%';
+            document.getElementById('sentiment-bear-pct').textContent = bearPct + '%';
+            document.getElementById('sentiment-total').textContent = `${{total.toLocaleString()}} votes today`;
+        }}
+
+        // ===== Giscus Comments =====
+        function initGiscus() {{
+            const container = document.getElementById('giscus-container');
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            // Giscus script - uses GitHub Discussions
+            // You need to configure this at https://giscus.app/
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', 'willgaildraud/bitcoin-narrative-generator');
+            script.setAttribute('data-repo-id', ''); // Get this from giscus.app
+            script.setAttribute('data-category', 'General');
+            script.setAttribute('data-category-id', ''); // Get this from giscus.app
+            script.setAttribute('data-mapping', 'pathname');
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'top');
+            script.setAttribute('data-theme', theme);
+            script.setAttribute('data-lang', 'en');
+            script.setAttribute('data-loading', 'lazy');
+            script.crossOrigin = 'anonymous';
+            script.async = true;
+
+            container.innerHTML = '';
+            container.appendChild(script);
+
+            // Fallback message if Giscus isn't configured yet
+            setTimeout(() => {{
+                if (container.querySelector('iframe') === null) {{
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 30px; color: var(--text-muted);">
+                            <p>Comments coming soon!</p>
+                            <p style="font-size: 0.85rem; margin-top: 8px;">Join the discussion on
+                                <a href="https://github.com/willgaildraud/bitcoin-narrative-generator/discussions"
+                                   target="_blank" rel="noopener" style="color: var(--accent);">GitHub Discussions</a>
+                            </p>
+                        </div>
+                    `;
+                }}
+            }}, 3000);
         }}
 
         // ===== Glossary Functions =====
