@@ -579,6 +579,30 @@ Based on current data patterns:
         # Convert news to JSON for embedding in JavaScript
         news_json = json.dumps(bitcoin_news) if bitcoin_news else "[]"
 
+        # Yesterday vs Today comparison data
+        history_7d = data.get("price_history_7d", {}) if data else {}
+        price_data_7d = history_7d.get('full_price_data', []) if history_7d else []
+
+        # Get yesterday's price (second to last data point in 7d history)
+        yesterday_price = 0
+        if len(price_data_7d) >= 2:
+            yesterday_price = price_data_7d[-2][1] if price_data_7d[-2] else 0
+
+        # Calculate price delta
+        price_delta = 0
+        price_delta_pct = 0
+        if yesterday_price > 0 and price > 0:
+            price_delta = price - yesterday_price
+            price_delta_pct = ((price - yesterday_price) / yesterday_price) * 100
+
+        # Yesterday's sentiment from Fear & Greed history
+        fg_history = fear_greed.get('history', []) if fear_greed else []
+        yesterday_fg = fg_history[1].get('value', 0) if len(fg_history) > 1 else fg_value
+        fg_delta = fg_value - yesterday_fg
+
+        # Supply delta (roughly 900 BTC mined per day)
+        supply_delta = 144 * block_reward  # 144 blocks * block reward
+
         # Generate "Today's Bitcoin Pulse" summary (neutral, factual, no predictions)
         def generate_pulse_summary():
             parts = []
@@ -691,22 +715,27 @@ Based on current data patterns:
             </div>
             '''
 
-        # Determine sentiment color
+        # Determine sentiment color and label
         if fg_value >= 75:
             fg_color = "#22c55e"
             fg_gradient = "linear-gradient(135deg, #22c55e, #16a34a)"
+            fg_label = "Extreme Greed"
         elif fg_value >= 55:
             fg_color = "#84cc16"
             fg_gradient = "linear-gradient(135deg, #84cc16, #65a30d)"
+            fg_label = "Greed"
         elif fg_value >= 45:
             fg_color = "#eab308"
             fg_gradient = "linear-gradient(135deg, #eab308, #ca8a04)"
+            fg_label = "Neutral"
         elif fg_value >= 25:
             fg_color = "#f97316"
             fg_gradient = "linear-gradient(135deg, #f97316, #ea580c)"
+            fg_label = "Fear"
         else:
             fg_color = "#ef4444"
             fg_gradient = "linear-gradient(135deg, #ef4444, #dc2626)"
+            fg_label = "Extreme Fear"
 
         change_color_24h = "#22c55e" if change_24h >= 0 else "#ef4444"
         change_color_7d = "#22c55e" if change_7d >= 0 else "#ef4444"
@@ -1791,6 +1820,340 @@ Based on current data patterns:
             margin-bottom: 10px;
         }}
 
+        /* Yesterday vs Today Comparison */
+        .comparison-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }}
+
+        .comparison-title {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }}
+
+        .comparison-table {{
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-darker);
+            border-radius: 8px;
+            overflow: hidden;
+        }}
+
+        .comparison-table th,
+        .comparison-table td {{
+            padding: 12px 16px;
+            text-align: center;
+        }}
+
+        .comparison-table th {{
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: var(--bg-darker);
+        }}
+
+        .comparison-table td {{
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-color);
+        }}
+
+        .comparison-table .metric-name {{
+            text-align: left;
+            font-weight: 500;
+        }}
+
+        .comparison-table .delta {{
+            font-weight: 600;
+        }}
+
+        .comparison-table .delta.positive {{
+            color: var(--green);
+        }}
+
+        .comparison-table .delta.negative {{
+            color: var(--red);
+        }}
+
+        .comparison-table .delta.neutral {{
+            color: var(--text-muted);
+        }}
+
+        /* What Changed Today */
+        .changes-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }}
+
+        .changes-title {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }}
+
+        .changes-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+
+        .changes-list li {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }}
+
+        .changes-list li:last-child {{
+            border-bottom: none;
+        }}
+
+        .change-icon {{
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }}
+
+        .change-icon.up {{
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }}
+
+        .change-icon.down {{
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }}
+
+        .change-icon.neutral {{
+            background: rgba(156, 163, 175, 0.2);
+            color: var(--text-muted);
+        }}
+
+        /* Education Drawer */
+        .education-drawer {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin: 20px 0;
+            overflow: hidden;
+        }}
+
+        .education-toggle {{
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }}
+
+        .education-toggle:hover {{
+            background: var(--bg-card-hover);
+        }}
+
+        .education-toggle-icon {{
+            transition: transform 0.3s;
+        }}
+
+        .education-drawer.open .education-toggle-icon {{
+            transform: rotate(180deg);
+        }}
+
+        .education-content {{
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }}
+
+        .education-drawer.open .education-content {{
+            max-height: 600px;
+        }}
+
+        .education-inner {{
+            padding: 0 20px 20px;
+        }}
+
+        .education-section {{
+            margin-bottom: 20px;
+        }}
+
+        .education-section:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .education-section h4 {{
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+        }}
+
+        .education-section p {{
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }}
+
+        /* Share Card */
+        .share-section {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }}
+
+        .share-title {{
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }}
+
+        .share-card {{
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(246, 133, 27, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 0 auto 16px;
+            max-width: 400px;
+            text-align: left;
+        }}
+
+        .share-card-header {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }}
+
+        .share-card-logo {{
+            font-size: 1.5rem;
+        }}
+
+        .share-card-brand {{
+            font-size: 0.85rem;
+            color: #f6851b;
+            font-weight: 600;
+        }}
+
+        .share-card-date {{
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }}
+
+        .share-card-price {{
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }}
+
+        .share-card-stats {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }}
+
+        .share-card-stat {{
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px;
+        }}
+
+        .share-card-stat-label {{
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+
+        .share-card-stat-value {{
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }}
+
+        .share-btn {{
+            background: #f6851b;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }}
+
+        .share-btn:hover {{
+            background: #e07916;
+        }}
+
+        /* Roadmap Footer */
+        .roadmap-footer {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }}
+
+        .roadmap-title {{
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 12px 0;
+        }}
+
+        .roadmap-list {{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+
+        .roadmap-list li {{
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }}
+
         /* Halving Countdown Widget */
         .halving-widget {{
             background: linear-gradient(135deg, rgba(246, 133, 27, 0.1) 0%, rgba(246, 133, 27, 0.05) 100%);
@@ -2750,6 +3113,87 @@ Based on current data patterns:
                 <div class="pulse-summary-text">{pulse_summary}</div>
             </div>
 
+            <!-- What Changed Today -->
+            <div class="changes-card">
+                <h3 class="changes-title">What Changed Today</h3>
+                <ul class="changes-list">
+                    <li>
+                        <span class="change-icon {"up" if price_delta_pct >= 0 else "down"}">{"↑" if price_delta_pct >= 0 else "↓"}</span>
+                        <span>Price {"rose" if price_delta_pct >= 0 else "fell"} {abs(price_delta_pct):.2f}% to ${price:,.0f}</span>
+                    </li>
+                    <li>
+                        <span class="change-icon {"up" if fg_delta > 0 else "down" if fg_delta < 0 else "neutral"}">{"↑" if fg_delta > 0 else "↓" if fg_delta < 0 else "→"}</span>
+                        <span>Sentiment {"improved" if fg_delta > 0 else "declined" if fg_delta < 0 else "unchanged"} ({fg_delta:+d} to {fg_value})</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">⛏</span>
+                        <span>~144 blocks mined, adding ~{supply_delta:.1f} BTC to supply</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">📊</span>
+                        <span>Total supply now {circulating:,.0f} of 21M BTC</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Yesterday vs Today Comparison -->
+            <div class="comparison-card">
+                <h3 class="comparison-title">Yesterday vs Today</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Yesterday</th>
+                            <th>Today</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Price</td>
+                            <td>${yesterday_price:,.0f}</td>
+                            <td>${price:,.0f}</td>
+                            <td class="delta {"positive" if price_delta_pct >= 0 else "negative"}">{price_delta_pct:+.2f}%</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Fear & Greed</td>
+                            <td>{yesterday_fg}</td>
+                            <td>{fg_value} ({fg_label})</td>
+                            <td class="delta {"positive" if fg_delta > 0 else "negative" if fg_delta < 0 else "neutral"}">{fg_delta:+d}</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Supply Added</td>
+                            <td colspan="2" style="text-align: center;">~{supply_delta:.2f} BTC / day</td>
+                            <td class="delta neutral">+{supply_delta * 365:.0f} BTC/year</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Education Drawer -->
+            <div class="education-drawer" id="education-drawer">
+                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
+                    <span>What am I looking at?</span>
+                    <span class="education-toggle-icon">▼</span>
+                </button>
+                <div class="education-content">
+                    <div class="education-inner">
+                        <div class="education-section">
+                            <h4>What is Bitcoin?</h4>
+                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why does the halving matter?</h4>
+                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why is supply capped at 21 million?</h4>
+                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Halving Countdown Widget -->
             <div class="halving-widget">
                 <div class="halving-title">Next Bitcoin Halving</div>
@@ -3138,6 +3582,49 @@ Based on current data patterns:
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Share Today's Pulse -->
+        <div class="share-section">
+            <h3 class="share-title">Share Today's Pulse</h3>
+            <div class="share-card" id="share-card">
+                <div class="share-card-header">
+                    <span class="share-card-logo">₿</span>
+                    <span class="share-card-brand">TheBitcoinPulse.com</span>
+                    <span class="share-card-date">{time_now}</span>
+                </div>
+                <div class="share-card-price">${price:,.0f}</div>
+                <div class="share-card-stats">
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">24h Change</div>
+                        <div class="share-card-stat-value" style="color: {"#22c55e" if change_24h >= 0 else "#ef4444"}">{change_24h:+.2f}%</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Sentiment</div>
+                        <div class="share-card-stat-value">{fg_value} ({fg_label})</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Halving</div>
+                        <div class="share-card-stat-value">{days_until_halving} days</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Supply</div>
+                        <div class="share-card-stat-value">{(circulating/21000000)*100:.1f}% mined</div>
+                    </div>
+                </div>
+            </div>
+            <button class="share-btn" onclick="shareSnapshot()">Share Snapshot</button>
+        </div>
+
+        <!-- Roadmap Footer -->
+        <div class="roadmap-footer">
+            <h3 class="roadmap-title">Coming Soon</h3>
+            <ul class="roadmap-list">
+                <li>Price Alerts</li>
+                <li>Portfolio Tracker</li>
+                <li>Weekly Email Digest</li>
+                <li>Mobile App</li>
+            </ul>
         </div>
     </main>
 
@@ -4125,6 +4612,55 @@ Based on current data patterns:
                         }}
                     }});
                 }}
+            }});
+        }}
+
+        // Share Snapshot Function
+        async function shareSnapshot() {{
+            const shareData = {{
+                title: 'The Bitcoin Pulse',
+                text: `Bitcoin: ${price:,.0f} ({change_24h:+.2f}%) | Sentiment: {fg_value} ({fg_label}) | {days_until_halving} days to halving`,
+                url: 'https://thebitcoinpulse.com'
+            }};
+
+            // Track analytics event
+            if (typeof gtag === 'function') {{
+                gtag('event', 'share_snapshot', {{
+                    'event_category': 'engagement',
+                    'event_label': 'social_share'
+                }});
+            }}
+
+            // Try Web Share API first (mobile)
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {{
+                try {{
+                    await navigator.share(shareData);
+                }} catch (err) {{
+                    if (err.name !== 'AbortError') {{
+                        fallbackShare(shareData);
+                    }}
+                }}
+            }} else {{
+                fallbackShare(shareData);
+            }}
+        }}
+
+        function fallbackShare(data) {{
+            // Copy to clipboard as fallback
+            const text = `${{data.text}}\n\n${{data.url}}`;
+            navigator.clipboard.writeText(text).then(() => {{
+                const btn = document.querySelector('.share-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied to clipboard!';
+                btn.style.background = '#22c55e';
+                setTimeout(() => {{
+                    btn.textContent = originalText;
+                    btn.style.background = '#f6851b';
+                }}, 2000);
+            }}).catch(() => {{
+                // If clipboard fails, open Twitter share
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${{encodeURIComponent(data.text)}}&url=${{encodeURIComponent(data.url)}}`;
+                window.open(twitterUrl, '_blank');
             }});
         }}
     </script>
