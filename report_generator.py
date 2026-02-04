@@ -719,64 +719,7 @@ Based on current data patterns:
             else:
                 return '<span class="signal-icon">&#8594;</span>'
 
-        signals_html = ""
-        if signals:
-            signals_html = f'''
-            <!-- Market Signals Card -->
-            <div class="card mt-24" style="margin-bottom: 24px;">
-                <div class="card-header">
-                    <div class="card-icon">&#128161;</div>
-                    <h3 class="card-title">Market Signals</h3>
-                </div>
-                <div class="signals-grid">
-                    <div class="signal-item">
-                        <div class="signal-label">50D MA Trend</div>
-                        <div class="signal-value {signals.get("ma50_trend", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("ma50_trend", {}).get("icon", "neutral"))}
-                            {signals.get("ma50_trend", {}).get("label", "N/A")}
-                        </div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-label">200D MA Trend</div>
-                        <div class="signal-value {signals.get("ma200_trend", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("ma200_trend", {}).get("icon", "neutral"))}
-                            {signals.get("ma200_trend", {}).get("label", "N/A")}
-                        </div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-label">MA Cross</div>
-                        <div class="signal-value {signals.get("cross", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("cross", {}).get("icon", "neutral"))}
-                            {signals.get("cross", {}).get("label", "N/A")}
-                        </div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-label">Volume</div>
-                        <div class="signal-value {signals.get("volume", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("volume", {}).get("icon", "neutral"))}
-                            {signals.get("volume", {}).get("label", "Normal")}
-                        </div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-label">Mempool</div>
-                        <div class="signal-value {signals.get("mempool", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("mempool", {}).get("icon", "neutral"))}
-                            {signals.get("mempool", {}).get("label", "Normal")}
-                        </div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-label">Hash Rate</div>
-                        <div class="signal-value {signals.get("hash_rate", {}).get("status", "neutral")}">
-                            {signal_icon(signals.get("hash_rate", {}).get("icon", "neutral"))}
-                            {signals.get("hash_rate", {}).get("label", "Stable")}
-                        </div>
-                    </div>
-                </div>
-                <div class="signals-disclaimer">
-                    Rule-based signals for informational purposes only. Not financial advice.
-                </div>
-            </div>
-            '''
+        # Market Signals section removed - using Market Conditions Score instead
 
         # Determine sentiment color and label
         if fg_value >= 75:
@@ -3478,8 +3421,6 @@ Based on current data patterns:
                 </div>
             </div>
 
-            {signals_html}
-
             <!-- Price Chart -->
             <div class="chart-container">
                 <div class="chart-header">
@@ -3494,10 +3435,13 @@ Based on current data patterns:
                             <button class="ma-toggle-btn" data-ma="50">50D MA</button>
                         </div>
                         <div class="chart-timeframes">
+                            <button class="timeframe-btn" data-days="0.25">6H</button>
                             <button class="timeframe-btn" data-days="1">24H</button>
                             <button class="timeframe-btn active" data-days="7">7D</button>
                             <button class="timeframe-btn" data-days="30">30D</button>
                             <button class="timeframe-btn" data-days="90">90D</button>
+                            <button class="timeframe-btn" data-days="365">1Y</button>
+                            <button class="timeframe-btn" data-days="max">ALL</button>
                         </div>
                     </div>
                 </div>
@@ -3934,18 +3878,30 @@ Based on current data patterns:
         async function fetchBinanceChart(days) {{
             // Map days to Binance intervals
             let interval, limit;
-            if (days <= 1) {{
+            if (days === 'max') {{
+                // All-time: weekly candles
+                interval = '1w';
+                limit = 1000;
+            }} else if (days <= 0.5) {{
+                // 6 hours or less: 1-minute candles
+                interval = '1m';
+                limit = Math.ceil(days * 24 * 60);
+            }} else if (days <= 1) {{
                 interval = '5m';
                 limit = 288;  // 5min * 288 = 24h
             }} else if (days <= 7) {{
                 interval = '1h';
-                limit = days * 24;
+                limit = Math.ceil(days * 24);
             }} else if (days <= 30) {{
                 interval = '4h';
-                limit = days * 6;
-            }} else {{
+                limit = Math.ceil(days * 6);
+            }} else if (days <= 365) {{
                 interval = '1d';
-                limit = days;
+                limit = Math.ceil(days);
+            }} else {{
+                // More than 1 year: weekly candles
+                interval = '1w';
+                limit = Math.ceil(days / 7);
             }}
 
             const url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${{interval}}&limit=${{limit}}`;
@@ -4581,7 +4537,8 @@ Based on current data patterns:
                     const chartWrapper = document.querySelector('.chart-wrapper');
                     chartWrapper.style.opacity = '0.5';
 
-                    const days = parseInt(this.dataset.days);
+                    const daysRaw = this.dataset.days;
+                    const days = daysRaw === 'max' ? 'max' : parseFloat(daysRaw);
                     console.log('Switching to ' + days + ' day view...');
 
                     try {{
