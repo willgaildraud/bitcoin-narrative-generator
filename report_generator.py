@@ -2100,104 +2100,6 @@ Based on current data patterns:
             margin: 0;
         }}
 
-        /* Share Card */
-        .share-section {{
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-        }}
-
-        .share-title {{
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0 0 16px 0;
-        }}
-
-        .share-card {{
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(246, 133, 27, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            margin: 0 auto 16px;
-            max-width: 400px;
-            text-align: left;
-        }}
-
-        .share-card-header {{
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }}
-
-        .share-card-logo {{
-            font-size: 1.5rem;
-        }}
-
-        .share-card-brand {{
-            font-size: 0.85rem;
-            color: #f6851b;
-            font-weight: 600;
-        }}
-
-        .share-card-date {{
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-left: auto;
-        }}
-
-        .share-card-price {{
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-        }}
-
-        .share-card-stats {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }}
-
-        .share-card-stat {{
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 10px;
-        }}
-
-        .share-card-stat-label {{
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }}
-
-        .share-card-stat-value {{
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-        }}
-
-        .share-btn {{
-            background: #f6851b;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }}
-
-        .share-btn:hover {{
-            background: #e07916;
-        }}
-
         /* Roadmap Footer */
         .roadmap-footer {{
             background: var(--bg-card);
@@ -2718,13 +2620,6 @@ Based on current data patterns:
             .currency-option {{ padding: 6px 12px; font-size: 0.75rem; }}
 
             /* Share section mobile */
-            .share-section {{ padding: 16px; margin: 16px 0; }}
-            .share-card {{ padding: 16px; }}
-            .share-card-price {{ font-size: 1.5rem; }}
-            .share-card-stats {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
-            .share-card-stat {{ padding: 8px; }}
-            .share-card-stat-label {{ font-size: 0.55rem; }}
-            .share-card-stat-value {{ font-size: 0.8rem; }}
 
             /* Roadmap mobile */
             .roadmap-footer {{ padding: 16px; margin: 16px 0; }}
@@ -3745,38 +3640,6 @@ Based on current data patterns:
             </div>
         </div>
 
-        <!-- Share Today's Pulse -->
-        <div class="share-section">
-            <h3 class="share-title">Share Today's Pulse</h3>
-            <div class="share-card" id="share-card">
-                <div class="share-card-header">
-                    <span class="share-card-logo">₿</span>
-                    <span class="share-card-brand">TheBitcoinPulse.com</span>
-                    <span class="share-card-date">{time_now}</span>
-                </div>
-                <div class="share-card-price">${price:,.0f}</div>
-                <div class="share-card-stats">
-                    <div class="share-card-stat">
-                        <div class="share-card-stat-label">24h Change</div>
-                        <div class="share-card-stat-value" style="color: {"#22c55e" if change_24h >= 0 else "#ef4444"}">{change_24h:+.2f}%</div>
-                    </div>
-                    <div class="share-card-stat">
-                        <div class="share-card-stat-label">Sentiment</div>
-                        <div class="share-card-stat-value">{fg_value} ({fg_label})</div>
-                    </div>
-                    <div class="share-card-stat">
-                        <div class="share-card-stat-label">Halving</div>
-                        <div class="share-card-stat-value">{days_until_halving} days</div>
-                    </div>
-                    <div class="share-card-stat">
-                        <div class="share-card-stat-label">Supply</div>
-                        <div class="share-card-stat-value">{(circulating/21000000)*100:.1f}% mined</div>
-                    </div>
-                </div>
-            </div>
-            <button class="share-btn" onclick="shareSnapshot()">Share Snapshot</button>
-        </div>
-
         <!-- Roadmap Footer -->
         <div class="roadmap-footer">
             <h3 class="roadmap-title">Coming Soon</h3>
@@ -4389,59 +4252,58 @@ Based on current data patterns:
         }}
 
         function convertAllPrices() {{
-            // Hero price
+            // Hero price - always convert from base USD
             const heroPrice = document.querySelector('.hero-price');
             if (heroPrice) {{
-                const priceText = heroPrice.textContent;
-                const usdMatch = priceText.match(/[\\d,]+/);
-                if (usdMatch) {{
-                    heroPrice.innerHTML = formatConvertedPrice(basePriceUSD) +
-                        '<span class="price-currency">' + currentCurrency.code + '</span>';
-                }}
+                heroPrice.innerHTML = formatConvertedPrice(basePriceUSD) +
+                    '<span class="price-currency">' + currentCurrency.code + '</span>';
             }}
 
-            // Share card price
-            const shareCardPrice = document.querySelector('.share-card-price');
-            if (shareCardPrice) {{
-                shareCardPrice.textContent = formatConvertedPrice(basePriceUSD);
-            }}
-
-            // Comparison table prices
+            // Comparison table prices - store USD in data attribute on first run
             document.querySelectorAll('.comparison-table td').forEach(td => {{
-                if (td.textContent.startsWith('$')) {{
-                    const num = parseFloat(td.textContent.replace(/[$,]/g, ''));
+                // Store original USD value on first conversion
+                if (!td.dataset.usd && td.textContent.match(/^[$€£¥₹A-Z]/)) {{
+                    const num = parseFloat(td.textContent.replace(/[^\\d.]/g, ''));
                     if (!isNaN(num)) {{
-                        td.textContent = formatConvertedPrice(num);
+                        td.dataset.usd = num;
                     }}
+                }}
+                // Convert from stored USD value
+                if (td.dataset.usd) {{
+                    td.textContent = formatConvertedPrice(parseFloat(td.dataset.usd));
                 }}
             }});
 
-            // Changes list prices
+            // Changes list prices - store original USD values
             document.querySelectorAll('.changes-list span').forEach(span => {{
                 const text = span.textContent;
-                if (text.includes('$')) {{
-                    const match = text.match(/\\$([\\d,]+)/);
+                // Store original on first run
+                if (!span.dataset.originalText && text.match(/[$€£¥₹]/)) {{
+                    span.dataset.originalText = text;
+                    const match = text.match(/[$€£¥₹A-Z$]?([\\d,]+)/);
                     if (match) {{
-                        const num = parseFloat(match[1].replace(/,/g, ''));
-                        span.textContent = text.replace(/\\$[\\d,]+/, formatConvertedPrice(num));
+                        span.dataset.usd = parseFloat(match[1].replace(/,/g, ''));
                     }}
+                }}
+                // Convert using stored values
+                if (span.dataset.usd && span.dataset.originalText) {{
+                    const converted = formatConvertedPrice(parseFloat(span.dataset.usd));
+                    span.textContent = span.dataset.originalText.replace(/[$€£¥₹A-Z$]?[\\d,]+/, converted);
                 }}
             }});
 
-            // Historical table
+            // Historical table - store USD values
             document.querySelectorAll('.history-price-cell').forEach(cell => {{
-                const text = cell.textContent;
-                if (text.startsWith('$')) {{
-                    const num = parseFloat(text.replace(/[$,]/g, ''));
+                if (!cell.dataset.usd && cell.textContent.match(/^[$€£¥₹A-Z]/)) {{
+                    const num = parseFloat(cell.textContent.replace(/[^\\d.]/g, ''));
                     if (!isNaN(num)) {{
-                        cell.textContent = formatConvertedPrice(num);
+                        cell.dataset.usd = num;
                     }}
                 }}
+                if (cell.dataset.usd) {{
+                    cell.textContent = formatConvertedPrice(parseFloat(cell.dataset.usd));
+                }}
             }});
-
-            // Market cap (stored in trillions for USD)
-            const marketCapEl = document.querySelector('.stat-item .stat-value');
-            // Skip market cap conversion for simplicity - it's already formatted
 
             // Update chart with converted prices
             if (priceChart && chartDataUSD && chartDataUSD.length > 0) {{
@@ -4458,18 +4320,19 @@ Based on current data patterns:
 
                 priceChart.update('none');
 
-                // Update chart stats
-                const high = Math.max(...convertedPrices);
-                const low = Math.min(...convertedPrices);
-                const avg = convertedPrices.reduce((a, b) => a + b, 0) / convertedPrices.length;
+                // Update chart stats from USD values
+                const usdPrices = chartDataUSD.map(p => p[1]);
+                const highUSD = Math.max(...usdPrices);
+                const lowUSD = Math.min(...usdPrices);
+                const avgUSD = usdPrices.reduce((a, b) => a + b, 0) / usdPrices.length;
 
                 const highEl = document.getElementById('chart-high');
                 const lowEl = document.getElementById('chart-low');
                 const avgEl = document.getElementById('chart-avg');
 
-                if (highEl) highEl.textContent = formatConvertedPrice(high / currentCurrency.rate);
-                if (lowEl) lowEl.textContent = formatConvertedPrice(low / currentCurrency.rate);
-                if (avgEl) avgEl.textContent = formatConvertedPrice(avg / currentCurrency.rate);
+                if (highEl) highEl.textContent = formatConvertedPrice(highUSD);
+                if (lowEl) lowEl.textContent = formatConvertedPrice(lowUSD);
+                if (avgEl) avgEl.textContent = formatConvertedPrice(avgUSD);
             }}
 
             // Track currency change
@@ -5010,54 +4873,6 @@ Based on current data patterns:
             }});
         }}
 
-        // Share Snapshot Function
-        async function shareSnapshot() {{
-            const shareData = {{
-                title: 'The Bitcoin Pulse',
-                text: `Bitcoin: ${price:,.0f} ({change_24h:+.2f}%) | Sentiment: {fg_value} ({fg_label}) | {days_until_halving} days to halving`,
-                url: 'https://thebitcoinpulse.com'
-            }};
-
-            // Track analytics event
-            if (typeof gtag === 'function') {{
-                gtag('event', 'share_snapshot', {{
-                    'event_category': 'engagement',
-                    'event_label': 'social_share'
-                }});
-            }}
-
-            // Try Web Share API first (mobile)
-            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {{
-                try {{
-                    await navigator.share(shareData);
-                }} catch (err) {{
-                    if (err.name !== 'AbortError') {{
-                        fallbackShare(shareData);
-                    }}
-                }}
-            }} else {{
-                fallbackShare(shareData);
-            }}
-        }}
-
-        function fallbackShare(data) {{
-            // Copy to clipboard as fallback
-            const text = `${{data.text}}\n\n${{data.url}}`;
-            navigator.clipboard.writeText(text).then(() => {{
-                const btn = document.querySelector('.share-btn');
-                const originalText = btn.textContent;
-                btn.textContent = 'Copied to clipboard!';
-                btn.style.background = '#22c55e';
-                setTimeout(() => {{
-                    btn.textContent = originalText;
-                    btn.style.background = '#f6851b';
-                }}, 2000);
-            }}).catch(() => {{
-                // If clipboard fails, open Twitter share
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${{encodeURIComponent(data.text)}}&url=${{encodeURIComponent(data.url)}}`;
-                window.open(twitterUrl, '_blank');
-            }});
-        }}
     </script>
 </body>
 </html>'''
