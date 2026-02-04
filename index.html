@@ -162,6 +162,14 @@
             margin: 0 0 16px 0;
         }
 
+        .price-currency {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
         .hero-change {
             display: inline-flex;
             align-items: center;
@@ -943,6 +951,78 @@
 
         .nav-link:hover {
             color: var(--accent);
+        }
+
+        /* Currency Selector */
+        .currency-selector {
+            position: relative;
+        }
+
+        .currency-btn {
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .currency-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .currency-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 120px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 100;
+        }
+
+        .currency-selector.open .currency-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .currency-option {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .currency-option:hover {
+            background: var(--bg-darker);
+            color: var(--text-primary);
+        }
+
+        .currency-option.active {
+            color: var(--accent);
+        }
+
+        .currency-flag {
+            font-size: 1rem;
         }
 
         /* Today's Pulse Summary */
@@ -2200,6 +2280,35 @@
                         <span class="logo-text">The Bitcoin Pulse</span>
                     </a>
                     <div class="nav-links">
+                        <div class="currency-selector" id="currency-selector">
+                            <button class="currency-btn" id="currency-btn">
+                                <span id="currency-display">USD</span>
+                                <span>▼</span>
+                            </button>
+                            <div class="currency-dropdown" id="currency-dropdown">
+                                <div class="currency-option active" data-currency="USD" data-symbol="$" data-rate="1">
+                                    <span class="currency-flag">🇺🇸</span> USD
+                                </div>
+                                <div class="currency-option" data-currency="EUR" data-symbol="€" data-rate="0.92">
+                                    <span class="currency-flag">🇪🇺</span> EUR
+                                </div>
+                                <div class="currency-option" data-currency="GBP" data-symbol="£" data-rate="0.79">
+                                    <span class="currency-flag">🇬🇧</span> GBP
+                                </div>
+                                <div class="currency-option" data-currency="JPY" data-symbol="¥" data-rate="149.5">
+                                    <span class="currency-flag">🇯🇵</span> JPY
+                                </div>
+                                <div class="currency-option" data-currency="AUD" data-symbol="A$" data-rate="1.53">
+                                    <span class="currency-flag">🇦🇺</span> AUD
+                                </div>
+                                <div class="currency-option" data-currency="CAD" data-symbol="C$" data-rate="1.36">
+                                    <span class="currency-flag">🇨🇦</span> CAD
+                                </div>
+                                <div class="currency-option" data-currency="INR" data-symbol="₹" data-rate="83.1">
+                                    <span class="currency-flag">🇮🇳</span> INR
+                                </div>
+                            </div>
+                        </div>
                         <span class="nav-link" id="open-glossary">Learn</span>
                         <div class="share-container">
                             <button class="share-btn" id="share-btn">
@@ -2228,12 +2337,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$75,996</h1>
+                <h1 class="hero-price">$76,086</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    -3.14% (24h)
+                    -2.92% (24h)
                 </div>
             </section>
 
@@ -2244,22 +2353,22 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$74.71B</div>
+                    <div class="stat-value">$74.72B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-14.55%</div>
+                    <div class="stat-value red">-14.45%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-17.97%</div>
+                    <div class="stat-value red">-17.87%</div>
                 </div>
             </div>
 
             <!-- Today's Bitcoin Pulse Summary -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is down 3.1% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is down 2.9% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
             </div>
 
             <!-- What Changed Today -->
@@ -2268,7 +2377,7 @@
                 <ul class="changes-list">
                     <li>
                         <span class="change-icon up">↑</span>
-                        <span>Price rose 0.47% to $75,996</span>
+                        <span>Price rose 0.59% to $76,086</span>
                     </li>
                     <li>
                         <span class="change-icon down">↓</span>
@@ -2301,8 +2410,8 @@
                         <tr>
                             <td class="metric-name">Price</td>
                             <td>$75,639</td>
-                            <td>$75,996</td>
-                            <td class="delta positive">+0.47%</td>
+                            <td>$76,086</td>
+                            <td class="delta positive">+0.59%</td>
                         </tr>
                         <tr>
                             <td class="metric-name">Fear & Greed</td>
@@ -2502,7 +2611,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$75,996.00</span>
+                        <span class="data-value accent">$76,086.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -2530,15 +2639,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$79,254 <small>(-4.1%)</small></span>
+                <span class="data-value" style="color: var(--red)">$79,266 <small>(-4.0%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,531 <small>(-12.2%)</small></span>
+                <span class="data-value" style="color: var(--red)">$86,535 <small>(-12.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$88,503 <small>(-14.1%)</small></span>
+                <span class="data-value" style="color: var(--red)">$88,505 <small>(-14.0%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2660,11 +2769,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$237,488</span>
+                        <span class="data-value">$237,769</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">10.0 min</span>
+                        <span class="data-value">10.1 min</span>
                     </div>
                 </div>
 
@@ -2687,7 +2796,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">31,535</span>
+                        <span class="data-value">33,438</span>
                     </div>
                 </div>
 
@@ -2710,7 +2819,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
-                        <span class="data-value">1,315</span>
+                        <span class="data-value">1,314</span>
                     </div>
                 </div>
             </div>
@@ -2731,7 +2840,7 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">9,546</div>
+                    <div class="mini-stat-value">9,534</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2792,7 +2901,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">31,535 txs</span>
+                        <span class="data-value">33,438 txs</span>
                     </div>
                 </div>
             </div>
@@ -2830,11 +2939,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">$74.71B</span>
+                        <span class="data-value accent">$74.72B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.91%</span>
+                        <span class="data-value">4.92%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -2885,13 +2994,13 @@
                 <div class="share-card-header">
                     <span class="share-card-logo">₿</span>
                     <span class="share-card-brand">TheBitcoinPulse.com</span>
-                    <span class="share-card-date">10:16 UTC</span>
+                    <span class="share-card-date">10:25 UTC</span>
                 </div>
-                <div class="share-card-price">$75,996</div>
+                <div class="share-card-price">$76,086</div>
                 <div class="share-card-stats">
                     <div class="share-card-stat">
                         <div class="share-card-stat-label">24h Change</div>
-                        <div class="share-card-stat-value" style="color: #ef4444">-3.14%</div>
+                        <div class="share-card-stat-value" style="color: #ef4444">-2.92%</div>
                     </div>
                     <div class="share-card-stat">
                         <div class="share-card-stat-label">Sentiment</div>
@@ -2927,7 +3036,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 10:16 UTC</span> ·
+                <span id="last-update">Last updated: 10:25 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -2969,7 +3078,7 @@
         let priceChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 75996;
+        let lastPrice = 76086;
         let isChartLoading = false;
 
         // MA visibility state
@@ -3383,8 +3492,146 @@
             await updateFearGreed();
         }
 
+        // ===== Currency Conversion =====
+        let currentCurrency = { code: 'USD', symbol: '$', rate: 1 };
+        const basePriceUSD = 76086;
+
+        function initCurrencySelector() {
+            const selector = document.getElementById('currency-selector');
+            const btn = document.getElementById('currency-btn');
+            const dropdown = document.getElementById('currency-dropdown');
+            const display = document.getElementById('currency-display');
+            const options = dropdown.querySelectorAll('.currency-option');
+
+            // Load saved preference
+            const saved = localStorage.getItem('btcPulseCurrency');
+            if (saved) {
+                try {
+                    const savedCurrency = JSON.parse(saved);
+                    currentCurrency = savedCurrency;
+                    display.textContent = savedCurrency.code;
+                    options.forEach(opt => {
+                        opt.classList.toggle('active', opt.dataset.currency === savedCurrency.code);
+                    });
+                    convertAllPrices();
+                } catch (e) {}
+            }
+
+            // Toggle dropdown
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selector.classList.toggle('open');
+            });
+
+            // Select currency
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const code = opt.dataset.currency;
+                    const symbol = opt.dataset.symbol;
+                    const rate = parseFloat(opt.dataset.rate);
+
+                    currentCurrency = { code, symbol, rate };
+                    display.textContent = code;
+                    localStorage.setItem('btcPulseCurrency', JSON.stringify(currentCurrency));
+
+                    options.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    selector.classList.remove('open');
+
+                    convertAllPrices();
+                });
+            });
+
+            // Close on outside click
+            document.addEventListener('click', () => {
+                selector.classList.remove('open');
+            });
+        }
+
+        function convertPrice(usdPrice) {
+            return usdPrice * currentCurrency.rate;
+        }
+
+        function formatConvertedPrice(usdPrice, decimals = 0) {
+            const converted = convertPrice(usdPrice);
+            if (currentCurrency.code === 'JPY' || currentCurrency.code === 'INR') {
+                return currentCurrency.symbol + Math.round(converted).toLocaleString();
+            }
+            return currentCurrency.symbol + converted.toLocaleString(undefined, {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function convertAllPrices() {
+            // Hero price
+            const heroPrice = document.querySelector('.hero-price');
+            if (heroPrice) {
+                const priceText = heroPrice.textContent;
+                const usdMatch = priceText.match(/[\d,]+/);
+                if (usdMatch) {
+                    heroPrice.innerHTML = formatConvertedPrice(basePriceUSD) +
+                        '<span class="price-currency">' + currentCurrency.code + '</span>';
+                }
+            }
+
+            // Share card price
+            const shareCardPrice = document.querySelector('.share-card-price');
+            if (shareCardPrice) {
+                shareCardPrice.textContent = formatConvertedPrice(basePriceUSD);
+            }
+
+            // Comparison table prices
+            document.querySelectorAll('.comparison-table td').forEach(td => {
+                if (td.textContent.startsWith('$')) {
+                    const num = parseFloat(td.textContent.replace(/[$,]/g, ''));
+                    if (!isNaN(num)) {
+                        td.textContent = formatConvertedPrice(num);
+                    }
+                }
+            });
+
+            // Changes list prices
+            document.querySelectorAll('.changes-list span').forEach(span => {
+                const text = span.textContent;
+                if (text.includes('$')) {
+                    const match = text.match(/\$([\d,]+)/);
+                    if (match) {
+                        const num = parseFloat(match[1].replace(/,/g, ''));
+                        span.textContent = text.replace(/\$[\d,]+/, formatConvertedPrice(num));
+                    }
+                }
+            });
+
+            // Historical table
+            document.querySelectorAll('.history-price-cell').forEach(cell => {
+                const text = cell.textContent;
+                if (text.startsWith('$')) {
+                    const num = parseFloat(text.replace(/[$,]/g, ''));
+                    if (!isNaN(num)) {
+                        cell.textContent = formatConvertedPrice(num);
+                    }
+                }
+            });
+
+            // Market cap (stored in trillions for USD)
+            const marketCapEl = document.querySelector('.stat-item .stat-value');
+            // Skip market cap conversion for simplicity - it's already formatted
+
+            // Track currency change
+            if (typeof gtag === 'function') {
+                gtag('event', 'currency_change', {
+                    'event_category': 'settings',
+                    'event_label': currentCurrency.code
+                });
+            }
+        }
+
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize currency selector
+            initCurrencySelector();
+
             // Initialize main price chart
             initChart();
 
@@ -3913,7 +4160,7 @@
         async function shareSnapshot() {
             const shareData = {
                 title: 'The Bitcoin Pulse',
-                text: `Bitcoin: $75,996 (-3.14%) | Sentiment: 14 (Extreme Fear) | 798 days to halving`,
+                text: `Bitcoin: $76,086 (-2.92%) | Sentiment: 14 (Extreme Fear) | 798 days to halving`,
                 url: 'https://thebitcoinpulse.com'
             };
 
