@@ -1698,6 +1698,252 @@ Based on current data patterns:
             color: var(--accent);
         }}
 
+        /* Halving Countdown Widget */
+        .halving-widget {{
+            background: linear-gradient(135deg, rgba(246, 133, 27, 0.1) 0%, rgba(246, 133, 27, 0.05) 100%);
+            border: 1px solid rgba(246, 133, 27, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }}
+
+        .halving-title {{
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }}
+
+        .halving-countdown {{
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }}
+
+        .countdown-item {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-width: 80px;
+        }}
+
+        .countdown-value {{
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }}
+
+        .countdown-label {{
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 6px;
+        }}
+
+        .halving-progress {{
+            margin: 20px 0;
+        }}
+
+        .halving-progress-bar {{
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }}
+
+        .halving-progress-fill {{
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }}
+
+        .halving-stats {{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }}
+
+        .halving-info {{
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }}
+
+        .halving-info-item {{
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }}
+
+        .halving-info-item strong {{
+            color: var(--text-primary);
+        }}
+
+        /* Share Button */
+        .share-btn {{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .share-btn:hover {{
+            border-color: var(--accent);
+            color: var(--accent);
+        }}
+
+        .share-dropdown {{
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 160px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }}
+
+        .share-dropdown.active {{
+            display: block;
+        }}
+
+        .share-option {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }}
+
+        .share-option:hover {{
+            background: var(--bg-darker);
+            color: var(--text-primary);
+        }}
+
+        .share-container {{
+            position: relative;
+        }}
+
+        .share-toast {{
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--green);
+            color: var(--green);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }}
+
+        .share-toast.show {{
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }}
+
+        /* News Feed */
+        .news-feed {{
+            margin-top: 40px;
+        }}
+
+        .news-grid {{
+            display: grid;
+            gap: 16px;
+        }}
+
+        .news-item {{
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }}
+
+        .news-item:hover {{
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }}
+
+        .news-content {{
+            flex: 1;
+        }}
+
+        .news-source {{
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }}
+
+        .news-title {{
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }}
+
+        .news-time {{
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }}
+
+        .news-loading {{
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }}
+
+        @media (max-width: 768px) {{
+            .halving-countdown {{
+                gap: 10px;
+            }}
+            .countdown-item {{
+                padding: 12px 16px;
+                min-width: 65px;
+            }}
+            .countdown-value {{
+                font-size: 1.5rem;
+            }}
+            .halving-info {{
+                gap: 12px;
+            }}
+        }}
+
         /* Market Signals Card */
         .signals-grid {{
             display: grid;
@@ -1978,6 +2224,24 @@ Based on current data patterns:
                     </a>
                     <div class="nav-links">
                         <span class="nav-link" id="open-glossary">Learn</span>
+                        <div class="share-container">
+                            <button class="share-btn" id="share-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+                                </svg>
+                                Share
+                            </button>
+                            <div class="share-dropdown" id="share-dropdown">
+                                <div class="share-option" data-action="copy">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Copy Link
+                                </div>
+                                <div class="share-option" data-action="twitter">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                    Share on X
+                                </div>
+                            </div>
+                        </div>
                         <span class="nav-date">{today}</span>
                     </div>
                 </div>
@@ -2012,6 +2276,44 @@ Based on current data patterns:
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
                     <div class="stat-value {"green" if change_30d >= 0 else "red"}">{change_30d:+.2f}%</div>
+                </div>
+            </div>
+
+            <!-- Halving Countdown Widget -->
+            <div class="halving-widget">
+                <div class="halving-title">Next Bitcoin Halving</div>
+                <div class="halving-countdown" id="halving-countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-days">--</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-hours">--</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-mins">--</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-blocks">--</div>
+                        <div class="countdown-label">Blocks</div>
+                    </div>
+                </div>
+                <div class="halving-progress">
+                    <div class="halving-progress-bar">
+                        <div class="halving-progress-fill" id="halving-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="halving-stats">
+                        <span>Last Halving (2024)</span>
+                        <span id="halving-progress-pct">0%</span>
+                        <span>Next Halving (~{next_halving})</span>
+                    </div>
+                </div>
+                <div class="halving-info">
+                    <div class="halving-info-item">Current Block: <strong>{block_height:,}</strong></div>
+                    <div class="halving-info-item">Current Reward: <strong>{block_reward} BTC</strong></div>
+                    <div class="halving-info-item">Post-Halving: <strong>{block_reward/2} BTC</strong></div>
                 </div>
             </div>
 
@@ -2329,6 +2631,17 @@ Based on current data patterns:
                         <span class="data-label">24h Tx Volume</span>
                         <span class="data-value">{fmt(tx_volume_usd)}</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Bitcoin News Feed -->
+            <div class="section-header mt-40">
+                <h2 class="section-title">Bitcoin News</h2>
+                <p class="section-subtitle">Latest headlines from around the web</p>
+            </div>
+            <div class="card mb-24">
+                <div class="news-grid" id="news-feed">
+                    <div class="news-loading">Loading latest news...</div>
                 </div>
             </div>
         </div>
@@ -2873,7 +3186,173 @@ Based on current data patterns:
 
             // Initialize glossary
             initGlossary();
+
+            // Initialize halving countdown
+            initHalvingCountdown();
+
+            // Initialize share button
+            initShareButton();
+
+            // Load news feed
+            loadNewsFeed();
         }});
+
+        // ===== Halving Countdown =====
+        const HALVING_DATA = {{
+            blocksUntilHalving: {blocks_until_halving},
+            currentBlock: {block_height},
+            nextHalvingBlock: {block_height + blocks_until_halving},
+            lastHalvingBlock: {block_height + blocks_until_halving - 210000}
+        }};
+
+        function initHalvingCountdown() {{
+            updateHalvingCountdown();
+            setInterval(updateHalvingCountdown, 60000); // Update every minute
+        }}
+
+        function updateHalvingCountdown() {{
+            const blocksLeft = HALVING_DATA.blocksUntilHalving;
+            const minutesLeft = blocksLeft * 10; // Avg 10 min per block
+
+            const days = Math.floor(minutesLeft / 1440);
+            const hours = Math.floor((minutesLeft % 1440) / 60);
+            const mins = Math.floor(minutesLeft % 60);
+
+            document.getElementById('countdown-days').textContent = days;
+            document.getElementById('countdown-hours').textContent = hours;
+            document.getElementById('countdown-mins').textContent = mins;
+            document.getElementById('countdown-blocks').textContent = blocksLeft.toLocaleString();
+
+            // Calculate progress (blocks since last halving / 210000)
+            const blocksSinceLastHalving = 210000 - blocksLeft;
+            const progressPct = (blocksSinceLastHalving / 210000) * 100;
+
+            document.getElementById('halving-progress').style.width = progressPct.toFixed(1) + '%';
+            document.getElementById('halving-progress-pct').textContent = progressPct.toFixed(1) + '%';
+        }}
+
+        // ===== Share Button =====
+        function initShareButton() {{
+            const shareBtn = document.getElementById('share-btn');
+            const shareDropdown = document.getElementById('share-dropdown');
+
+            shareBtn.addEventListener('click', (e) => {{
+                e.stopPropagation();
+                shareDropdown.classList.toggle('active');
+            }});
+
+            document.addEventListener('click', () => {{
+                shareDropdown.classList.remove('active');
+            }});
+
+            shareDropdown.querySelectorAll('.share-option').forEach(option => {{
+                option.addEventListener('click', (e) => {{
+                    e.stopPropagation();
+                    const action = option.dataset.action;
+
+                    if (action === 'copy') {{
+                        copyToClipboard();
+                    }} else if (action === 'twitter') {{
+                        shareToTwitter();
+                    }}
+
+                    shareDropdown.classList.remove('active');
+                }});
+            }});
+        }}
+
+        function copyToClipboard() {{
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {{
+                showToast('Link copied to clipboard!');
+            }}).catch(() => {{
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Link copied to clipboard!');
+            }});
+        }}
+
+        function shareToTwitter() {{
+            const price = document.querySelector('.hero-price').textContent;
+            const change = document.querySelector('.hero-change').textContent;
+            const text = `Bitcoin is at ${{price}} (${{change}})\\n\\nLive data from The Bitcoin Pulse`;
+            const url = 'https://thebitcoinpulse.com';
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${{encodeURIComponent(text)}}&url=${{encodeURIComponent(url)}}`;
+            window.open(twitterUrl, '_blank', 'width=550,height=420');
+        }}
+
+        function showToast(message) {{
+            let toast = document.querySelector('.share-toast');
+            if (!toast) {{
+                toast = document.createElement('div');
+                toast.className = 'share-toast';
+                document.body.appendChild(toast);
+            }}
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }}
+
+        // ===== News Feed =====
+        async function loadNewsFeed() {{
+            const newsContainer = document.getElementById('news-feed');
+
+            try {{
+                // Fetch from CryptoPanic API (free, no auth required for public feed)
+                const response = await fetch('https://cryptopanic.com/api/free/v1/posts/?auth_token=public&currencies=BTC&kind=news&public=true');
+
+                if (!response.ok) throw new Error('News fetch failed');
+
+                const data = await response.json();
+                const news = data.results?.slice(0, 5) || [];
+
+                if (news.length === 0) {{
+                    newsContainer.innerHTML = '<div class="news-loading">No recent news available</div>';
+                    return;
+                }}
+
+                newsContainer.innerHTML = news.map(item => `
+                    <a href="${{item.url}}" target="_blank" rel="noopener" class="news-item">
+                        <div class="news-content">
+                            <div class="news-source">${{item.source?.title || 'Bitcoin News'}}</div>
+                            <div class="news-title">${{item.title}}</div>
+                            <div class="news-time">${{formatTimeAgo(item.published_at)}}</div>
+                        </div>
+                    </a>
+                `).join('');
+
+            }} catch (error) {{
+                console.log('News feed error:', error);
+                // Fallback to static placeholder
+                newsContainer.innerHTML = `
+                    <div class="news-item" style="cursor: default;">
+                        <div class="news-content">
+                            <div class="news-source">Bitcoin News</div>
+                            <div class="news-title">Unable to load news feed. Visit major crypto news sites for latest updates.</div>
+                            <div class="news-time">--</div>
+                        </div>
+                    </div>
+                `;
+            }}
+        }}
+
+        function formatTimeAgo(dateString) {{
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 60) return `${{diffMins}}m ago`;
+            if (diffHours < 24) return `${{diffHours}}h ago`;
+            return `${{diffDays}}d ago`;
+        }}
 
         // ===== Glossary Functions =====
         function initGlossary() {{
