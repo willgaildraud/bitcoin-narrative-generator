@@ -934,14 +934,42 @@ class DataFetcher:
 
         return stats
 
-    def fetch_bitcoin_news(self, limit: int = 5) -> list[dict]:
-        """Fetch latest crypto news from Cointelegraph RSS feed."""
+    def fetch_bitcoin_news(self, limit: int = 8) -> list[dict]:
+        """Fetch latest Bitcoin news from multiple sources."""
         news_items = []
+        btc_keywords = ["bitcoin", "btc", "halving", "mining", "satoshi", "lightning"]
 
-        # Primary source: Cointelegraph RSS via rss2json
+        # Source 1: Reddit r/Bitcoin hot posts
+        try:
+            url = "https://www.reddit.com/r/Bitcoin/hot.json"
+            headers = {"User-Agent": "TheBitcoinPulse/1.0"}
+            self._rate_limit()
+            response = self.session.get(url, headers=headers, timeout=15)
+
+            if response.status_code == 200:
+                data = response.json()
+                posts = data.get("data", {}).get("children", [])
+                for post in posts[:5]:
+                    post_data = post.get("data", {})
+                    # Skip stickied posts and low-score posts
+                    if post_data.get("stickied") or post_data.get("score", 0) < 50:
+                        continue
+                    news_items.append({
+                        "title": post_data.get("title", ""),
+                        "url": f"https://reddit.com{post_data.get('permalink', '')}",
+                        "source": "r/Bitcoin",
+                        "published_at": "",
+                        "domain": "reddit.com",
+                        "score": post_data.get("score", 0),
+                        "comments": post_data.get("num_comments", 0)
+                    })
+        except requests.RequestException:
+            pass
+
+        # Source 2: Cointelegraph RSS via rss2json
         try:
             url = "https://api.rss2json.com/v1/api.json"
-            params = {"rss_url": "https://cointelegraph.com/rss"}
+            params = {"rss_url": "https://cointelegraph.com/rss/tag/bitcoin"}
 
             self._rate_limit()
             response = self.session.get(url, params=params, timeout=15)
@@ -950,13 +978,9 @@ class DataFetcher:
                 data = response.json()
                 if data.get("status") == "ok":
                     items = data.get("items", [])
-
-                    # Filter for Bitcoin-related news and limit results
-                    btc_keywords = ["bitcoin", "btc", "crypto", "halving", "mining"]
-                    for item in items:
+                    for item in items[:3]:
                         title = item.get("title", "").lower()
-                        # Include if title mentions Bitcoin/crypto or if we need more items
-                        if any(kw in title for kw in btc_keywords) or len(news_items) < limit:
+                        if any(kw in title for kw in btc_keywords):
                             news_items.append({
                                 "title": item.get("title", ""),
                                 "url": item.get("link", ""),
@@ -964,12 +988,95 @@ class DataFetcher:
                                 "published_at": item.get("pubDate", ""),
                                 "domain": "cointelegraph.com"
                             })
-                            if len(news_items) >= limit:
-                                break
         except requests.RequestException:
             pass
 
-        return news_items
+        # Source 3: Bitcoin Magazine RSS
+        try:
+            url = "https://api.rss2json.com/v1/api.json"
+            params = {"rss_url": "https://bitcoinmagazine.com/feed"}
+
+            self._rate_limit()
+            response = self.session.get(url, params=params, timeout=15)
+
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "ok":
+                    items = data.get("items", [])
+                    for item in items[:3]:
+                        news_items.append({
+                            "title": item.get("title", ""),
+                            "url": item.get("link", ""),
+                            "source": "Bitcoin Magazine",
+                            "published_at": item.get("pubDate", ""),
+                            "domain": "bitcoinmagazine.com"
+                        })
+        except requests.RequestException:
+            pass
+
+        # Source 4: Decrypt RSS (crypto news)
+        try:
+            url = "https://api.rss2json.com/v1/api.json"
+            params = {"rss_url": "https://decrypt.co/feed"}
+
+            self._rate_limit()
+            response = self.session.get(url, params=params, timeout=15)
+
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "ok":
+                    items = data.get("items", [])
+                    for item in items[:4]:
+                        title = item.get("title", "").lower()
+                        if any(kw in title for kw in btc_keywords):
+                            news_items.append({
+                                "title": item.get("title", ""),
+                                "url": item.get("link", ""),
+                                "source": "Decrypt",
+                                "published_at": item.get("pubDate", ""),
+                                "domain": "decrypt.co"
+                            })
+        except requests.RequestException:
+            pass
+
+        # Source 5: Reddit r/CryptoCurrency (Bitcoin posts)
+        try:
+            url = "https://www.reddit.com/r/CryptoCurrency/search.json"
+            headers = {"User-Agent": "TheBitcoinPulse/1.0"}
+            params = {"q": "bitcoin", "sort": "hot", "t": "day", "limit": 5}
+            self._rate_limit()
+            response = self.session.get(url, headers=headers, params=params, timeout=15)
+
+            if response.status_code == 200:
+                data = response.json()
+                posts = data.get("data", {}).get("children", [])
+                for post in posts[:3]:
+                    post_data = post.get("data", {})
+                    if post_data.get("score", 0) >= 100:
+                        news_items.append({
+                            "title": post_data.get("title", ""),
+                            "url": f"https://reddit.com{post_data.get('permalink', '')}",
+                            "source": "r/CryptoCurrency",
+                            "published_at": "",
+                            "domain": "reddit.com",
+                            "score": post_data.get("score", 0),
+                            "comments": post_data.get("num_comments", 0)
+                        })
+        except requests.RequestException:
+            pass
+
+        # Deduplicate and limit
+        seen_titles = set()
+        unique_items = []
+        for item in news_items:
+            title_lower = item["title"].lower()[:50]
+            if title_lower not in seen_titles:
+                seen_titles.add(title_lower)
+                unique_items.append(item)
+                if len(unique_items) >= limit:
+                    break
+
+        return unique_items
 
     def fetch_all_data(self, include_historical: bool = True) -> dict[str, Any]:
         """Fetch all Bitcoin market data from all sources."""

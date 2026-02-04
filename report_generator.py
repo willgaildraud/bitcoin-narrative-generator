@@ -3784,7 +3784,9 @@ Based on current data patterns:
         let priceChart = null;
         let currentTimeframe = 7;
         let chartData = [];
+        let chartDataUSD = [];  // Store original USD data for conversion
         let lastPrice = {price};
+        let lastPriceUSD = {price};  // Store USD price for conversion
         let isChartLoading = false;
 
         // MA visibility state
@@ -3794,10 +3796,18 @@ Based on current data patterns:
 
         // ===== Formatters =====
         function formatPrice(n) {{
+            if (typeof currentCurrency !== 'undefined' && currentCurrency.code !== 'USD') {{
+                const converted = n * currentCurrency.rate;
+                return currentCurrency.symbol + converted.toLocaleString('en-US', {{maximumFractionDigits: 0}});
+            }}
             return '$' + n.toLocaleString('en-US', {{maximumFractionDigits: 0}});
         }}
 
         function formatPriceDecimal(n) {{
+            if (typeof currentCurrency !== 'undefined' && currentCurrency.code !== 'USD') {{
+                const converted = n * currentCurrency.rate;
+                return currentCurrency.symbol + converted.toLocaleString('en-US', {{minimumFractionDigits: 2, maximumFractionDigits: 2}});
+            }}
             return '$' + n.toLocaleString('en-US', {{minimumFractionDigits: 2, maximumFractionDigits: 2}});
         }}
 
@@ -4013,10 +4023,13 @@ Based on current data patterns:
 
             // Only update if we got data
             if (newData && newData.length > 0) {{
+                chartDataUSD = newData;  // Store original USD data
                 chartData = newData;
 
                 const labels = chartData.map(p => p[0]);
-                const prices = chartData.map(p => p[1]);
+                // Convert prices to current currency
+                const rate = (typeof currentCurrency !== 'undefined') ? currentCurrency.rate : 1;
+                const prices = chartData.map(p => p[1] * rate);
 
                 // Calculate moving averages
                 const ma7 = calculateMA(prices, 7);
@@ -4083,16 +4096,24 @@ Based on current data patterns:
 
                 if (data.bitcoin) {{
                     const btc = data.bitcoin;
-                    const newPrice = btc.usd;
+                    const newPriceUSD = btc.usd;
+                    lastPriceUSD = newPriceUSD;  // Store USD price
+
+                    // Get current currency rate
+                    const rate = (typeof currentCurrency !== 'undefined') ? currentCurrency.rate : 1;
+                    const symbol = (typeof currentCurrency !== 'undefined') ? currentCurrency.symbol : '$';
+                    const code = (typeof currentCurrency !== 'undefined') ? currentCurrency.code : 'USD';
+                    const newPrice = newPriceUSD * rate;
 
                     // Update hero price with flash effect
                     const heroPrice = document.querySelector('.hero-price');
                     if (heroPrice) {{
                         const oldPrice = lastPrice;
-                        heroPrice.textContent = formatPrice(newPrice);
-                        if (newPrice !== oldPrice) {{
+                        heroPrice.innerHTML = symbol + newPrice.toLocaleString('en-US', {{maximumFractionDigits: 0}}) +
+                            '<span class="price-currency">' + code + '</span>';
+                        if (newPriceUSD !== (oldPrice / rate)) {{
                             heroPrice.style.transition = 'color 0.3s';
-                            heroPrice.style.color = newPrice > oldPrice ? '#3fb950' : '#f85149';
+                            heroPrice.style.color = newPriceUSD > (oldPrice / rate) ? '#3fb950' : '#f85149';
                             setTimeout(() => {{ heroPrice.style.color = '#f0f6fc'; }}, 500);
                         }}
                         lastPrice = newPrice;
@@ -4323,6 +4344,35 @@ Based on current data patterns:
             // Market cap (stored in trillions for USD)
             const marketCapEl = document.querySelector('.stat-item .stat-value');
             // Skip market cap conversion for simplicity - it's already formatted
+
+            // Update chart with converted prices
+            if (priceChart && chartDataUSD && chartDataUSD.length > 0) {{
+                const convertedPrices = chartDataUSD.map(p => p[1] * currentCurrency.rate);
+                priceChart.data.datasets[0].data = convertedPrices;
+
+                // Recalculate MAs with converted prices
+                const ma7 = calculateMA(convertedPrices, 7);
+                const ma20 = calculateMA(convertedPrices, 20);
+                const ma50 = calculateMA(convertedPrices, 50);
+                priceChart.data.datasets[1].data = ma7;
+                priceChart.data.datasets[2].data = ma20;
+                priceChart.data.datasets[3].data = ma50;
+
+                priceChart.update('none');
+
+                // Update chart stats
+                const high = Math.max(...convertedPrices);
+                const low = Math.min(...convertedPrices);
+                const avg = convertedPrices.reduce((a, b) => a + b, 0) / convertedPrices.length;
+
+                const highEl = document.getElementById('chart-high');
+                const lowEl = document.getElementById('chart-low');
+                const avgEl = document.getElementById('chart-avg');
+
+                if (highEl) highEl.textContent = formatConvertedPrice(high / currentCurrency.rate);
+                if (lowEl) lowEl.textContent = formatConvertedPrice(low / currentCurrency.rate);
+                if (avgEl) avgEl.textContent = formatConvertedPrice(avg / currentCurrency.rate);
+            }}
 
             // Track currency change
             if (typeof gtag === 'function') {{
