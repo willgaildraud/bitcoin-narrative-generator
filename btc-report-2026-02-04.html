@@ -2388,162 +2388,25 @@
         </nav>
 
         <div class="container">
+            <!-- 1. Live Bitcoin Price -->
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$73,492</h1>
+                <h1 class="hero-price">$73,454</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    -3.66% (24h)
+                    -3.82% (24h)
                 </div>
             </section>
 
-            <div class="stats-row">
-                <div class="stat-item">
-                    <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="stat-market-cap" data-usd="1468787367173">$1.47T</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">24h Volume</div>
-                    <div class="stat-value" id="stat-volume" data-usd="71201930122">$71.20B</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-17.75%</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-22.04%</div>
-                </div>
-            </div>
-
-            <!-- Today's Bitcoin Pulse Summary -->
+            <!-- 2. Today's Pulse -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is down 3.7% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is down 3.8% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
             </div>
 
-            <!-- What Changed Today -->
-            <div class="changes-card">
-                <h3 class="changes-title">What Changed Today</h3>
-                <ul class="changes-list">
-                    <li>
-                        <span class="change-icon down">↓</span>
-                        <span>Price fell 2.84% to $73,492</span>
-                    </li>
-                    <li>
-                        <span class="change-icon down">↓</span>
-                        <span>Sentiment declined (-3 to 14)</span>
-                    </li>
-                    <li>
-                        <span class="change-icon neutral">⛏</span>
-                        <span>~144 blocks mined, adding ~450.0 BTC to supply</span>
-                    </li>
-                    <li>
-                        <span class="change-icon neutral">📊</span>
-                        <span>Total supply now 19,982,656 of 21M BTC</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Yesterday vs Today Comparison -->
-            <div class="comparison-card">
-                <h3 class="comparison-title">Yesterday vs Today</h3>
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Yesterday</th>
-                            <th>Today</th>
-                            <th>Change</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="metric-name">Price</td>
-                            <td>$75,639</td>
-                            <td>$73,492</td>
-                            <td class="delta negative">-2.84%</td>
-                        </tr>
-                        <tr>
-                            <td class="metric-name">Fear & Greed</td>
-                            <td>17</td>
-                            <td>14 (Extreme Fear)</td>
-                            <td class="delta negative">-3</td>
-                        </tr>
-                        <tr>
-                            <td class="metric-name">Supply Added</td>
-                            <td colspan="2" style="text-align: center;">~450.00 BTC / day</td>
-                            <td class="delta neutral">+164250 BTC/year</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Education Drawer -->
-            <div class="education-drawer" id="education-drawer">
-                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
-                    <span>What am I looking at?</span>
-                    <span class="education-toggle-icon">▼</span>
-                </button>
-                <div class="education-content">
-                    <div class="education-inner">
-                        <div class="education-section">
-                            <h4>What is Bitcoin?</h4>
-                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
-                        </div>
-                        <div class="education-section">
-                            <h4>Why does the halving matter?</h4>
-                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
-                        </div>
-                        <div class="education-section">
-                            <h4>Why is supply capped at 21 million?</h4>
-                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Halving Countdown Widget -->
-            <div class="halving-widget">
-                <div class="halving-title">Next Bitcoin Halving</div>
-                <div class="halving-countdown" id="halving-countdown">
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-days">--</div>
-                        <div class="countdown-label">Days</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-hours">--</div>
-                        <div class="countdown-label">Hours</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-mins">--</div>
-                        <div class="countdown-label">Minutes</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-blocks">--</div>
-                        <div class="countdown-label">Blocks</div>
-                    </div>
-                </div>
-                <div class="halving-progress">
-                    <div class="halving-progress-bar">
-                        <div class="halving-progress-fill" id="halving-progress" style="width: 0%"></div>
-                    </div>
-                    <div class="halving-stats">
-                        <span>Last Halving (2024)</span>
-                        <span id="halving-progress-pct">0%</span>
-                        <span>Next Halving (~2028-04-13)</span>
-                    </div>
-                </div>
-                <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>935,034</strong></div>
-                    <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
-                    <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
-                </div>
-            </div>
-
-            <!-- Market Conditions Score -->
+            <!-- 3. Market Conditions Score -->
             <div class="market-score-card">
                 <div class="market-score-header">
                     <h3 class="market-score-title">Market Conditions</h3>
@@ -2564,7 +2427,7 @@
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 50D MA</span>
-                        <span class="score-item-value">Price -16.9% below</span>
+                        <span class="score-item-value">Price -17.0% below</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">>30% from ATH</span>
@@ -2580,7 +2443,84 @@
                 </div>
             </div>
 
-            <!-- Price Chart -->
+            <!-- 4. What Changed Today -->
+            <div class="changes-card">
+                <h3 class="changes-title">What Changed Today</h3>
+                <ul class="changes-list">
+                    <li>
+                        <span class="change-icon down">↓</span>
+                        <span>Price fell 2.89% to $73,454</span>
+                    </li>
+                    <li>
+                        <span class="change-icon down">↓</span>
+                        <span>Sentiment declined (-3 to 14)</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">⛏</span>
+                        <span>~144 blocks mined, adding ~450.0 BTC to supply</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">📊</span>
+                        <span>Total supply now 19,984,462 of 21M BTC</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 5. Yesterday vs Today -->
+            <div class="comparison-card">
+                <h3 class="comparison-title">Yesterday vs Today</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Yesterday</th>
+                            <th>Today</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Price</td>
+                            <td>$75,639</td>
+                            <td>$73,454</td>
+                            <td class="delta negative">-2.89%</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Fear & Greed</td>
+                            <td>17</td>
+                            <td>14 (Extreme Fear)</td>
+                            <td class="delta negative">-3</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Supply Added</td>
+                            <td colspan="2" style="text-align: center;">~450.00 BTC / day</td>
+                            <td class="delta neutral">+164250 BTC/year</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 6. Stats Row -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">Market Cap</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="1467029240977">$1.47T</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">24h Volume</div>
+                    <div class="stat-value" id="stat-volume" data-usd="71452530270">$71.45B</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">7d Change</div>
+                    <div class="stat-value red">-17.80%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">30d Change</div>
+                    <div class="stat-value red">-22.08%</div>
+                </div>
+            </div>
+
+            <!-- 7. Price Chart -->
             <div class="chart-container">
                 <div class="chart-header">
                     <div style="display: flex; align-items: center; gap: 16px;">
@@ -2638,6 +2578,12 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
+            <!-- 8. Combined Market Overview Section -->
+            <div class="section-header">
+                <h2 class="section-title">Market Overview</h2>
+                <p class="section-subtitle">Price ranges, averages, sentiment, and trading data</p>
+            </div>
+
             <div class="grid-3 mb-24">
                 <!-- Price Range Card -->
                 <div class="card">
@@ -2647,7 +2593,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$73,492.00</span>
+                        <span class="data-value accent">$73,454.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -2655,7 +2601,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
-                        <span class="data-value">$73,478.78</span>
+                        <span class="data-value">$73,415.85</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">All-Time High</span>
@@ -2675,15 +2621,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$78,894 <small>(-6.9%)</small></span>
+                <span class="data-value" style="color: var(--red)">$78,889 <small>(-6.9%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,405 <small>(-15.0%)</small></span>
+                <span class="data-value" style="color: var(--red)">$86,403 <small>(-15.0%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$88,453 <small>(-16.9%)</small></span>
+                <span class="data-value" style="color: var(--red)">$88,452 <small>(-17.0%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2713,7 +2659,111 @@
                 </div>
             </div>
 
-            <!-- Historical Prices -->
+            <div class="grid-2 mb-24">
+                <!-- Market Dominance Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">&#127760;</div>
+                        <h3 class="card-title">Market Dominance</h3>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
+                        <span class="data-value accent">57.0%</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Total Crypto MCap</span>
+                        <span class="data-value">$2.57T</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
+                        <span class="data-value">$1.47T</span>
+                    </div>
+                </div>
+
+                <!-- Trading Volume Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">&#128200;</div>
+                        <h3 class="card-title">Trading Volume</h3>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
+                        <span class="data-value accent">$71.45B</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Volume/MCap Ratio</span>
+                        <span class="data-value">4.87%</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">24h Tx Volume</span>
+                        <span class="data-value">$13.34B</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Education Drawer -->
+            <div class="education-drawer" id="education-drawer">
+                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
+                    <span>What am I looking at?</span>
+                    <span class="education-toggle-icon">▼</span>
+                </button>
+                <div class="education-content">
+                    <div class="education-inner">
+                        <div class="education-section">
+                            <h4>What is Bitcoin?</h4>
+                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why does the halving matter?</h4>
+                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why is supply capped at 21 million?</h4>
+                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Halving Countdown Widget -->
+            <div class="halving-widget">
+                <div class="halving-title">Next Bitcoin Halving</div>
+                <div class="halving-countdown" id="halving-countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-days">--</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-hours">--</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-mins">--</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-blocks">--</div>
+                        <div class="countdown-label">Blocks</div>
+                    </div>
+                </div>
+                <div class="halving-progress">
+                    <div class="halving-progress-bar">
+                        <div class="halving-progress-fill" id="halving-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="halving-stats">
+                        <span>Last Halving (2024)</span>
+                        <span id="halving-progress-pct">0%</span>
+                        <span>Next Halving (~2028-04-13)</span>
+                    </div>
+                </div>
+                <div class="halving-info">
+                    <div class="halving-info-item">Current Block: <strong>935,037</strong></div>
+                    <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
+                    <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
+                </div>
+            </div>
+
+            <!-- 11. Historical Prices -->
             <div class="section-header mt-40">
                 <h2 class="section-title">Bitcoin on February 04</h2>
                 <p class="section-subtitle">Historical prices for this date across the years</p>
@@ -2797,7 +2847,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
-                        <span class="data-value">935,034</span>
+                        <span class="data-value">935,037</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
@@ -2805,11 +2855,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$229,662</span>
+                        <span class="data-value">$229,544</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">9.5 min</span>
+                        <span class="data-value">9.6 min</span>
                     </div>
                 </div>
 
@@ -2820,7 +2870,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">114,966</span>
+                        <span class="data-value">114,963</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -2832,7 +2882,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">26,384</span>
+                        <span class="data-value">19,228</span>
                     </div>
                 </div>
 
@@ -2855,7 +2905,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
-                        <span class="data-value">1,360</span>
+                        <span class="data-value">1,361</span>
                     </div>
                 </div>
             </div>
@@ -2872,11 +2922,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">5 sat/vB</div>
+                    <div class="mini-stat-value">1 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">9,530</div>
+                    <div class="mini-stat-value">9,534</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2937,53 +2987,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">26,384 txs</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Market & Trading Data -->
-            <div class="section-header mt-40">
-                <h2 class="section-title">Market & Trading Data</h2>
-                <p class="section-subtitle">Futures, dominance, and liquidations</p>
-            </div>
-
-            <div class="grid-2 mb-24">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">&#127760;</div>
-                        <h3 class="card-title">Market Dominance</h3>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">57.1%</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value">$2.57T</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value">$1.47T</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">&#128200;</div>
-                        <h3 class="card-title">Trading Volume</h3>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">$71.20B</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.85%</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">24h Tx Volume</span>
-                        <span class="data-value">$13.34B</span>
+                        <span class="data-value">19,228 txs</span>
                     </div>
                 </div>
             </div>
@@ -3040,7 +3044,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 20:52 UTC</span> ·
+                <span id="last-update">Last updated: 21:04 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -3083,8 +3087,8 @@
         let currentTimeframe = 7;
         let chartData = [];
         let chartDataUSD = [];  // Store original USD data for conversion
-        let lastPrice = 73492;
-        let lastPriceUSD = 73492;  // Store USD price for conversion
+        let lastPrice = 73454;
+        let lastPriceUSD = 73454;  // Store USD price for conversion
         let isChartLoading = false;
 
         // MA visibility state
@@ -3591,7 +3595,7 @@
 
         // ===== Currency Conversion =====
         let currentCurrency = { code: 'USD', symbol: '$', rate: 1 };
-        const basePriceUSD = 73492;
+        const basePriceUSD = 73454;
 
         function initCurrencySelector() {
             const selector = document.getElementById('currency-selector');
@@ -3863,8 +3867,8 @@
 
         // ===== Halving Countdown =====
         const HALVING_DATA = {
-            blocksUntilHalving: 114966,
-            currentBlock: 935034,
+            blocksUntilHalving: 114963,
+            currentBlock: 935037,
             nextHalvingBlock: 1050000,
             lastHalvingBlock: 840000
         };
