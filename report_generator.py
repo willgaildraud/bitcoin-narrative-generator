@@ -603,6 +603,68 @@ Based on current data patterns:
         # Supply delta (roughly 900 BTC mined per day)
         supply_delta = 144 * block_reward  # 144 blocks * block reward
 
+        # Get 200-day MA for market conditions score
+        ma_data_200 = history_200d.get('moving_averages', {}) if history_200d else {}
+        sma_200 = ma_data_200.get('sma_200_current', 0) or 0
+
+        # Calculate Market Conditions Score (0-5)
+        # Rule-based, transparent scoring - NOT financial advice
+        market_score = 0
+        market_score_details = []
+
+        # 1. Fear & Greed < 25 (Extreme Fear) = +1 point
+        if fg_value < 25:
+            market_score += 1
+            market_score_details.append(("Extreme Fear", True, f"F&G at {fg_value}"))
+        else:
+            market_score_details.append(("Extreme Fear", False, f"F&G at {fg_value}"))
+
+        # 2. Price below 200-day MA = +1 point
+        if sma_200 > 0 and price < sma_200:
+            market_score += 1
+            market_score_details.append(("Below 200D MA", True, f"Price {((price/sma_200 - 1) * 100):.1f}% below"))
+        elif sma_200 > 0:
+            market_score_details.append(("Below 200D MA", False, f"Price {((price/sma_200 - 1) * 100):+.1f}% vs MA"))
+        else:
+            market_score_details.append(("Below 200D MA", False, "N/A"))
+
+        # 3. Price below 50-day MA = +1 point
+        if sma_50 > 0 and price < sma_50:
+            market_score += 1
+            market_score_details.append(("Below 50D MA", True, f"Price {((price/sma_50 - 1) * 100):.1f}% below"))
+        elif sma_50 > 0:
+            market_score_details.append(("Below 50D MA", False, f"Price {((price/sma_50 - 1) * 100):+.1f}% vs MA"))
+        else:
+            market_score_details.append(("Below 50D MA", False, "N/A"))
+
+        # 4. >30% down from ATH = +1 point
+        if ath_change < -30:
+            market_score += 1
+            market_score_details.append((">30% from ATH", True, f"{ath_change:.1f}% from ATH"))
+        else:
+            market_score_details.append((">30% from ATH", False, f"{ath_change:.1f}% from ATH"))
+
+        # 5. Hash rate rising = +1 point
+        hr_current = blockchain.get("hash_rate_current", 0) or 0
+        hr_avg = blockchain.get("hash_rate_30d_avg", 0) or 1
+        hr_change_pct = ((hr_current - hr_avg) / hr_avg * 100) if hr_avg else 0
+        if hr_change_pct > 0:
+            market_score += 1
+            market_score_details.append(("Hash Rate Rising", True, f"+{hr_change_pct:.1f}% vs 30d avg"))
+        else:
+            market_score_details.append(("Hash Rate Rising", False, f"{hr_change_pct:.1f}% vs 30d avg"))
+
+        # Determine score label
+        if market_score >= 4:
+            market_score_label = "Historically Favorable"
+            market_score_color = "#22c55e"  # green
+        elif market_score >= 2:
+            market_score_label = "Neutral Conditions"
+            market_score_color = "#eab308"  # yellow
+        else:
+            market_score_label = "Historically Unfavorable"
+            market_score_color = "#ef4444"  # red
+
         # Generate "Today's Bitcoin Pulse" summary (neutral, factual, no predictions)
         def generate_pulse_summary():
             parts = []
@@ -1900,6 +1962,101 @@ Based on current data patterns:
             margin-bottom: 10px;
         }}
 
+        /* Market Conditions Score */
+        .market-score-card {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }}
+
+        .market-score-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }}
+
+        .market-score-title {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }}
+
+        .market-score-badge {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }}
+
+        .market-score-value {{
+            font-size: 1.5rem;
+            font-weight: 700;
+        }}
+
+        .market-score-details {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }}
+
+        .score-item {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--bg-darker);
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }}
+
+        .score-check {{
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }}
+
+        .score-check.active {{
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }}
+
+        .score-check.inactive {{
+            background: rgba(156, 163, 175, 0.2);
+            color: var(--text-muted);
+        }}
+
+        .score-item-label {{
+            color: var(--text-secondary);
+        }}
+
+        .score-item-value {{
+            margin-left: auto;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }}
+
+        .market-score-disclaimer {{
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-style: italic;
+        }}
+
         /* Yesterday vs Today Comparison */
         .comparison-card {{
             background: var(--bg-card);
@@ -2590,6 +2747,17 @@ Based on current data patterns:
             .logo-text {{ font-size: 0.95rem; }}
             .logo-icon {{ width: 30px; height: 30px; font-size: 16px; }}
 
+            /* Market score mobile */
+            .market-score-card {{ padding: 16px; margin: 16px 0; }}
+            .market-score-header {{ flex-direction: column; align-items: flex-start; gap: 12px; }}
+            .market-score-title {{ font-size: 1rem; }}
+            .market-score-badge {{ font-size: 0.8rem; }}
+            .market-score-value {{ font-size: 1.2rem; }}
+            .market-score-details {{ grid-template-columns: 1fr; gap: 8px; }}
+            .score-item {{ padding: 8px 10px; font-size: 0.75rem; }}
+            .score-check {{ width: 18px; height: 18px; font-size: 0.65rem; }}
+            .market-score-disclaimer {{ font-size: 0.65rem; }}
+
             /* Comparison table mobile */
             .comparison-card {{ padding: 16px; margin: 16px 0; }}
             .comparison-title {{ font-size: 1rem; margin-bottom: 12px; }}
@@ -3167,6 +3335,27 @@ Based on current data patterns:
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
                 <div class="pulse-summary-text">{pulse_summary}</div>
+            </div>
+
+            <!-- Market Conditions Score -->
+            <div class="market-score-card">
+                <div class="market-score-header">
+                    <h3 class="market-score-title">Market Conditions</h3>
+                    <div class="market-score-badge" style="background: {market_score_color}20; color: {market_score_color};">
+                        <span class="market-score-value">{market_score}/5</span>
+                        <span>{market_score_label}</span>
+                    </div>
+                </div>
+                <div class="market-score-details">
+                    {"".join(f'''<div class="score-item">
+                        <span class="score-check {"active" if active else "inactive"}">{"✓" if active else "✗"}</span>
+                        <span class="score-item-label">{label}</span>
+                        <span class="score-item-value">{detail}</span>
+                    </div>''' for label, active, detail in market_score_details)}
+                </div>
+                <div class="market-score-disclaimer">
+                    Based on historical patterns only. Not financial advice. Past performance does not indicate future results.
+                </div>
             </div>
 
             <!-- What Changed Today -->
