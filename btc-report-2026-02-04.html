@@ -969,6 +969,340 @@
             margin-bottom: 10px;
         }
 
+        /* Yesterday vs Today Comparison */
+        .comparison-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-darker);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .comparison-table th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: var(--bg-darker);
+        }
+
+        .comparison-table td {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comparison-table .metric-name {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .comparison-table .delta {
+            font-weight: 600;
+        }
+
+        .comparison-table .delta.positive {
+            color: var(--green);
+        }
+
+        .comparison-table .delta.negative {
+            color: var(--red);
+        }
+
+        .comparison-table .delta.neutral {
+            color: var(--text-muted);
+        }
+
+        /* What Changed Today */
+        .changes-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .changes-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }
+
+        .changes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .changes-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .changes-list li:last-child {
+            border-bottom: none;
+        }
+
+        .change-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .change-icon.up {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+
+        .change-icon.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        .change-icon.neutral {
+            background: rgba(156, 163, 175, 0.2);
+            color: var(--text-muted);
+        }
+
+        /* Education Drawer */
+        .education-drawer {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .education-toggle {
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+
+        .education-toggle:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .education-toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .education-drawer.open .education-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .education-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .education-drawer.open .education-content {
+            max-height: 600px;
+        }
+
+        .education-inner {
+            padding: 0 20px 20px;
+        }
+
+        .education-section {
+            margin-bottom: 20px;
+        }
+
+        .education-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .education-section h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+        }
+
+        .education-section p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Share Card */
+        .share-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .share-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(246, 133, 27, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 0 auto 16px;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .share-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .share-card-logo {
+            font-size: 1.5rem;
+        }
+
+        .share-card-brand {
+            font-size: 0.85rem;
+            color: #f6851b;
+            font-weight: 600;
+        }
+
+        .share-card-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .share-card-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .share-card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .share-card-stat {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .share-card-stat-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .share-card-stat-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .share-btn {
+            background: #f6851b;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e07916;
+        }
+
+        /* Roadmap Footer */
+        .roadmap-footer {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .roadmap-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 12px 0;
+        }
+
+        .roadmap-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .roadmap-list li {
+            background: var(--bg-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
         /* Halving Countdown Widget */
         .halving-widget {
             background: linear-gradient(135deg, rgba(246, 133, 27, 0.1) 0%, rgba(246, 133, 27, 0.05) 100%);
@@ -1894,12 +2228,12 @@
         <div class="container">
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$76,066</h1>
+                <h1 class="hero-price">$75,996</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    -2.67% (24h)
+                    -3.14% (24h)
                 </div>
             </section>
 
@@ -1910,22 +2244,103 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value">$73.87B</div>
+                    <div class="stat-value">$74.71B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-14.47%</div>
+                    <div class="stat-value red">-14.55%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-17.75%</div>
+                    <div class="stat-value red">-17.97%</div>
                 </div>
             </div>
 
             <!-- Today's Bitcoin Pulse Summary -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is down 2.7% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is down 3.1% today. Sentiment is in extreme fear. 798 days remain until the halving. Network activity is steady.</div>
+            </div>
+
+            <!-- What Changed Today -->
+            <div class="changes-card">
+                <h3 class="changes-title">What Changed Today</h3>
+                <ul class="changes-list">
+                    <li>
+                        <span class="change-icon up">↑</span>
+                        <span>Price rose 0.47% to $75,996</span>
+                    </li>
+                    <li>
+                        <span class="change-icon down">↓</span>
+                        <span>Sentiment declined (-3 to 14)</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">⛏</span>
+                        <span>~144 blocks mined, adding ~450.0 BTC to supply</span>
+                    </li>
+                    <li>
+                        <span class="change-icon neutral">📊</span>
+                        <span>Total supply now 19,982,656 of 21M BTC</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Yesterday vs Today Comparison -->
+            <div class="comparison-card">
+                <h3 class="comparison-title">Yesterday vs Today</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Yesterday</th>
+                            <th>Today</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Price</td>
+                            <td>$75,639</td>
+                            <td>$75,996</td>
+                            <td class="delta positive">+0.47%</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Fear & Greed</td>
+                            <td>17</td>
+                            <td>14 (Extreme Fear)</td>
+                            <td class="delta negative">-3</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Supply Added</td>
+                            <td colspan="2" style="text-align: center;">~450.00 BTC / day</td>
+                            <td class="delta neutral">+164250 BTC/year</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Education Drawer -->
+            <div class="education-drawer" id="education-drawer">
+                <button class="education-toggle" onclick="document.getElementById('education-drawer').classList.toggle('open')">
+                    <span>What am I looking at?</span>
+                    <span class="education-toggle-icon">▼</span>
+                </button>
+                <div class="education-content">
+                    <div class="education-inner">
+                        <div class="education-section">
+                            <h4>What is Bitcoin?</h4>
+                            <p>Bitcoin is a decentralized digital currency that operates without a central bank or single administrator. It uses a peer-to-peer network where transactions are verified by nodes and recorded on a public ledger called a blockchain.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why does the halving matter?</h4>
+                            <p>Every 210,000 blocks (roughly every 4 years), the reward miners receive for adding new blocks is cut in half. This reduces the rate of new Bitcoin creation, making it increasingly scarce over time. Historically, halvings have preceded significant price movements.</p>
+                        </div>
+                        <div class="education-section">
+                            <h4>Why is supply capped at 21 million?</h4>
+                            <p>Bitcoin's creator designed a fixed supply to make it deflationary, unlike traditional currencies that can be printed indefinitely. This scarcity is enforced by the protocol itself and cannot be changed, making Bitcoin similar to digital gold.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Halving Countdown Widget -->
@@ -1960,7 +2375,7 @@
                     </div>
                 </div>
                 <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>934,968</strong></div>
+                    <div class="halving-info-item">Current Block: <strong>934,970</strong></div>
                     <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
                     <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
                 </div>
@@ -2087,7 +2502,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent">$76,066.00</span>
+                        <span class="data-value accent">$75,996.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -2115,15 +2530,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$79,265 <small>(-4.0%)</small></span>
+                <span class="data-value" style="color: var(--red)">$79,254 <small>(-4.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$86,535 <small>(-12.1%)</small></span>
+                <span class="data-value" style="color: var(--red)">$86,531 <small>(-12.2%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" style="color: var(--red)">$88,505 <small>(-14.0%)</small></span>
+                <span class="data-value" style="color: var(--red)">$88,503 <small>(-14.1%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2237,7 +2652,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
-                        <span class="data-value">934,968</span>
+                        <span class="data-value">934,970</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
@@ -2245,11 +2660,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value">$237,706</span>
+                        <span class="data-value">$237,488</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">9.7 min</span>
+                        <span class="data-value">10.0 min</span>
                     </div>
                 </div>
 
@@ -2260,7 +2675,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">115,032</span>
+                        <span class="data-value">115,030</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -2272,7 +2687,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">24,883</span>
+                        <span class="data-value">31,535</span>
                     </div>
                 </div>
 
@@ -2295,7 +2710,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
-                        <span class="data-value">1,314</span>
+                        <span class="data-value">1,315</span>
                     </div>
                 </div>
             </div>
@@ -2312,11 +2727,11 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">1 sat/vB</div>
+                    <div class="mini-stat-value">2 sat/vB</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">9,821</div>
+                    <div class="mini-stat-value">9,546</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2377,7 +2792,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">24,883 txs</span>
+                        <span class="data-value">31,535 txs</span>
                     </div>
                 </div>
             </div>
@@ -2415,11 +2830,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">$73.87B</span>
+                        <span class="data-value accent">$74.71B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">4.86%</span>
+                        <span class="data-value">4.91%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -2462,6 +2877,49 @@
                 </div>
             </div>
         </div>
+
+        <!-- Share Today's Pulse -->
+        <div class="share-section">
+            <h3 class="share-title">Share Today's Pulse</h3>
+            <div class="share-card" id="share-card">
+                <div class="share-card-header">
+                    <span class="share-card-logo">₿</span>
+                    <span class="share-card-brand">TheBitcoinPulse.com</span>
+                    <span class="share-card-date">10:16 UTC</span>
+                </div>
+                <div class="share-card-price">$75,996</div>
+                <div class="share-card-stats">
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">24h Change</div>
+                        <div class="share-card-stat-value" style="color: #ef4444">-3.14%</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Sentiment</div>
+                        <div class="share-card-stat-value">14 (Extreme Fear)</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Halving</div>
+                        <div class="share-card-stat-value">798 days</div>
+                    </div>
+                    <div class="share-card-stat">
+                        <div class="share-card-stat-label">Supply</div>
+                        <div class="share-card-stat-value">95.2% mined</div>
+                    </div>
+                </div>
+            </div>
+            <button class="share-btn" onclick="shareSnapshot()">Share Snapshot</button>
+        </div>
+
+        <!-- Roadmap Footer -->
+        <div class="roadmap-footer">
+            <h3 class="roadmap-title">Coming Soon</h3>
+            <ul class="roadmap-list">
+                <li>Price Alerts</li>
+                <li>Portfolio Tracker</li>
+                <li>Weekly Email Digest</li>
+                <li>Mobile App</li>
+            </ul>
+        </div>
     </main>
 
     <footer>
@@ -2469,7 +2927,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 09:36 UTC</span> ·
+                <span id="last-update">Last updated: 10:16 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -2511,7 +2969,7 @@
         let priceChart = null;
         let currentTimeframe = 7;
         let chartData = [];
-        let lastPrice = 76066;
+        let lastPrice = 75996;
         let isChartLoading = false;
 
         // MA visibility state
@@ -3020,8 +3478,8 @@
 
         // ===== Halving Countdown =====
         const HALVING_DATA = {
-            blocksUntilHalving: 115032,
-            currentBlock: 934968,
+            blocksUntilHalving: 115030,
+            currentBlock: 934970,
             nextHalvingBlock: 1050000,
             lastHalvingBlock: 840000
         };
@@ -3448,6 +3906,57 @@
                         }
                     });
                 }
+            });
+        }
+
+        // Share Snapshot Function
+        async function shareSnapshot() {
+            const shareData = {
+                title: 'The Bitcoin Pulse',
+                text: `Bitcoin: $75,996 (-3.14%) | Sentiment: 14 (Extreme Fear) | 798 days to halving`,
+                url: 'https://thebitcoinpulse.com'
+            };
+
+            // Track analytics event
+            if (typeof gtag === 'function') {
+                gtag('event', 'share_snapshot', {
+                    'event_category': 'engagement',
+                    'event_label': 'social_share'
+                });
+            }
+
+            // Try Web Share API first (mobile)
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        fallbackShare(shareData);
+                    }
+                }
+            } else {
+                fallbackShare(shareData);
+            }
+        }
+
+        function fallbackShare(data) {
+            // Copy to clipboard as fallback
+            const text = `${data.text}
+
+${data.url}`;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.share-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied to clipboard!';
+                btn.style.background = '#22c55e';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#f6851b';
+                }, 2000);
+            }).catch(() => {
+                // If clipboard fails, open Twitter share
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`;
+                window.open(twitterUrl, '_blank');
             });
         }
     </script>
