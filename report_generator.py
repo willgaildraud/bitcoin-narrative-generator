@@ -464,6 +464,7 @@ Based on current data patterns:
         blockchain = data.get("blockchain", {}) if data else {}
         history_30d = data.get("price_history_30d", {}) if data else {}
         history_90d = data.get("price_history_90d", {}) if data else {}
+        history_200d = data.get("price_history_200d", {}) if data else {}
         block_stats = data.get("block_stats", {}) if data else {}
         network_stats = data.get("network_stats", {}) if data else {}
         address_stats = data.get("address_stats", {}) if data else {}
