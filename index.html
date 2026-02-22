@@ -175,9 +175,9 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: rgba(248, 81, 73, 0.1);
+            background: rgba(63, 185, 80, 0.1);
             border-radius: 8px;
-            color: #ef4444;
+            color: #22c55e;
             font-weight: 600;
             font-size: 1.1rem;
         }
@@ -465,7 +465,7 @@
         .fg-indicator {
             position: absolute;
             top: -4px;
-            left: 8%;
+            left: 9%;
             transform: translateX(-50%);
             width: 16px;
             height: 16px;
@@ -2381,7 +2381,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="nav-date">February 21, 2026</span>
+                        <span class="nav-date">February 22, 2026</span>
                     </div>
                 </div>
             </div>
@@ -2391,19 +2391,19 @@
             <!-- 1. Live Bitcoin Price -->
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$67,979</h1>
+                <h1 class="hero-price">$67,963</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d='M6 9l6 6 6-6'/>
+                        <path d='M18 15l-6-6-6 6'/>
                     </svg>
-                    -0.10% (24h)
+                    +0.22% (24h)
                 </div>
             </section>
 
             <!-- 2. Today's Pulse -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is down 0.1% today. Sentiment is in extreme fear. 779 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is up 0.2% today. Sentiment is in extreme fear. 779 days remain until the halving. Network activity is steady.</div>
             </div>
 
             <!-- 3. Market Conditions Score -->
@@ -2411,7 +2411,7 @@
                 <div class="market-score-header">
                     <h3 class="market-score-title">Market Conditions</h3>
                     <div class="market-score-badge" style="background: #22c55e20; color: #22c55e;">
-                        <span class="market-score-value">5/5</span>
+                        <span class="market-score-value">4/5</span>
                         <span>Historically Favorable</span>
                     </div>
                 </div>
@@ -2419,23 +2419,23 @@
                     <div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Extreme Fear</span>
-                        <span class="score-item-value">F&G at 8</span>
+                        <span class="score-item-value">F&G at 9</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 200D MA</span>
-                        <span class="score-item-value">Price -31.4% below</span>
+                        <span class="score-item-value">Price -31.3% below</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 50D MA</span>
-                        <span class="score-item-value">Price -16.9% below</span>
+                        <span class="score-item-value">Price -16.4% below</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">>30% from ATH</span>
                         <span class="score-item-value">-46.1% from ATH</span>
                     </div><div class="score-item">
-                        <span class="score-check active">✓</span>
+                        <span class="score-check inactive">✗</span>
                         <span class="score-item-label">Hash Rate Rising</span>
-                        <span class="score-item-value">+2.0% vs 30d avg</span>
+                        <span class="score-item-value">-10.4% vs 30d avg</span>
                     </div>
                 </div>
                 <div class="market-score-disclaimer">
@@ -2448,12 +2448,12 @@
                 <h3 class="changes-title">What Changed Today</h3>
                 <ul class="changes-list">
                     <li>
-                        <span class="change-icon up">↑</span>
-                        <span>Price rose 0.01% to $67,979</span>
+                        <span class="change-icon down">↓</span>
+                        <span>Price fell 0.02% to $67,963</span>
                     </li>
                     <li>
                         <span class="change-icon up">↑</span>
-                        <span>Sentiment improved (+1 to 8)</span>
+                        <span>Sentiment improved (+1 to 9)</span>
                     </li>
                     <li>
                         <span class="change-icon neutral">⛏</span>
@@ -2461,7 +2461,7 @@
                     </li>
                     <li>
                         <span class="change-icon neutral">📊</span>
-                        <span>Total supply now 19,992,828 of 21M BTC</span>
+                        <span>Total supply now 19,992,875 of 21M BTC</span>
                     </li>
                 </ul>
             </div>
@@ -2481,14 +2481,14 @@
                     <tbody>
                         <tr>
                             <td class="metric-name">Price</td>
-                            <td>$67,970</td>
-                            <td>$67,979</td>
-                            <td class="delta positive">+0.01%</td>
+                            <td>$67,978</td>
+                            <td>$67,963</td>
+                            <td class="delta negative">-0.02%</td>
                         </tr>
                         <tr>
                             <td class="metric-name">Fear & Greed</td>
-                            <td>7</td>
-                            <td>8 (Extreme Fear)</td>
+                            <td>8</td>
+                            <td>9 (Extreme Fear)</td>
                             <td class="delta positive">+1</td>
                         </tr>
                         <tr>
@@ -2504,19 +2504,19 @@
             <div class="stats-row">
                 <div class="stat-item">
                     <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="stat-market-cap" data-usd="1358878745476">$1.36T</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="1358764877281">$1.36T</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value" id="stat-volume" data-usd="20705920198">$20.71B</div>
+                    <div class="stat-value" id="stat-volume" data-usd="20180065095">$20.18B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-2.78%</div>
+                    <div class="stat-value red">-2.60%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value red">-23.84%</div>
+                    <div class="stat-value red">-24.03%</div>
                 </div>
             </div>
 
@@ -2593,11 +2593,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent" id="price-current" data-usd="67979">$67,979.00</span>
+                        <span class="data-value accent" id="price-current" data-usd="67963">$67,963.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
-                        <span class="data-value" id="price-high-30d" data-usd="89443.39744146909">$89,443.40</span>
+                        <span class="data-value" id="price-high-30d" data-usd="89412.39849953113">$89,412.40</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d Low</span>
@@ -2621,15 +2621,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" id="ma-7d" data-usd="67777.37571167656" data-pct="0.3026083353400329" style="color: var(--green)">$67,777 <small>(+0.3%)</small></span>
+                <span class="data-value" id="ma-7d" data-usd="67670.28786494279" data-pct="0.44516914343623915" style="color: var(--green)">$67,670 <small>(+0.4%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" id="ma-20d" data-usd="69292.01542939074" data-pct="-1.889885466919846" style="color: var(--red)">$69,292 <small>(-1.9%)</small></span>
+                <span class="data-value" id="ma-20d" data-usd="68751.98094410416" data-pct="-1.1351612384036982" style="color: var(--red)">$68,752 <small>(-1.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" id="ma-50d" data-usd="81772.28512409038" data-pct="-16.863671356510782" style="color: var(--red)">$81,772 <small>(-16.9%)</small></span>
+                <span class="data-value" id="ma-50d" data-usd="81319.74740440884" data-pct="-16.41447830898349" style="color: var(--red)">$81,320 <small>(-16.4%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2646,7 +2646,7 @@
                         <h3 class="card-title">Market Sentiment<span class="info-icon" data-metric="fear_greed" aria-label="Learn more">i</span></h3>
                     </div>
                     <div class="fg-container">
-                        <div class="fg-value">8</div>
+                        <div class="fg-value">9</div>
                         <div class="fg-label">Extreme Fear</div>
                         <div class="fg-bar">
                             <div class="fg-indicator"></div>
@@ -2668,15 +2668,15 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">56.4%</span>
+                        <span class="data-value accent">56.5%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value" id="total-crypto-mcap" data-usd="2407167485834.1064">$2.41T</span>
+                        <span class="data-value" id="total-crypto-mcap" data-usd="2408205640104.569">$2.41T</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value" id="btc-market-cap" data-usd="1358878745476">$1.36T</span>
+                        <span class="data-value" id="btc-market-cap" data-usd="1358764877281">$1.36T</span>
                     </div>
                 </div>
 
@@ -2688,15 +2688,15 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent" id="trading-volume-24h" data-usd="20705920198">$20.71B</span>
+                        <span class="data-value accent" id="trading-volume-24h" data-usd="20180065095">$20.18B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">1.52%</span>
+                        <span class="data-value">1.49%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
-                        <span class="data-value" id="tx-volume-24h" data-usd="10586854048.32113">$10.59B</span>
+                        <span class="data-value" id="tx-volume-24h" data-usd="2476187168.520625">$2.48B</span>
                     </div>
                 </div>
             </div>
@@ -2757,7 +2757,7 @@
                     </div>
                 </div>
                 <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>937,721</strong></div>
+                    <div class="halving-info-item">Current Block: <strong>937,732</strong></div>
                     <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
                     <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
                 </div>
@@ -2765,7 +2765,7 @@
 
             <!-- 11. Historical Prices -->
             <div class="section-header mt-40">
-                <h2 class="section-title">Bitcoin on February 21</h2>
+                <h2 class="section-title">Bitcoin on February 22</h2>
                 <p class="section-subtitle">Historical prices for this date across the years</p>
             </div>
             <div class="card mb-24">
@@ -2781,8 +2781,8 @@
                         <tbody>
                             <tr>
                     <td class="history-year-cell">2025</td>
-                    <td class="history-price-cell">$98,384</td>
-                    <td class="history-change-cell"><span style="color: var(--green)">+130.1%</span></td>
+                    <td class="history-price-cell">$96,135</td>
+                    <td class="history-change-cell"><span style="color: var(--green)">+124.9%</span></td>
                 </tr><tr>
                     <td class="history-year-cell">2024</td>
                     <td class="history-price-cell">$42,750</td>
@@ -2847,7 +2847,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
-                        <span class="data-value">937,721</span>
+                        <span class="data-value">937,732</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
@@ -2855,11 +2855,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value" id="reward-value" data-usd="212434.375">$212,434</span>
+                        <span class="data-value" id="reward-value" data-usd="212384.375">$212,384</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
-                        <span class="data-value">11.5 min</span>
+                        <span class="data-value">11.0 min</span>
                     </div>
                 </div>
 
@@ -2870,7 +2870,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">112,279</span>
+                        <span class="data-value">112,268</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -2882,7 +2882,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">10,344</span>
+                        <span class="data-value">13,658</span>
                     </div>
                 </div>
 
@@ -2914,11 +2914,11 @@
             <div class="mini-stats">
                 <div class="mini-stat">
                     <div class="mini-stat-label">Hash Rate<span class="info-icon" data-metric="hash_rate" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">983 EH/s</div>
+                    <div class="mini-stat-value">854 EH/s</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Transactions<span class="info-icon" data-metric="tx_count" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">413,542</div>
+                    <div class="mini-stat-value">350,751</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Fee Rate<span class="info-icon" data-metric="fee_rate" aria-label="Learn more">i</span></div>
@@ -2926,7 +2926,7 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">9,436</div>
+                    <div class="mini-stat-value">9,408</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2934,7 +2934,7 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Avg Fee</div>
-                    <div class="mini-stat-value" id="avg-fee-mini" data-usd="158637.52751014713">$158637.53</div>
+                    <div class="mini-stat-value" id="avg-fee-mini" data-usd="156759.36390446572">$156759.36</div>
                 </div>
             </div>
 
@@ -2952,15 +2952,15 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Active Addresses (24h)<span class="info-icon" data-metric="active_addresses" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">493,761</span>
+                        <span class="data-value accent">447,339</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">7-Day Average</span>
-                        <span class="data-value">452,229</span>
+                        <span class="data-value">450,704</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">New Addresses</span>
-                        <span class="data-value">100,823,436</span>
+                        <span class="data-value">100,824,514</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Whale Txs (Recent)<span class="info-icon" data-metric="whale_transactions" aria-label="Learn more">i</span></span>
@@ -2975,19 +2975,19 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume</span>
-                        <span class="data-value accent" id="onchain-volume-24h" data-usd="10586854048.32113">$10.59B</span>
+                        <span class="data-value accent" id="onchain-volume-24h" data-usd="2476187168.520625">$2.48B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Daily Transactions</span>
-                        <span class="data-value">413,542</span>
+                        <span class="data-value">350,751</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Tx Fee</span>
-                        <span class="data-value" id="avg-tx-fee" data-usd="158637.52751014713">$158637.53</span>
+                        <span class="data-value" id="avg-tx-fee" data-usd="156759.36390446572">$156759.36</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">10,344 txs</span>
+                        <span class="data-value">13,658 txs</span>
                     </div>
                 </div>
             </div>
@@ -3044,7 +3044,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 23:18 UTC</span> ·
+                <span id="last-update">Last updated: 01:10 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -3087,8 +3087,8 @@
         let currentTimeframe = 7;
         let chartData = [];
         let chartDataUSD = [];  // Store original USD data for conversion
-        let lastPrice = 67979;
-        let lastPriceUSD = 67979;  // Store USD price for conversion
+        let lastPrice = 67963;
+        let lastPriceUSD = 67963;  // Store USD price for conversion
         let isChartLoading = false;
 
         // MA visibility state
@@ -3594,7 +3594,7 @@
 
         // ===== Currency Conversion =====
         let currentCurrency = { code: 'USD', symbol: '$', rate: 1 };
-        const basePriceUSD = 67979;
+        const basePriceUSD = 67963;
 
         function initCurrencySelector() {
             const selector = document.getElementById('currency-selector');
@@ -3952,8 +3952,8 @@
 
         // ===== Halving Countdown =====
         const HALVING_DATA = {
-            blocksUntilHalving: 112279,
-            currentBlock: 937721,
+            blocksUntilHalving: 112268,
+            currentBlock: 937732,
             nextHalvingBlock: 1050000,
             lastHalvingBlock: 840000
         };
