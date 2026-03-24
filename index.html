@@ -175,9 +175,9 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: rgba(63, 185, 80, 0.1);
+            background: rgba(248, 81, 73, 0.1);
             border-radius: 8px;
-            color: #22c55e;
+            color: #ef4444;
             font-weight: 600;
             font-size: 1.1rem;
         }
@@ -2391,19 +2391,19 @@
             <!-- 1. Live Bitcoin Price -->
             <section class="hero">
                 <span class="hero-label">Live Market Data</span>
-                <h1 class="hero-price">$70,902</h1>
+                <h1 class="hero-price">$70,296</h1>
                 <div class="hero-change">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d='M18 15l-6-6-6 6'/>
+                        <path d='M6 9l6 6 6-6'/>
                     </svg>
-                    +0.33% (24h)
+                    -1.81% (24h)
                 </div>
             </section>
 
             <!-- 2. Today's Pulse -->
             <div class="pulse-summary">
                 <div class="pulse-summary-label">Today's Pulse</div>
-                <div class="pulse-summary-text">Bitcoin is up 0.3% today. Sentiment is in extreme fear. 749 days remain until the halving. Network activity is steady.</div>
+                <div class="pulse-summary-text">Bitcoin is down 1.8% today. Sentiment is in extreme fear. 749 days remain until the halving. Network activity is steady.</div>
             </div>
 
             <!-- 3. Market Conditions Score -->
@@ -2423,15 +2423,15 @@
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">Below 200D MA</span>
-                        <span class="score-item-value">Price -23.1% below</span>
+                        <span class="score-item-value">Price -23.7% below</span>
                     </div><div class="score-item">
                         <span class="score-check inactive">✗</span>
                         <span class="score-item-label">Below 50D MA</span>
-                        <span class="score-item-value">Price +2.7% vs MA</span>
+                        <span class="score-item-value">Price +1.8% vs MA</span>
                     </div><div class="score-item">
                         <span class="score-check active">✓</span>
                         <span class="score-item-label">>30% from ATH</span>
-                        <span class="score-item-value">-43.8% from ATH</span>
+                        <span class="score-item-value">-44.2% from ATH</span>
                     </div><div class="score-item">
                         <span class="score-check inactive">✗</span>
                         <span class="score-item-label">Hash Rate Rising</span>
@@ -2448,8 +2448,8 @@
                 <h3 class="changes-title">What Changed Today</h3>
                 <ul class="changes-list">
                     <li>
-                        <span class="change-icon up">↑</span>
-                        <span>Price rose 0.01% to $70,902</span>
+                        <span class="change-icon down">↓</span>
+                        <span>Price fell 0.84% to $70,296</span>
                     </li>
                     <li>
                         <span class="change-icon up">↑</span>
@@ -2482,8 +2482,8 @@
                         <tr>
                             <td class="metric-name">Price</td>
                             <td>$70,893</td>
-                            <td>$70,902</td>
-                            <td class="delta positive">+0.01%</td>
+                            <td>$70,296</td>
+                            <td class="delta negative">-0.84%</td>
                         </tr>
                         <tr>
                             <td class="metric-name">Fear & Greed</td>
@@ -2504,19 +2504,19 @@
             <div class="stats-row">
                 <div class="stat-item">
                     <div class="stat-label">Market Cap</div>
-                    <div class="stat-value" id="stat-market-cap" data-usd="1417755713615">$1.42T</div>
+                    <div class="stat-value" id="stat-market-cap" data-usd="1405754252892">$1.41T</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">24h Volume</div>
-                    <div class="stat-value" id="stat-volume" data-usd="39600495319">$39.60B</div>
+                    <div class="stat-value" id="stat-volume" data-usd="37624260790">$37.62B</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">7d Change</div>
-                    <div class="stat-value red">-3.83%</div>
+                    <div class="stat-value red">-4.64%</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">30d Change</div>
-                    <div class="stat-value green">+4.08%</div>
+                    <div class="stat-value green">+3.48%</div>
                 </div>
             </div>
 
@@ -2593,7 +2593,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Current Price</span>
-                        <span class="data-value accent" id="price-current" data-usd="70902">$70,902.00</span>
+                        <span class="data-value accent" id="price-current" data-usd="70296">$70,296.00</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">30d High</span>
@@ -2609,7 +2609,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">From ATH</span>
-                        <span class="data-value" style="color: var(--red)">-43.8%</span>
+                        <span class="data-value" style="color: var(--red)">-44.2%</span>
                     </div>
                 </div>
 
@@ -2621,15 +2621,15 @@
             </div>
             <div class="data-row">
                 <span class="data-label">7-Day MA</span>
-                <span class="data-value" id="ma-7d" data-usd="70011.46933844153" data-pct="1.3049628356194718" style="color: var(--green)">$70,011 <small>(+1.3%)</small></span>
+                <span class="data-value" id="ma-7d" data-usd="69922.10577332719" data-pct="0.5398039156248017" style="color: var(--green)">$69,922 <small>(+0.5%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">20-Day MA</span>
-                <span class="data-value" id="ma-20d" data-usd="70258.65984471832" data-pct="0.9485423586699564" style="color: var(--green)">$70,259 <small>(+0.9%)</small></span>
+                <span class="data-value" id="ma-20d" data-usd="70227.3825969283" data-pct="0.10275969085280162" style="color: var(--green)">$70,227 <small>(+0.1%)</small></span>
             </div>
             <div class="data-row">
                 <span class="data-label">50-Day MA</span>
-                <span class="data-value" id="ma-50d" data-usd="69047.11767093754" data-pct="2.71984607958838" style="color: var(--green)">$69,047 <small>(+2.7%)</small></span>
+                <span class="data-value" id="ma-50d" data-usd="69034.60677182153" data-pct="1.8323292121274335" style="color: var(--green)">$69,035 <small>(+1.8%)</small></span>
             </div>
             <div class="data-row" style="border-top: 1px solid var(--border-color); margin-top: 12px; padding-top: 12px;">
                 <span class="data-label">Trend Signal</span>
@@ -2668,15 +2668,15 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Dominance<span class="info-icon" data-metric="btc_dominance" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent">56.6%</span>
+                        <span class="data-value accent">56.5%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Total Crypto MCap</span>
-                        <span class="data-value" id="total-crypto-mcap" data-usd="2505485905478.478">$2.51T</span>
+                        <span class="data-value" id="total-crypto-mcap" data-usd="2484675351572.8604">$2.48T</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">BTC Market Cap<span class="info-icon" data-metric="market_cap" aria-label="Learn more">i</span></span>
-                        <span class="data-value" id="btc-market-cap" data-usd="1417755713615">$1.42T</span>
+                        <span class="data-value" id="btc-market-cap" data-usd="1405754252892">$1.41T</span>
                     </div>
                 </div>
 
@@ -2688,11 +2688,11 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Volume<span class="info-icon" data-metric="volume_24h" aria-label="Learn more">i</span></span>
-                        <span class="data-value accent" id="trading-volume-24h" data-usd="39600495319">$39.60B</span>
+                        <span class="data-value accent" id="trading-volume-24h" data-usd="37624260790">$37.62B</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Volume/MCap Ratio</span>
-                        <span class="data-value">2.79%</span>
+                        <span class="data-value">2.68%</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">24h Tx Volume</span>
@@ -2757,7 +2757,7 @@
                     </div>
                 </div>
                 <div class="halving-info">
-                    <div class="halving-info-item">Current Block: <strong>942,002</strong></div>
+                    <div class="halving-info-item">Current Block: <strong>942,009</strong></div>
                     <div class="halving-info-item">Current Reward: <strong>3.125 BTC</strong></div>
                     <div class="halving-info-item">Post-Halving: <strong>1.5625 BTC</strong></div>
                 </div>
@@ -2847,7 +2847,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Height<span class="info-icon" data-metric="block_height" aria-label="Learn more">i</span></span>
-                        <span class="data-value">942,002</span>
+                        <span class="data-value">942,009</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Block Reward<span class="info-icon" data-metric="block_reward" aria-label="Learn more">i</span></span>
@@ -2855,7 +2855,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Reward Value</span>
-                        <span class="data-value" id="reward-value" data-usd="221568.75">$221,569</span>
+                        <span class="data-value" id="reward-value" data-usd="219675.0">$219,675</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Avg Block Time</span>
@@ -2870,7 +2870,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Blocks Until</span>
-                        <span class="data-value">107,998</span>
+                        <span class="data-value">107,991</span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Est. Date</span>
@@ -2882,7 +2882,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool TXs</span>
-                        <span class="data-value">20,414</span>
+                        <span class="data-value">18,490</span>
                     </div>
                 </div>
 
@@ -2905,7 +2905,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Sats per $1<span class="info-icon" data-metric="sats_per_dollar" aria-label="Learn more">i</span></span>
-                        <span class="data-value">1,410</span>
+                        <span class="data-value">1,422</span>
                     </div>
                 </div>
             </div>
@@ -2926,7 +2926,7 @@
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Nodes<span class="info-icon" data-metric="nodes" aria-label="Learn more">i</span></div>
-                    <div class="mini-stat-value">721</div>
+                    <div class="mini-stat-value">720</div>
                 </div>
                 <div class="mini-stat">
                     <div class="mini-stat-label">Difficulty<span class="info-icon" data-metric="difficulty" aria-label="Learn more">i</span></div>
@@ -2987,7 +2987,7 @@
                     </div>
                     <div class="data-row">
                         <span class="data-label">Mempool Size<span class="info-icon" data-metric="mempool" aria-label="Learn more">i</span></span>
-                        <span class="data-value">20,414 txs</span>
+                        <span class="data-value">18,490 txs</span>
                     </div>
                 </div>
             </div>
@@ -3044,7 +3044,7 @@
             <p class="footer-text">The Bitcoin Pulse</p>
             <p class="footer-links">Data: CoinGecko · Alternative.me · Blockchain.com · Mempool.space · Blockchair</p>
             <p class="footer-links" style="margin-top: 8px;">
-                <span id="last-update">Last updated: 12:46 UTC</span> ·
+                <span id="last-update">Last updated: 14:16 UTC</span> ·
                 <span id="update-status">Auto-refresh: ON</span>
             </p>
         </div>
@@ -3087,8 +3087,8 @@
         let currentTimeframe = 7;
         let chartData = [];
         let chartDataUSD = [];  // Store original USD data for conversion
-        let lastPrice = 70902;
-        let lastPriceUSD = 70902;  // Store USD price for conversion
+        let lastPrice = 70296;
+        let lastPriceUSD = 70296;  // Store USD price for conversion
         let isChartLoading = false;
 
         // MA visibility state
@@ -3594,7 +3594,7 @@
 
         // ===== Currency Conversion =====
         let currentCurrency = { code: 'USD', symbol: '$', rate: 1 };
-        const basePriceUSD = 70902;
+        const basePriceUSD = 70296;
 
         function initCurrencySelector() {
             const selector = document.getElementById('currency-selector');
@@ -3952,8 +3952,8 @@
 
         // ===== Halving Countdown =====
         const HALVING_DATA = {
-            blocksUntilHalving: 107998,
-            currentBlock: 942002,
+            blocksUntilHalving: 107991,
+            currentBlock: 942009,
             nextHalvingBlock: 1050000,
             lastHalvingBlock: 840000
         };
@@ -4052,7 +4052,7 @@
         }
 
         // ===== News Feed =====
-        const NEWS_DATA = [{"title": "What happens to Bitcoin if US bond yields soar above 5%?", "url": "https://cointelegraph.com/news/what-happens-bitcoin-bond-yields-above-5percent?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 10:55:56", "domain": "cointelegraph.com"}, {"title": "Bitcoin value \u2018off the chart\u2019 as BTC price metric hits record lows in 2026", "url": "https://cointelegraph.com/news/bitcoin-value-off-the-chart-btc-price-metric-hits-record-lows-in-2026?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 10:32:09", "domain": "cointelegraph.com"}, {"title": "Strategy unveils $44.1B capital-raising capacity to buy more Bitcoin", "url": "https://cointelegraph.com/news/strategy-44-billion-plan-fund-bitcoin-buys?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 00:20:11", "domain": "cointelegraph.com"}, {"title": "MoonPay Launches Open-Source Wallet Standard for AI Agents", "url": "https://bitcoinmagazine.com/news/moonpay-launches-open-source-wallet", "source": "Bitcoin Magazine", "published_at": "2026-03-23 21:11:45", "domain": "bitcoinmagazine.com"}, {"title": "Bitcoin Swings Wildly as Iran Ceasefire Drama Rocks Crypto Markets", "url": "https://bitcoinmagazine.com/markets/bitcoin-swings-wildly-amid-iran-war", "source": "Bitcoin Magazine", "published_at": "2026-03-23 18:59:40", "domain": "bitcoinmagazine.com"}];
+        const NEWS_DATA = [{"title": "Omnes, Apex to tokenize Bitcoin mining exposure via structured note on Base", "url": "https://cointelegraph.com/news/omnes-apex-tokenized-bitcoin-mining-note-base?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 12:39:04", "domain": "cointelegraph.com"}, {"title": "What happens to Bitcoin if US bond yields soar above 5%?", "url": "https://cointelegraph.com/news/what-happens-bitcoin-bond-yields-above-5percent?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 10:55:56", "domain": "cointelegraph.com"}, {"title": "Bitcoin value \u2018off the chart\u2019 as BTC price metric hits record lows in 2026", "url": "https://cointelegraph.com/news/bitcoin-value-off-the-chart-btc-price-metric-hits-record-lows-in-2026?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound", "source": "Cointelegraph", "published_at": "2026-03-24 10:32:09", "domain": "cointelegraph.com"}, {"title": "Australia\u2019s $105 Billion Hostplus Eyes Bitcoin Investments for Nearly Two Million Pension Members", "url": "https://bitcoinmagazine.com/news/australias-105-billion-hostplus-bitcoin", "source": "Bitcoin Magazine", "published_at": "2026-03-24 12:51:11", "domain": "bitcoinmagazine.com"}, {"title": "MoonPay Launches Open-Source Wallet Standard for AI Agents", "url": "https://bitcoinmagazine.com/news/moonpay-launches-open-source-wallet", "source": "Bitcoin Magazine", "published_at": "2026-03-23 21:11:45", "domain": "bitcoinmagazine.com"}];
 
         function loadNewsFeed() {
             const newsContainer = document.getElementById('news-feed');
